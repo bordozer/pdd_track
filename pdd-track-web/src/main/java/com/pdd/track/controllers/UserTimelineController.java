@@ -1,6 +1,9 @@
 package com.pdd.track.controllers;
 
 import com.pdd.track.entity.UserStudyTimelineEntity;
+import com.pdd.track.model.Gender;
+import com.pdd.track.model.Student;
+import com.pdd.track.model.Student;
 import com.pdd.track.service.TimelineService;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -13,16 +16,22 @@ import java.util.List;
 @RequestMapping(value = "/timeline")
 public class UserTimelineController {
 
+    private static final Student STUDENT = Student.builder().key("qaz-wsx-edc").name("BorDark").gender(Gender.MALE).build(); // TODO: read user from context
+
     @Inject
     private TimelineService timelineService;
 
     @RequestMapping(method = RequestMethod.GET, value = "/")
     public List<UserStudyTimelineEntity> getAll() {
-        return timelineService.getAll("qaz-wsx-edc"); // TODO: read user from context
+        return timelineService.getAll(STUDENT.getKey());
     }
 
-    /*@RequestMapping(method = RequestMethod.PUT, value = "/log")
-    public UserStudyTimelineEntity createLogRecord(@RequestBody final DEL_LogItemDto dto) {
-        return new UserStudyTimelineEntity();
-    }*/
+    // TODO: for dev purposes only
+    @RequestMapping(method = RequestMethod.PUT, value = "/add/")
+    public UserStudyTimelineEntity createLogRecord() {
+        UserStudyTimelineEntity entity = new UserStudyTimelineEntity();
+        entity.setStudent(STUDENT);
+
+        return timelineService.create(entity);
+    }
 }

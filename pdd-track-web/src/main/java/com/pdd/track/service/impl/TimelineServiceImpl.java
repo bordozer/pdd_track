@@ -18,4 +18,9 @@ public class TimelineServiceImpl implements TimelineService {
     public List<UserStudyTimelineEntity> getAll(final String userKey) {
         return timelineRepository.findAll();
     }
+
+    @Override
+    public UserStudyTimelineEntity create(final UserStudyTimelineEntity entity) {
+        return timelineRepository.save(entity);
+    }
 }
