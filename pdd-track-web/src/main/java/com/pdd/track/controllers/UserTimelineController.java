@@ -65,21 +65,10 @@ public class UserTimelineController {
         pddSection.setName("General");
         pddSection.setQuestionsCount(116);
 
-        TimelineItem lecture1 = new TimelineItem();
-        lecture1.setDate(LocalDate.of(2017, 3, 4));
-        lecture1.setEvent(new LectureEvent());
-
-        TimelineItem lecture2 = new TimelineItem();
-        lecture1.setDate(LocalDate.of(2017, 3, 5));
-        lecture1.setEvent(new LectureEvent());
-
-        TimelineItem study1 = new TimelineItem();
-        lecture1.setDate(LocalDate.of(2017, 3, 6));
-        lecture1.setEvent(new PddSectionStudy());
-
-        TimelineItem testing1 = new TimelineItem();
-        lecture1.setDate(LocalDate.of(2017, 3, 6));
-        lecture1.setEvent(new PddSectionTesting(17, 20, false));
+        TimelineItem lecture1 = new TimelineItem(LocalDate.of(2017, 3, 4), new LectureEvent());
+        TimelineItem lecture2 = new TimelineItem(LocalDate.of(2017, 3, 5), new LectureEvent());
+        TimelineItem study1 = new TimelineItem(LocalDate.of(2017, 3, 6), new PddSectionStudy());
+        TimelineItem testing1 = new TimelineItem(LocalDate.of(2017, 3, 7), new PddSectionTesting(17, 20, false));
 
         PddSectionTimelineItem sectionTimelineItem = new PddSectionTimelineItem();
         sectionTimelineItem.setPddSection(pddSection);

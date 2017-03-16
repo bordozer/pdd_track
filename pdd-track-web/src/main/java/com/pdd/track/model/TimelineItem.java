@@ -7,6 +7,6 @@ import java.time.LocalDate;
 
 @Data
 public class TimelineItem {
-    private LocalDate date;
-    private TimelineEvent event;
+    private final LocalDate date;
+    private final TimelineEvent event;
 }
