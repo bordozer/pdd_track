@@ -6,4 +6,5 @@ import lombok.Data;
 public class Testing {
     private int totalQuestions;
     private int passedQuestions;
+    private boolean passed;
 }
