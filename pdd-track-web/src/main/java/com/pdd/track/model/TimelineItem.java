@@ -3,10 +3,10 @@ package com.pdd.track.model;
 import com.pdd.track.model.events.TimelineEvent;
 import lombok.Data;
 
-import java.time.LocalDateTime;
+import java.time.LocalDate;
 
 @Data
 public class TimelineItem {
-    private LocalDateTime date;
-    private TimelineEvent events;
+    private LocalDate date;
+    private TimelineEvent event;
 }
