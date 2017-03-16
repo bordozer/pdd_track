@@ -1,14 +1,14 @@
-package com.pdd.track.entity;
+package com.pdd.track.entity.rule;
 
 import lombok.Data;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
 @Data
-@Document(collection = "PDD.TRACK.DRIVING_SCHOOL")
-public class DrivingSchoolEntity {
+@Document(collection = "PDD.TRACK.RULES")
+public class RulesSetEntity {
     @Id
     private String _id;
     private String name;
-    private String address;
+    private int year;
 }

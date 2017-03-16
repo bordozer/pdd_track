@@ -1,4 +1,4 @@
-package com.pdd.track.entity;
+package com.pdd.track.entity.school;
 
 import lombok.Data;
 import org.springframework.data.annotation.Id;

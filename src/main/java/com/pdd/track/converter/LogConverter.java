@@ -1,8 +1,8 @@
 package com.pdd.track.converter;
 
-import com.pdd.track.dto.LogItemDto;
-import com.pdd.track.entity.LogEntity;
-import com.pdd.track.model.LogItem;
+import com.pdd.track.dto.DEL_LogItemDto;
+import com.pdd.track.entity.DEL_LogEntity;
+import com.pdd.track.model.DEL_LogItem;
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -12,7 +12,7 @@ import org.springframework.util.Assert;
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 public class LogConverter {
 
-    public static void populateEntity(final LogEntity entity, final LogItem model) {
+    public static void populateEntity(final DEL_LogEntity entity, final DEL_LogItem model) {
         Assert.notNull(entity, "Entity must not nbe null");
         Assert.notNull(model, "Model must not nbe null");
 
@@ -20,10 +20,10 @@ public class LogConverter {
         entity.setValue(model.getValue());
     }
 
-    public static LogItem toModel(final LogEntity entity) {
+    public static DEL_LogItem toModel(final DEL_LogEntity entity) {
         Assert.notNull(entity, "Entity must not nbe null");
 
-        LogItem result = new LogItem();
+        DEL_LogItem result = new DEL_LogItem();
         result.setId(entity.get_id());
         result.setField(entity.getField());
         result.setValue(entity.getValue());
@@ -32,10 +32,10 @@ public class LogConverter {
         return result;
     }
 
-    public static LogItem toModel(final LogItemDto dto) {
+    public static DEL_LogItem toModel(final DEL_LogItemDto dto) {
         Assert.notNull(dto, "DTO must not nbe null");
 
-        LogItem result = new LogItem();
+        DEL_LogItem result = new DEL_LogItem();
         result.setId(dto.getId());
         result.setField(dto.getField());
         result.setValue(dto.getValue());
@@ -44,10 +44,10 @@ public class LogConverter {
         return result;
     }
 
-    public static LogItemDto toDto(final LogItem model) {
+    public static DEL_LogItemDto toDto(final DEL_LogItem model) {
         Assert.notNull(model, "Model must not nbe null");
 
-        LogItemDto result = new LogItemDto();
+        DEL_LogItemDto result = new DEL_LogItemDto();
         result.setId(model.getId());
         result.setField(model.getField());
         result.setValue(model.getValue());

@@ -8,7 +8,7 @@ import java.time.LocalDateTime;
 
 @Data
 @Document(collection = "pdd.track.collection")
-public class LogEntity {
+public class DEL_LogEntity {
     @Id
     private String _id;
     private String field;

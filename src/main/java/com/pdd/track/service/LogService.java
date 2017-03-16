@@ -1,13 +1,13 @@
 package com.pdd.track.service;
 
 
-import com.pdd.track.model.LogItem;
+import com.pdd.track.model.DEL_LogItem;
 
 import java.util.List;
 
 public interface LogService {
 
-    List<LogItem> getAll();
+    List<DEL_LogItem> getAll();
 
-    LogItem createLogRecord(final LogItem logItem);
+    DEL_LogItem createLogRecord(final DEL_LogItem logItem);
 }

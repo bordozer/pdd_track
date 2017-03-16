@@ -10,7 +10,7 @@ import lombok.Data;
 import java.time.LocalDateTime;
 
 @Data
-public class LogItemDto {
+public class DEL_LogItemDto {
     private String id;
     private String field;
     private String value;

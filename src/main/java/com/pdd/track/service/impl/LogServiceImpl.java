@@ -1,8 +1,8 @@
 package com.pdd.track.service.impl;
 
 import com.pdd.track.converter.LogConverter;
-import com.pdd.track.entity.LogEntity;
-import com.pdd.track.model.LogItem;
+import com.pdd.track.entity.DEL_LogEntity;
+import com.pdd.track.model.DEL_LogItem;
 import com.pdd.track.repository.LogRepository;
 import com.pdd.track.service.LogService;
 import lombok.extern.slf4j.Slf4j;
@@ -21,7 +21,7 @@ public class LogServiceImpl implements LogService {
     private LogRepository logRepository;
 
     @Override
-    public List<LogItem> getAll() {
+    public List<DEL_LogItem> getAll() {
         LOGGER.info("About to fetch log items");
 
         return logRepository.findAll().stream()
@@ -30,10 +30,10 @@ public class LogServiceImpl implements LogService {
     }
 
     @Override
-    public LogItem createLogRecord(final LogItem logItem) {
+    public DEL_LogItem createLogRecord(final DEL_LogItem logItem) {
         LOGGER.info("About to create log item: {}", logItem);
 
-        LogEntity entity = new LogEntity();
+        DEL_LogEntity entity = new DEL_LogEntity();
         entity.setTime(LocalDateTime.now());
 
         LogConverter.populateEntity(entity, logItem);
@@ -41,8 +41,8 @@ public class LogServiceImpl implements LogService {
         return getLogItem(logRepository.save(entity));
     }
 
-    private LogItem getLogItem(final LogEntity entity) {
-        LogItem logItem = LogConverter.toModel(entity);
+    private DEL_LogItem getLogItem(final DEL_LogEntity entity) {
+        DEL_LogItem logItem = LogConverter.toModel(entity);
         LOGGER.info("Log item: {}", logItem);
         return logItem;
     }
