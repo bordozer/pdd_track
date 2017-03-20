@@ -8,7 +8,8 @@ import lombok.NoArgsConstructor;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class DrivingEvent extends TimelineEvent {
+public abstract class AbstractDrivingEvent extends TimelineEvent {
+
     private int duration; // minutes
 
     @Override

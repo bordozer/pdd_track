@@ -7,6 +7,6 @@ import lombok.NoArgsConstructor;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class SchoolTimelineItem {
+public class StudyingTimelineItem {
     private TimelineItem timelineItems;
 }

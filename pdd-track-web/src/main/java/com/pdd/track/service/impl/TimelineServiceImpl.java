@@ -23,4 +23,9 @@ public class TimelineServiceImpl implements TimelineService {
     public UserStudyTimelineEntity create(final UserStudyTimelineEntity entity) {
         return timelineRepository.save(entity);
     }
+
+    @Override
+    public void deleteAll() {
+        timelineRepository.deleteAll();
+    }
 }

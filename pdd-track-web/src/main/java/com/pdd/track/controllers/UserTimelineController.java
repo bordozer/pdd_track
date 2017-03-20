@@ -5,13 +5,13 @@ import com.pdd.track.entity.UserStudyTimelineEntity;
 import com.pdd.track.model.Gender;
 import com.pdd.track.model.PddSection;
 import com.pdd.track.model.PddSectionTimelineItem;
-import com.pdd.track.model.SchoolTimelineItem;
+import com.pdd.track.model.StudyingTimelineItem;
 import com.pdd.track.model.Student;
 import com.pdd.track.model.TimelineItem;
-import com.pdd.track.model.events.DrivingEvent;
 import com.pdd.track.model.events.LectureEvent;
 import com.pdd.track.model.events.PddSectionStudy;
 import com.pdd.track.model.events.PddSectionTesting;
+import com.pdd.track.model.events.SchoolDrivingEvent;
 import com.pdd.track.service.TimelineService;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -36,22 +36,29 @@ public class UserTimelineController {
     }
 
     // TODO: for dev purposes only
-    @RequestMapping(method = RequestMethod.PUT, value = "/add/")
+    @RequestMapping(method = RequestMethod.PUT, value = "/data-create/")
     public UserStudyTimelineEntity createLogRecord() {
+        timelineService.deleteAll();
         return timelineService.create(constructUserStudyTimelineEntity());
     }
 
     private UserStudyTimelineEntity constructUserStudyTimelineEntity() {
         UserStudyTimelineEntity entity = new UserStudyTimelineEntity();
         entity.setStudent(STUDENT);
+        entity.setStudyingTimelineItems(constructStudyingTimelineItems());
         entity.setPddSectionTimelineItems(constructPddSectionTimelineItems());
-        entity.setSchoolTimelineItems(constructTimelineItems());
         return entity;
     }
 
-    private List<SchoolTimelineItem> constructTimelineItems() {
-        TimelineItem driving1 = new TimelineItem(LocalDate.of(2017, 3, 17), new DrivingEvent(50));
-        return Lists.newArrayList(new SchoolTimelineItem(driving1));
+    private List<StudyingTimelineItem> constructStudyingTimelineItems() {
+        TimelineItem schoolDriving1 = new TimelineItem(LocalDate.of(2017, 3, 17), new SchoolDrivingEvent(50));
+        TimelineItem additionalDriving1 = new TimelineItem(LocalDate.of(2017, 3, 18), new SchoolDrivingEvent(90));
+        TimelineItem additionalDriving2 = new TimelineItem(LocalDate.of(2017, 3, 19), new SchoolDrivingEvent(90));
+        return Lists.newArrayList(
+                new StudyingTimelineItem(schoolDriving1),
+                new StudyingTimelineItem(additionalDriving1),
+                new StudyingTimelineItem(additionalDriving2)
+        );
     }
 
     private List<PddSectionTimelineItem> constructPddSectionTimelineItems() {

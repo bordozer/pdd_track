@@ -9,4 +9,6 @@ public interface TimelineService {
     List<UserStudyTimelineEntity> getAll(String userKey);
 
     UserStudyTimelineEntity create(UserStudyTimelineEntity entity);
+
+    void deleteAll();
 }
