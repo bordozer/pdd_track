@@ -5,8 +5,10 @@ import com.pdd.track.entity.UserStudyTimelineEntity;
 import com.pdd.track.model.Gender;
 import com.pdd.track.model.PddSection;
 import com.pdd.track.model.PddSectionTimelineItem;
+import com.pdd.track.model.SchoolTimelineItem;
 import com.pdd.track.model.Student;
 import com.pdd.track.model.TimelineItem;
+import com.pdd.track.model.events.DrivingEvent;
 import com.pdd.track.model.events.LectureEvent;
 import com.pdd.track.model.events.PddSectionStudy;
 import com.pdd.track.model.events.PddSectionTesting;
@@ -39,29 +41,23 @@ public class UserTimelineController {
         return timelineService.create(constructUserStudyTimelineEntity());
     }
 
-    private List<TimelineItem> constructTimelineItems() {
-        TimelineItem lecture1 = new TimelineItem();
-        lecture1.setDate(LocalDate.of(2017, 3, 4));
-        lecture1.setEvent(new LectureEvent());
+    private UserStudyTimelineEntity constructUserStudyTimelineEntity() {
+        UserStudyTimelineEntity entity = new UserStudyTimelineEntity();
+        entity.setStudent(STUDENT);
+        entity.setPddSectionTimelineItems(constructPddSectionTimelineItems());
+        entity.setSchoolTimelineItems(constructTimelineItems());
+        return entity;
+    }
 
-        TimelineItem lecture2 = new TimelineItem();
-        lecture1.setDate(LocalDate.of(2017, 3, 5));
-        lecture1.setEvent(new LectureEvent());
-
-        TimelineItem study1 = new TimelineItem();
-        lecture1.setDate(LocalDate.of(2017, 3, 6));
-        lecture1.setEvent(new PddSectionStudy());
-
-        TimelineItem testing1 = new TimelineItem();
-        lecture1.setDate(LocalDate.of(2017, 3, 6));
-        lecture1.setEvent(new PddSectionTesting(17, 20, false));
-
-        return Lists.newArrayList(lecture1, lecture2, study1, testing1);
+    private List<SchoolTimelineItem> constructTimelineItems() {
+        TimelineItem driving1 = new TimelineItem(LocalDate.of(2017, 3, 17), new DrivingEvent(50));
+        return Lists.newArrayList(new SchoolTimelineItem(driving1));
     }
 
     private List<PddSectionTimelineItem> constructPddSectionTimelineItems() {
         PddSection pddSection = new PddSection();
         pddSection.setKey("qwe-asd-zxc");
+        pddSection.setNumber("1");
         pddSection.setName("General");
         pddSection.setQuestionsCount(116);
 
@@ -75,13 +71,5 @@ public class UserTimelineController {
         sectionTimelineItem.setTimelineItems(Lists.newArrayList(lecture1, lecture2, study1, testing1));
 
         return Lists.newArrayList(sectionTimelineItem);
-    }
-
-    private UserStudyTimelineEntity constructUserStudyTimelineEntity() {
-        UserStudyTimelineEntity entity = new UserStudyTimelineEntity();
-        entity.setStudent(STUDENT);
-        entity.setPddSectionTimelineItems(constructPddSectionTimelineItems());
-        entity.setTimelineItems(constructTimelineItems());
-        return entity;
     }
 }

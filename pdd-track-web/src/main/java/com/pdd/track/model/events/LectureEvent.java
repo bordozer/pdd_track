@@ -4,7 +4,7 @@ import com.pdd.track.model.TimeLineItemEventType;
 import lombok.Data;
 
 @Data
-public class LectureEvent extends TimelineEvent {
+public class LectureEvent extends PddSectionTimelineEvent {
 
     @Override
     public TimeLineItemEventType getEventType() {
