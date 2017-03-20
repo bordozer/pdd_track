@@ -3,11 +3,43 @@
 <head>
   <title>PDD Study Tracking system</title>
   <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+
+  <link rel="stylesheet" type="text/css" href="/resources/bower_components/jquery-ui/themes/smoothness/jquery-ui.min.css" />
+  <link rel="stylesheet" type="text/css" href="/resources/bower_components/bootstrap/dist/css/bootstrap.min.css" />
+  <link rel="stylesheet" type="text/css" href="/resources/bower_components/bootstrap/dist/css/bootstrap-theme.min.css" />
+  <link rel="stylesheet" type="text/css" href="/resources/bower_components/fontawesome/css/font-awesome.min.css" />
+
+  <script type="text/javascript" src="/resources/js/require-config.js"></script>
+  <script type="text/javascript" src="/resources/bower_components/requirejs/require.js"></script>
 </head>
 <body>
-  <h3>PDD Study Tracking system</h3>
-  <p th:text="'Hello, ' + ${userName} + '!'" />
-  <div class="js-pdd-sections-grid"></div>
+
+  <div class="container-fluid">
+    <div class="page-header" style="padding-left: 15px; margin: 0;">
+
+      <div class="row">
+
+        <div class="col-lg-2 fa fa-car fa-5x"></div>
+
+        <div class="col-lg-10">
+          <h1 class="js-project-name">PDD Study Tracking system</h1>
+        </div>
+
+      </div>
+
+    </div>
+
+    <div class="row" style="margin-top: 50px;">
+
+      <div class="col-lg-12">
+        <p th:text="'Hello, ' + ${userName} + '!'" />
+
+        <div class="js-pdd-sections-grid"></div>
+
+      </div>
+
+    </div>
+  </div>
 
   <script th:inline="javascript">
     /*<![CDATA[*/
