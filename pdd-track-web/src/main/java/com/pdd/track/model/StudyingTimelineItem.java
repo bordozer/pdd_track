@@ -8,5 +8,5 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class StudyingTimelineItem {
-    private TimelineItem timelineItems;
+    private TimelineItem timelineItem;
 }

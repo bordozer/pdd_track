@@ -5,15 +5,16 @@ import com.pdd.track.dto.DrivingDto.CarDto;
 import com.pdd.track.dto.DrivingDto.InstructorDto;
 import com.pdd.track.dto.PddSectionDto;
 import com.pdd.track.dto.TestingDto;
+import com.pdd.track.dto.TimelineDayColumn;
 import com.pdd.track.dto.TimelineDayDto;
 import com.pdd.track.dto.TimelineDayEventsDto;
-import com.pdd.track.dto.TimelineDayColumn;
 import com.pdd.track.dto.TimelineDto;
 import com.pdd.track.dto.TimelineItemDto;
 import com.pdd.track.entity.UserStudyTimelineEntity;
 import com.pdd.track.model.Car;
 import com.pdd.track.model.Instructor;
 import com.pdd.track.model.PddSection;
+import com.pdd.track.model.StudyingTimelineItem;
 import com.pdd.track.model.Testing;
 import com.pdd.track.model.TimelineItem;
 import com.pdd.track.model.events.PddSectionTesting;
@@ -61,19 +62,21 @@ public class TimelineConverter {
                 .map(sectionDto -> {
                     TimelineItemDto item = new TimelineItemDto();
                     item.setPddSection(sectionDto);
-                    item.setCells(convertCells(sectionDto.getKey(), entity, dayColumns));
+                    item.setCells(convertTimelineDays(sectionDto.getKey(), entity, dayColumns));
                     return item;
                 })
                 .collect(Collectors.toList());
     }
 
-    private static List<TimelineDayDto> convertCells(final String key, final UserStudyTimelineEntity entity, final List<TimelineDayColumn> dayColumns) {
+    private static List<TimelineDayDto> convertTimelineDays(final String key, final UserStudyTimelineEntity entity, final List<TimelineDayColumn> dayColumns) {
 
         List<TimelineItem> pddSectionTimelineItems = entity.getPddSectionTimelineItems().stream()
                 .filter(section -> section.getPddSection().getKey().equals(key))
                 .findFirst()
                 .orElseThrow(IllegalArgumentException::new)
                 .getTimelineItems();
+
+        List<StudyingTimelineItem> studyingTimelineItems = entity.getStudyingTimelineItems();
 
 
         List<TimelineDayDto> result = new ArrayList<>();
@@ -83,7 +86,11 @@ public class TimelineConverter {
 
                     TimelineDayDto cell = new TimelineDayDto();
                     cell.setDayIndex(getDayIndex(timelineDate, dayColumns));
-                    cell.setCellEvents(convertDayEvents(timelineDate, pddSectionTimelineItems));
+
+                    TimelineDayEventsDto dayEvents = new TimelineDayEventsDto();
+                    populatePddSectionDayEvents(timelineDate, pddSectionTimelineItems, dayEvents);
+                    populateGlobalDayEvents(timelineDate, studyingTimelineItems, dayEvents);
+                    cell.setCellEvents(dayEvents);
 
                     return cell;
                 })
@@ -93,8 +100,25 @@ public class TimelineConverter {
         return result;
     }
 
-    private static TimelineDayEventsDto convertDayEvents(final LocalDate timelineDate, final List<TimelineItem> pddSectionTimelineItems) {
-        TimelineDayEventsDto dayEvents = new TimelineDayEventsDto();
+    private static void populateGlobalDayEvents(final LocalDate timelineDate, final List<StudyingTimelineItem> studyingTimelineItems, final TimelineDayEventsDto dayEvents) {
+        studyingTimelineItems.stream()
+                .filter(timelineItem -> timelineItem.getTimelineItem().getDate().equals(timelineDate))
+                .forEach(timelineItem -> {
+                    TimelineEvent event = timelineItem.getTimelineItem().getEvent();
+                    switch (event.getEventType()) {
+                        case DRIVING:
+                            SchoolDrivingEvent schoolDrivingEvent = (SchoolDrivingEvent) event;
+                            CarDto carDto = convertCar(schoolDrivingEvent.getCar());
+                            InstructorDto instructor = convertInstructor(schoolDrivingEvent.getInstructor());
+                            dayEvents.setDriving(new DrivingDto(carDto, instructor, schoolDrivingEvent.getDuration()));
+                            break;
+                        default:
+                            throw new IllegalStateException(String.format("Not implemented yet: %s", event));
+                    }
+                });
+    }
+
+    private static void populatePddSectionDayEvents(final LocalDate timelineDate, final List<TimelineItem> pddSectionTimelineItems, final TimelineDayEventsDto dayEvents) {
         pddSectionTimelineItems.stream()
                 .filter(timelineItem -> timelineItem.getDate().equals(timelineDate))
                 .forEach(timelineItem -> {
@@ -102,12 +126,6 @@ public class TimelineConverter {
                     switch (event.getEventType()) {
                         case LECTURE:
                             dayEvents.setLecture(true);
-                            break;
-                        case DRIVING:
-                            SchoolDrivingEvent schoolDrivingEvent = (SchoolDrivingEvent) event;
-                            CarDto carDto = convertCar(schoolDrivingEvent.getCar());
-                            InstructorDto instructor = convertInstructor(schoolDrivingEvent.getInstructor());
-                            dayEvents.setDriving(new DrivingDto(carDto, instructor, schoolDrivingEvent.getDuration()));
                             break;
                         case STUDY:
                             dayEvents.setStudy(true);
@@ -117,10 +135,9 @@ public class TimelineConverter {
                             dayEvents.setTesting(convertTestingEvent(pddSectionTestingEvent.getTesting()));
                             break;
                         default:
-                            break;
+                            throw new IllegalStateException(String.format("Not implemented yet: %s", event));
                     }
                 });
-        return dayEvents;
     }
 
     private static TestingDto convertTestingEvent(final Testing testing) {
