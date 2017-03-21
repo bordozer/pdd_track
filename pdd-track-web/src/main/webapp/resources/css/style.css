@@ -13,6 +13,11 @@
     height: 100%;
 }
 
+.col-fixed-80 {
+    width: 80px;
+    height: 100%;
+}
+
 .col-fixed-160 {
     width: 160px;
     height: 100%;
@@ -28,8 +33,9 @@
     float: none;
 }
 
+/*
 .vertical-text{
     width:1px;
     word-wrap: break-word;
     white-space:pre-wrap;
-}
+}*/
