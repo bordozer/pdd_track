@@ -69,6 +69,9 @@ public class DataGenerationServiceImpl implements DataGenerationService {
     private static final PddSection PDD_SECTION_33 = new PddSection("1", "General", 116);
     private static final PddSection PDD_SECTION_34 = new PddSection("1", "General", 116);
 
+    public static final LocalDate STUDY_START_DAY = LocalDate.of(2017, 2, 25);
+    public static final LocalDate STUDY_END_DAY = LocalDate.of(2017, 4, 23);
+
     @Inject
     private TimelineService timelineService;
 
