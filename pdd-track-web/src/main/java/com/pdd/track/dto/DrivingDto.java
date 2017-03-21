@@ -11,6 +11,7 @@ public class DrivingDto {
     private CarDto car;
     private InstructorDto instructor;
     private int duration; // minutes
+    private boolean additionalDriving;
 
     @Data
     @NoArgsConstructor

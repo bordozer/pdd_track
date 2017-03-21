@@ -17,8 +17,9 @@ import com.pdd.track.model.PddSection;
 import com.pdd.track.model.StudyingTimelineItem;
 import com.pdd.track.model.Testing;
 import com.pdd.track.model.TimelineItem;
+import com.pdd.track.model.events.AbstractDrivingEvent;
+import com.pdd.track.model.events.AdditionalDrivingEvent;
 import com.pdd.track.model.events.PddSectionTesting;
-import com.pdd.track.model.events.SchoolDrivingEvent;
 import com.pdd.track.model.events.TimelineEvent;
 import com.pdd.track.service.impl.DataGenerationServiceImpl;
 import lombok.AccessLevel;
@@ -76,26 +77,32 @@ public class TimelineConverter {
                 .orElseThrow(IllegalArgumentException::new)
                 .getTimelineItems();
 
-        List<StudyingTimelineItem> studyingTimelineItems = entity.getStudyingTimelineItems();
-
-
         List<TimelineDayDto> result = new ArrayList<>();
         result.addAll(pddSectionTimelineItems.stream()
                 .map(timelineItem -> {
                     LocalDate timelineDate = timelineItem.getDate();
 
                     TimelineDayDto cell = new TimelineDayDto();
-                    cell.setDayIndex(getDayIndex(timelineDate, dayColumns));
+                    cell.setDayIndex(getDayIndexByDate(timelineDate, dayColumns));
 
                     TimelineDayEventsDto dayEvents = new TimelineDayEventsDto();
                     populatePddSectionDayEvents(timelineDate, pddSectionTimelineItems, dayEvents);
-                    populateGlobalDayEvents(timelineDate, studyingTimelineItems, dayEvents);
                     cell.setCellEvents(dayEvents);
 
                     return cell;
                 })
                 .collect(Collectors.toList())
         );
+
+        List<StudyingTimelineItem> studyingTimelineItems = entity.getStudyingTimelineItems();
+        studyingTimelineItems.stream()
+                .forEach(timelineItem -> {
+                    TimelineDayDto timelineDayDto = result.stream()
+                            .filter(timelineDay -> timelineDay.getDayIndex() == getDayDateByIndex(timelineDay.getDayIndex(), dayColumns))
+                            .findFirst()
+                            .orElseThrow(IllegalStateException::new);
+                    populateGlobalDayEvents(timelineItem.getTimelineItem().getDate(), studyingTimelineItems, timelineDayDto.getCellEvents());
+                });
 
         return result;
     }
@@ -107,10 +114,11 @@ public class TimelineConverter {
                     TimelineEvent event = timelineItem.getTimelineItem().getEvent();
                     switch (event.getEventType()) {
                         case DRIVING:
-                            SchoolDrivingEvent schoolDrivingEvent = (SchoolDrivingEvent) event;
+                            AbstractDrivingEvent schoolDrivingEvent = (AbstractDrivingEvent) event;
                             CarDto carDto = convertCar(schoolDrivingEvent.getCar());
                             InstructorDto instructor = convertInstructor(schoolDrivingEvent.getInstructor());
-                            dayEvents.setDriving(new DrivingDto(carDto, instructor, schoolDrivingEvent.getDuration()));
+                            boolean additionalDriving = event instanceof AdditionalDrivingEvent;
+                            dayEvents.setDriving(new DrivingDto(carDto, instructor, schoolDrivingEvent.getDuration(), additionalDriving));
                             break;
                         default:
                             throw new IllegalStateException(String.format("Not implemented yet: %s", event));
@@ -152,9 +160,17 @@ public class TimelineConverter {
         return new InstructorDto(instructor.getName());
     }
 
-    private static int getDayIndex(final LocalDate date, final List<TimelineDayColumn> dayColumns) {
+    private static int getDayIndexByDate(final LocalDate date, final List<TimelineDayColumn> dayColumns) {
         return dayColumns.stream()
                 .filter(dayColumn -> dayColumn.getDate().isEqual(date))
+                .findFirst()
+                .orElseThrow(IllegalArgumentException::new)
+                .getIndex();
+    }
+
+    private static int getDayDateByIndex(final int dayIndex, final List<TimelineDayColumn> dayColumns) {
+        return dayColumns.stream()
+                .filter(dayColumn -> dayColumn.getIndex() == dayIndex)
                 .findFirst()
                 .orElseThrow(IllegalArgumentException::new)
                 .getIndex();
