@@ -5,7 +5,7 @@ import com.pdd.track.dto.TimelineDto;
 import com.pdd.track.entity.UserStudyTimelineEntity;
 import com.pdd.track.service.DataGenerationService;
 import com.pdd.track.service.TimelineService;
-import com.pdd.track.service.impl.DataGenerationServiceImpl;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
@@ -15,8 +15,8 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 @RestController
-@RequestMapping(value = "/timeline")
-public class UserTimelineController {
+@RequestMapping(value = "/student/timeline")
+public class StudentTimelineController {
 
     @Inject
     private TimelineService timelineService;
@@ -24,9 +24,9 @@ public class UserTimelineController {
     @Inject
     private DataGenerationService dataGenerationService;
 
-    @RequestMapping(method = RequestMethod.GET, value = "/")
-    public List<TimelineDto> getAll() {
-        return timelineService.getAll(DataGenerationServiceImpl.STUDENT.getKey()).stream()
+    @RequestMapping(method = RequestMethod.GET, value = "/{userKey}/")
+    public List<TimelineDto> getStudentTimeline(@PathVariable("userKey") final String userKey) {
+        return timelineService.getAll(userKey).stream()
                 .map(TimelineConverter::toDto)
                 .collect(Collectors.toList());
     }
