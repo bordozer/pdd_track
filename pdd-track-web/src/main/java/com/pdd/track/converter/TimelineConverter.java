@@ -14,6 +14,7 @@ import com.pdd.track.entity.UserStudyTimelineEntity;
 import com.pdd.track.model.Car;
 import com.pdd.track.model.Instructor;
 import com.pdd.track.model.PddSection;
+import com.pdd.track.model.PddSectionTimelineItem;
 import com.pdd.track.model.StudyingTimelineItem;
 import com.pdd.track.model.Testing;
 import com.pdd.track.model.TimelineItem;
@@ -34,7 +35,7 @@ import java.util.stream.Collectors;
 public class TimelineConverter {
 
     public static TimelineDto toDto(final UserStudyTimelineEntity entity) {
-        List<TimelineDayColumn> dayColumns = getColumns();
+        List<TimelineDayColumn> dayColumns = getDayColumns();
         TimelineDto result = new TimelineDto();
         result.setDayColumns(dayColumns);
         result.setItems(convertItems(entity, dayColumns));
@@ -42,7 +43,7 @@ public class TimelineConverter {
         return result;
     }
 
-    private static List<TimelineDayColumn> getColumns() {
+    private static List<TimelineDayColumn> getDayColumns() {
         int index = 1;
         LocalDate currentDay = DataGenerationServiceImpl.STUDY_START_DAY;
         List<TimelineDayColumn> result = new ArrayList<>();
@@ -59,24 +60,18 @@ public class TimelineConverter {
     }
 
     private static List<TimelineItemDto> convertItems(final UserStudyTimelineEntity entity, final List<TimelineDayColumn> dayColumns) {
-        return convertPddSections(entity).stream()
+        return groupPddSections(entity.getPddSectionTimelineItems()).stream()
                 .map(sectionDto -> {
                     TimelineItemDto item = new TimelineItemDto();
                     item.setPddSection(sectionDto);
-                    item.setCells(convertTimelineDays(sectionDto.getKey(), entity, dayColumns));
+                    item.setTimelineDays(convertTimelineDaysForPddSection(sectionDto.getKey(), entity, dayColumns));
                     return item;
                 })
                 .collect(Collectors.toList());
     }
 
-    private static List<TimelineDayDto> convertTimelineDays(final String pddSectionKey, final UserStudyTimelineEntity entity, final List<TimelineDayColumn> dayColumns) {
-
-        List<TimelineItem> pddSectionTimelineItems = entity.getPddSectionTimelineItems().stream()
-                .filter(section -> section.getPddSection().getKey().equals(pddSectionKey))
-                .findFirst()
-                .orElseThrow(IllegalArgumentException::new)
-                .getTimelineItems();
-
+    private static List<TimelineDayDto> convertTimelineDaysForPddSection(final String pddSectionKey, final UserStudyTimelineEntity entity, final List<TimelineDayColumn> dayColumns) {
+        List<TimelineItem> pddSectionTimelineItems = filterTimelineItemsByPddSectionKey(pddSectionKey, entity.getPddSectionTimelineItems());
         return dayColumns.stream()
                 .map(dayColumn -> {
                     TimelineDayDto timelineDay = new TimelineDayDto();
@@ -91,6 +86,14 @@ public class TimelineConverter {
                     return timelineDay;
                 })
                 .collect(Collectors.toList());
+    }
+
+    private static List<TimelineItem> filterTimelineItemsByPddSectionKey(final String pddSectionKey, final List<PddSectionTimelineItem> pddSectionTimelineItems) {
+        return pddSectionTimelineItems.stream()
+                .filter(section -> section.getPddSection().getKey().equals(pddSectionKey))
+                .findFirst()
+                .orElseThrow(IllegalArgumentException::new)
+                .getTimelineItems();
     }
 
     private static void populateGlobalDayEvents(final LocalDate timelineDate, final List<StudyingTimelineItem> studyingTimelineItems, final TimelineDayEventsDto dayEvents) {
@@ -150,8 +153,8 @@ public class TimelineConverter {
         return new InstructorDto(instructor.getName());
     }
 
-    private static List<PddSectionDto> convertPddSections(final UserStudyTimelineEntity entity) {
-        return entity.getPddSectionTimelineItems().stream()
+    private static List<PddSectionDto> groupPddSections(final List<PddSectionTimelineItem> pddSectionTimelineItems) {
+        return pddSectionTimelineItems.stream()
                 .map(section -> {
                     PddSection pddSection = section.getPddSection();
                     PddSectionDto dto = new PddSectionDto();
