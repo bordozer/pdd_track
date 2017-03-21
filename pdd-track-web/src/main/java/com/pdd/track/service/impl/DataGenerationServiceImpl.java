@@ -29,7 +29,7 @@ public class DataGenerationServiceImpl implements DataGenerationService {
     public static final Student STUDENT = Student.builder().key("qaz-wsx-edc").name("BorDark").gender(Gender.MALE).build(); // TODO: read user from context
 
     private static final Instructor SCHOOL_INSTRUCTOR = new Instructor("Sergei");
-    private static final Car SCHOOL_CAR = new Car("Toyota RAW4");
+    private static final Car SCHOOL_CAR = new Car("Toyota RAV4");
 
     private static final Instructor ADDITIONAL_INSTRUCTOR = new Instructor("Yuriy");
     private static final Car ADDITIONAL_CAR = new Car("Honda Accord");
@@ -90,7 +90,8 @@ public class DataGenerationServiceImpl implements DataGenerationService {
         return Lists.newArrayList(
                 new StudyingTimelineItem(new TimelineItem(LocalDate.of(2017, 3, 17), new SchoolDrivingEvent(SCHOOL_INSTRUCTOR, SCHOOL_CAR, 50))),
                 new StudyingTimelineItem(new TimelineItem(LocalDate.of(2017, 3, 18), new AdditionalDrivingEvent(ADDITIONAL_INSTRUCTOR, ADDITIONAL_CAR, 90))),
-                new StudyingTimelineItem(new TimelineItem(LocalDate.of(2017, 3, 19), new AdditionalDrivingEvent(ADDITIONAL_INSTRUCTOR, ADDITIONAL_CAR, 90)))
+                new StudyingTimelineItem(new TimelineItem(LocalDate.of(2017, 3, 19), new AdditionalDrivingEvent(ADDITIONAL_INSTRUCTOR, ADDITIONAL_CAR, 90))),
+                new StudyingTimelineItem(new TimelineItem(LocalDate.of(2017, 3, 21), new AdditionalDrivingEvent(SCHOOL_INSTRUCTOR, SCHOOL_CAR, 110)))
         );
     }
 
