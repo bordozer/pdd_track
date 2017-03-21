@@ -1,14 +1,12 @@
 package com.pdd.track.service;
 
-import com.pdd.track.entity.UserStudyTimelineEntity;
-
-import java.util.List;
+import com.pdd.track.entity.TimelineEntity;
 
 public interface TimelineService {
 
-    List<UserStudyTimelineEntity> getAll(String userKey);
+    TimelineEntity getForStudent(String studentKey);
 
-    UserStudyTimelineEntity create(UserStudyTimelineEntity entity);
+    TimelineEntity create(TimelineEntity entity);
 
     void deleteAll();
 }

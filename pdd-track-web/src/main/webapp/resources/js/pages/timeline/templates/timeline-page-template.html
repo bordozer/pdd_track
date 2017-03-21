@@ -1,1 +1,10 @@
-timeline page
+<div class="row row-fluid">
+    <div class="col-xs-12">
+        <div class="col-xs-1 col-fixed-60"></div>
+        <div class="col-xs-1 col-fixed-60"></div>
+        <div class="col-xs-1 col-fixed-160"></div>
+        <% _.each(dayColumns, function(dayColumn) { %>
+            <div class="col-xs-1 col-fixed-30 text-center vertical-text"><small><%=dayColumn.index%><br /><%=dayColumn.date%></small></div>
+        <% }) %>
+    </div>
+</div>

@@ -1,12 +1,11 @@
 package com.pdd.track.service.impl;
 
-import com.pdd.track.entity.UserStudyTimelineEntity;
+import com.pdd.track.entity.TimelineEntity;
 import com.pdd.track.repository.TimelineRepository;
 import com.pdd.track.service.TimelineService;
 import org.springframework.stereotype.Service;
 
 import javax.inject.Inject;
-import java.util.List;
 
 @Service
 public class TimelineServiceImpl implements TimelineService {
@@ -15,12 +14,12 @@ public class TimelineServiceImpl implements TimelineService {
     private TimelineRepository timelineRepository;
 
     @Override
-    public List<UserStudyTimelineEntity> getAll(final String userKey) {
-        return timelineRepository.findAllByStudentKey(userKey);
+    public TimelineEntity getForStudent(final String studentKey) {
+        return timelineRepository.findOneByStudentKey(studentKey);
     }
 
     @Override
-    public UserStudyTimelineEntity create(final UserStudyTimelineEntity entity) {
+    public TimelineEntity create(final TimelineEntity entity) {
         return timelineRepository.save(entity);
     }
 

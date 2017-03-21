@@ -10,7 +10,7 @@ import com.pdd.track.dto.TimelineDayDto;
 import com.pdd.track.dto.TimelineDayEventsDto;
 import com.pdd.track.dto.TimelineDto;
 import com.pdd.track.dto.TimelineItemDto;
-import com.pdd.track.entity.UserStudyTimelineEntity;
+import com.pdd.track.entity.TimelineEntity;
 import com.pdd.track.model.Car;
 import com.pdd.track.model.Instructor;
 import com.pdd.track.model.PddSection;
@@ -34,7 +34,7 @@ import java.util.stream.Collectors;
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 public class TimelineConverter {
 
-    public static TimelineDto toDto(final UserStudyTimelineEntity entity) {
+    public static TimelineDto toDto(final TimelineEntity entity) {
         List<TimelineDayColumn> dayColumns = getDayColumns();
         TimelineDto result = new TimelineDto();
         result.setDayColumns(dayColumns);
@@ -59,7 +59,7 @@ public class TimelineConverter {
         return result;
     }
 
-    private static List<TimelineItemDto> convertItems(final UserStudyTimelineEntity entity, final List<TimelineDayColumn> dayColumns) {
+    private static List<TimelineItemDto> convertItems(final TimelineEntity entity, final List<TimelineDayColumn> dayColumns) {
         return groupPddSections(entity.getPddSectionTimelineItems()).stream()
                 .map(sectionDto -> {
                     TimelineItemDto item = new TimelineItemDto();
@@ -70,7 +70,7 @@ public class TimelineConverter {
                 .collect(Collectors.toList());
     }
 
-    private static List<TimelineDayDto> convertTimelineDaysForPddSection(final String pddSectionKey, final UserStudyTimelineEntity entity, final List<TimelineDayColumn> dayColumns) {
+    private static List<TimelineDayDto> convertTimelineDaysForPddSection(final String pddSectionKey, final TimelineEntity entity, final List<TimelineDayColumn> dayColumns) {
         List<TimelineItem> pddSectionTimelineItems = filterTimelineItemsByPddSectionKey(pddSectionKey, entity.getPddSectionTimelineItems());
         return dayColumns.stream()
                 .map(dayColumn -> {

@@ -1,7 +1,7 @@
 package com.pdd.track.service.impl;
 
 import com.google.common.collect.Lists;
-import com.pdd.track.entity.UserStudyTimelineEntity;
+import com.pdd.track.entity.TimelineEntity;
 import com.pdd.track.model.Car;
 import com.pdd.track.model.Gender;
 import com.pdd.track.model.Instructor;
@@ -76,13 +76,13 @@ public class DataGenerationServiceImpl implements DataGenerationService {
     private TimelineService timelineService;
 
     @Override
-    public UserStudyTimelineEntity createData() {
+    public TimelineEntity createData() {
         timelineService.deleteAll();
         return timelineService.create(constructUserStudyTimelineEntity());
     }
 
-    private UserStudyTimelineEntity constructUserStudyTimelineEntity() {
-        UserStudyTimelineEntity entity = new UserStudyTimelineEntity();
+    private TimelineEntity constructUserStudyTimelineEntity() {
+        TimelineEntity entity = new TimelineEntity();
         entity.setStudent(STUDENT);
         entity.setStudyingTimelineItems(constructStudyingTimelineItems());
         entity.setPddSectionTimelineItems(constructPddSectionTimelineItems());

@@ -10,7 +10,7 @@ import java.util.List;
 
 @Data
 @Document(collection = "PDD.TRACK.STUDYING_TIMELINE")
-public class UserStudyTimelineEntity {
+public class TimelineEntity {
     private String _id;
     private Student student;
     private List<StudyingTimelineItem> studyingTimelineItems;

@@ -1,0 +1,35 @@
+.red-border {
+    border-color: red;
+    border-width: 1px;
+}
+
+.col-fixed-30 {
+    width: 30px;
+    height: 100%;
+}
+
+.col-fixed-60 {
+    width: 60px;
+    height: 100%;
+}
+
+.col-fixed-160 {
+    width: 160px;
+    height: 100%;
+}
+
+.row-fluid {
+    overflow: auto;
+    white-space: nowrap;
+}
+
+.row-fluid .col-xs-1 {
+    display: inline-block;
+    float: none;
+}
+
+.vertical-text{
+    width:1px;
+    word-wrap: break-word;
+    white-space:pre-wrap;
+}

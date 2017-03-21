@@ -1,8 +1,8 @@
 package com.pdd.track.service;
 
-import com.pdd.track.entity.UserStudyTimelineEntity;
+import com.pdd.track.entity.TimelineEntity;
 
 public interface DataGenerationService {
 
-    UserStudyTimelineEntity createData();
+    TimelineEntity createData();
 }
