@@ -1,4 +1,4 @@
-package com.pdd.track.controllers;
+package com.pdd.track.controllers.rest;
 
 import com.pdd.track.entity.UserStudyTimelineEntity;
 import com.pdd.track.service.DataGenerationService;

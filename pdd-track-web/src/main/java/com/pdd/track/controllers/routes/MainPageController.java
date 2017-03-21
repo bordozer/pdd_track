@@ -1,4 +1,4 @@
-package com.pdd.track.controllers;
+package com.pdd.track.controllers.routes;
 
 import com.pdd.track.service.impl.DataGenerationServiceImpl;
 import org.springframework.stereotype.Controller;
