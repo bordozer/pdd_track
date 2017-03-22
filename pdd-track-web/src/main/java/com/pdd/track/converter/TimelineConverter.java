@@ -1,10 +1,12 @@
 package com.pdd.track.converter;
 
+import com.google.common.collect.Lists;
 import com.pdd.track.dto.DrivingDto;
 import com.pdd.track.dto.DrivingDto.CarDto;
 import com.pdd.track.dto.DrivingDto.InstructorDto;
 import com.pdd.track.dto.PddSectionDto;
 import com.pdd.track.dto.TestingDto;
+import com.pdd.track.dto.TimeLineDayHintDto;
 import com.pdd.track.dto.TimelineDayColumn;
 import com.pdd.track.dto.TimelineDayColumnEventsDto;
 import com.pdd.track.dto.TimelineDayDto;
@@ -20,6 +22,7 @@ import com.pdd.track.model.PddSection;
 import com.pdd.track.model.PddSectionTimelineItem;
 import com.pdd.track.model.StudyingTimelineItem;
 import com.pdd.track.model.Testing;
+import com.pdd.track.model.TimeLineDayHintType;
 import com.pdd.track.model.TimeLineItemEventType;
 import com.pdd.track.model.TimelineItem;
 import com.pdd.track.model.events.AbstractDrivingEvent;
@@ -32,13 +35,18 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import java.text.DecimalFormat;
+import java.time.Duration;
 import java.time.LocalDate;
+import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 public class TimelineConverter {
+
+    private static final LocalDate TODAY = LocalDate.now();
+    public static final int SECTION_TOO_LONG_WITHOUT_REPEAT_DAYS = 5;
 
     public static TimelineDto toDto(final TimelineEntity entity) {
         TimelineDto result = new TimelineDto();
@@ -107,7 +115,6 @@ public class TimelineConverter {
 
     private static List<TimelineDayColumn> getDayColumns() {
         int index = 1;
-        LocalDate today = LocalDate.now();
         LocalDate currentDay = DataGenerationServiceImpl.STUDY_START_DAY;
         List<TimelineDayColumn> result = new ArrayList<>();
         while (currentDay.isBefore(DataGenerationServiceImpl.STUDY_END_DAY.plusDays(1))) {
@@ -116,10 +123,10 @@ public class TimelineConverter {
             dayColumn.setDate(currentDay);
 
             TimelineDayColumnEventsDto columnEvents = new TimelineDayColumnEventsDto();
-            if (currentDay.isBefore(today)) {
+            if (currentDay.isBefore(TODAY)) {
                 columnEvents.setDayPassed(true);
             }
-            if (currentDay.equals(today)) {
+            if (currentDay.equals(TODAY)) {
                 columnEvents.setToday(true);
             }
             if (DataGenerationServiceImpl.LECTURE_WEEK_DAYS.contains(currentDay.getDayOfWeek())) {
@@ -166,6 +173,25 @@ public class TimelineConverter {
                     timelineItemSummary.setTestsAveragePercentageFormatted(formatDouble(averageTestingScore));
                     timelineItemSummary.setStudySuccess(averageTestingScore > 90);
                     tlItem.setTimelineItemSummary(timelineItemSummary);
+                });
+        result.stream()
+                .forEach(item -> {
+                    item.getTimelineDays().stream()
+                            .forEach(day -> {
+                                if (day.getDayDate().equals(TODAY)) {
+                                    TimelineItem pddSectionStudyEvent = getLastPddSectionEvent(item.getPddSection().getKey(), TimeLineItemEventType.STUDY, entity);
+                                    if (pddSectionStudyEvent == null) {
+                                        return;
+                                    }
+                                    TimelineItem lastTesting = getLastPddSectionEvent(item.getPddSection().getKey(), TimeLineItemEventType.TESTING, entity);
+                                    if (lastTesting == null) {
+                                        return;
+                                    }
+                                    if (ChronoUnit.DAYS.between(lastTesting.getDate(), TODAY) > SECTION_TOO_LONG_WITHOUT_REPEAT_DAYS) {
+                                        day.setDayHints(Lists.newArrayList(new TimeLineDayHintDto(TimeLineDayHintType.NEEDS_RESTUDY)));
+                                    }
+                                }
+                            });
                 });
         return result;
     }

@@ -14,4 +14,11 @@
     <strong class="fa fa-graduation-cap text-warning" title="Study"></strong>
 <% } %>
 
+<% if(dayEvents.dayHints && dayEvents.dayHints.length > 0) { %>
+    <% var dayHint = dayEvents.dayHints[0]%>
+    <small>
+        <strong class="text-danger fa fa-exclamation" title="Needs restudy"></strong>
+    </small>
+<% } %>
+
 &nbsp;
