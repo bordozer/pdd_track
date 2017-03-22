@@ -9,6 +9,7 @@ import java.util.List;
 public class TimelineDto {
     private List<TimelineDayColumn> dayColumns;
     private List<TimelineItemDto> items;
+    private List<TimelineDaySummaryDto> summaryColumns;
     private LocalDate startDate;
     private LocalDate endDate;
 }

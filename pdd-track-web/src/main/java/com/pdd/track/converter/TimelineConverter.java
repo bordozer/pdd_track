@@ -9,6 +9,7 @@ import com.pdd.track.dto.TimelineDayColumn;
 import com.pdd.track.dto.TimelineDayColumnEventsDto;
 import com.pdd.track.dto.TimelineDayDto;
 import com.pdd.track.dto.TimelineDayEventsDto;
+import com.pdd.track.dto.TimelineDaySummaryDto;
 import com.pdd.track.dto.TimelineDto;
 import com.pdd.track.dto.TimelineItemDto;
 import com.pdd.track.entity.TimelineEntity;
@@ -18,6 +19,7 @@ import com.pdd.track.model.PddSection;
 import com.pdd.track.model.PddSectionTimelineItem;
 import com.pdd.track.model.StudyingTimelineItem;
 import com.pdd.track.model.Testing;
+import com.pdd.track.model.TimeLineItemEventType;
 import com.pdd.track.model.TimelineItem;
 import com.pdd.track.model.events.AbstractDrivingEvent;
 import com.pdd.track.model.events.AdditionalDrivingEvent;
@@ -27,6 +29,7 @@ import com.pdd.track.service.impl.DataGenerationServiceImpl;
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
 
+import java.text.DecimalFormat;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
@@ -48,8 +51,26 @@ public class TimelineConverter {
                 });
 
         result.setItems(convertItems(entity, dayColumns));
+        result.setSummaryColumns(calculateTimelineDaySummary(entity, dayColumns));
 
         return result;
+    }
+
+    private static List<TimelineDaySummaryDto> calculateTimelineDaySummary(final TimelineEntity entity, final List<TimelineDayColumn> dayColumns) {
+        return dayColumns.stream()
+                .map(dayColumn -> {
+                    double averageTestingPercent = entity.getPddSectionTimelineItems().stream()
+                            .mapToDouble(item -> item.getTimelineItems().stream()
+                                    .mapToDouble(tlItem -> {
+                                        if (tlItem.getEvent() != null && TimeLineItemEventType.TESTING.equals(tlItem.getEvent().getEventType())) {
+                                            PddSectionTesting testingEvent = (PddSectionTesting) tlItem.getEvent();
+                                            return testingEvent.getTesting().getPassedQuestions() / testingEvent.getTesting().getTotalQuestions();
+                                        }
+                                        return 0;
+                                    }).sum()).sum();
+                    return new TimelineDaySummaryDto(formatDouble(averageTestingPercent));
+                })
+                .collect(Collectors.toList());
     }
 
     private static List<TimelineDayColumn> getDayColumns() {
@@ -188,5 +209,9 @@ public class TimelineConverter {
                     return dto;
                 })
                 .collect(Collectors.toList());
+    }
+
+    private static String formatDouble(final double value) {
+        return value == 0 ? "" : new DecimalFormat("#0.00").format(value);
     }
 }

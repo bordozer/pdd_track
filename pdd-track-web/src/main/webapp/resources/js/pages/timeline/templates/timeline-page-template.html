@@ -29,8 +29,8 @@
             <div class="col-xs-1 col-fixed-60">&nbsp;</div>
             <div class="col-xs-1 col-fixed-pdd-section">&nbsp;</div>
             <div class="col-xs-1 col-fixed-60 text-center">&nbsp;</div>
-            <% _.each(dayColumns, function(dayColumn) { %>
-                <div class="col-xs-1 text-center col-fixed-timeline-day">&nbsp;</div>
+            <% _.each(summaryColumns, function(summaryColumn) { %>
+                <div class="col-xs-1 text-center col-fixed-timeline-day"><%=summaryColumn.value%></div>
             <% }) %>
         </div>
     </div>
