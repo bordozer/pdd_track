@@ -1,6 +1,7 @@
 package com.pdd.track.service.impl;
 
 import com.google.common.collect.Lists;
+import com.google.common.collect.Sets;
 import com.pdd.track.entity.TimelineEntity;
 import com.pdd.track.model.Car;
 import com.pdd.track.model.Gender;
@@ -20,8 +21,10 @@ import com.pdd.track.service.TimelineService;
 import org.springframework.stereotype.Service;
 
 import javax.inject.Inject;
+import java.time.DayOfWeek;
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Set;
 
 @Service
 public class DataGenerationServiceImpl implements DataGenerationService {
@@ -71,6 +74,8 @@ public class DataGenerationServiceImpl implements DataGenerationService {
 
     public static final LocalDate STUDY_START_DAY = LocalDate.of(2017, 2, 25);
     public static final LocalDate STUDY_END_DAY = LocalDate.of(2017, 4, 23);
+
+    public static final Set<DayOfWeek> LECTURE_WEEK_DAYS = Sets.newHashSet(DayOfWeek.SATURDAY, DayOfWeek.SUNDAY);
 
     @Inject
     private TimelineService timelineService;

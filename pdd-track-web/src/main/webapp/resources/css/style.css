@@ -50,3 +50,15 @@
 .study {
     background-color: #9fda58;
 }
+
+.timeline-day-header-today {
+    background-color: #9bcc60;
+}
+
+.timeline-day-header-passed {
+    background-color: #e3e3e3;
+}
+
+.timeline-day-header-lecture-day {
+    background-color: #fdeeb3;
+}

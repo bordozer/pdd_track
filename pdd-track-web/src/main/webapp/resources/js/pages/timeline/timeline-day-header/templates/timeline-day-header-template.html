@@ -1,1 +1,11 @@
-DAY
+<strong class="text-muted"><%=dayIndex%></strong>
+
+<% if(columnEvents) { %>
+    <% if(columnEvents.driving) { %>
+        <strong class="pull-right fa fa-car text-primary" title="<%=columnEvents.driving.car.model%> (<%=columnEvents.driving.instructor.name%>) - <%=columnEvents.driving.duration%> m"></strong>
+    <% } %>
+
+    <% if(columnEvents.additionalDriving) { %>
+        <strong class="pull-right fa fa-car text-success" title="<%=columnEvents.additionalDriving.car.model%> (<%=columnEvents.additionalDriving.instructor.name%>) - <%=columnEvents.additionalDriving.duration%> m"></strong>
+    <% } %>
+<% } %>

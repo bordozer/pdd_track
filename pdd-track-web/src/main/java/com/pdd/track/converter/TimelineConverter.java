@@ -67,6 +67,9 @@ public class TimelineConverter {
             if (currentDay.equals(today)) {
                 columnEvents.setToday(true);
             }
+            if (DataGenerationServiceImpl.LECTURE_WEEK_DAYS.contains(currentDay.getDayOfWeek())) {
+                columnEvents.setLectureDay(true);
+            }
             dayColumn.setColumnEvents(columnEvents);
 
             result.add(dayColumn);

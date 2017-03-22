@@ -21,13 +21,17 @@ define(function (require) {
             var data = _.extend({}, jmodel.dayColumn, {});
             this.$el.html(template(data));
 
-            /*if (jmodel.timelineDay.dayEvents.lecture) {
-                this.$el.addClass('lecture');
+            if (jmodel.dayColumn.columnEvents.dayPassed) {
+                this.$el.addClass('timeline-day-header-passed');
             }
 
-            if (jmodel.timelineDay.dayEvents.study) {
-                this.$el.addClass('study');
-            }*/
+            if (jmodel.dayColumn.columnEvents.today) {
+                this.$el.addClass('timeline-day-header-today');
+            }
+
+            if (jmodel.dayColumn.columnEvents.lectureDay) {
+                this.$el.addClass('timeline-day-header-lecture-day');
+            }
 
             return this;
         }
