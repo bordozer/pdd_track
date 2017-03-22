@@ -8,6 +8,5 @@ import java.time.LocalDate;
 public class TimelineDayColumn {
     private int index;
     private LocalDate date;
-//    private boolean dayPassed;
-//    private boolean redQuestionsDay;
+    private TimelineDayColumnEventsDto columnEvents;
 }

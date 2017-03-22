@@ -6,6 +6,7 @@ import com.pdd.track.dto.DrivingDto.InstructorDto;
 import com.pdd.track.dto.PddSectionDto;
 import com.pdd.track.dto.TestingDto;
 import com.pdd.track.dto.TimelineDayColumn;
+import com.pdd.track.dto.TimelineDayColumnEventsDto;
 import com.pdd.track.dto.TimelineDayDto;
 import com.pdd.track.dto.TimelineDayEventsDto;
 import com.pdd.track.dto.TimelineDto;
@@ -35,9 +36,15 @@ import java.util.stream.Collectors;
 public class TimelineConverter {
 
     public static TimelineDto toDto(final TimelineEntity entity) {
-        List<TimelineDayColumn> dayColumns = getDayColumns();
         TimelineDto result = new TimelineDto();
+
+        List<TimelineDayColumn> dayColumns = getDayColumns();
         result.setDayColumns(dayColumns);
+        dayColumns.stream()
+                .forEach(dayColumn -> {
+                    populateGlobalDayEvents(dayColumn, entity.getStudyingTimelineItems());
+                });
+
         result.setItems(convertItems(entity, dayColumns));
 
         return result;
@@ -80,7 +87,6 @@ public class TimelineConverter {
 
                     TimelineDayEventsDto dayEvents = new TimelineDayEventsDto();
                     populatePddSectionDayEvents(dayColumn.getDate(), pddSectionTimelineItems, dayEvents);
-                    populateGlobalDayEvents(dayColumn.getDate(), entity.getStudyingTimelineItems(), dayEvents);
                     timelineDay.setDayEvents(dayEvents);
 
                     return timelineDay;
@@ -96,9 +102,9 @@ public class TimelineConverter {
                 .getTimelineItems();
     }
 
-    private static void populateGlobalDayEvents(final LocalDate timelineDate, final List<StudyingTimelineItem> studyingTimelineItems, final TimelineDayEventsDto dayEvents) {
+    private static void populateGlobalDayEvents(final TimelineDayColumn dayColumn, final List<StudyingTimelineItem> studyingTimelineItems) {
         studyingTimelineItems.stream()
-                .filter(timelineItem -> timelineItem.getTimelineItem().getDate().equals(timelineDate))
+                .filter(timelineItem -> timelineItem.getTimelineItem().getDate().equals(dayColumn.getDate()))
                 .forEach(timelineItem -> {
                     TimelineEvent event = timelineItem.getTimelineItem().getEvent();
                     switch (event.getEventType()) {
@@ -107,11 +113,13 @@ public class TimelineConverter {
                             CarDto carDto = convertCar(schoolDrivingEvent.getCar());
                             InstructorDto instructor = convertInstructor(schoolDrivingEvent.getInstructor());
                             boolean additionalDriving = event instanceof AdditionalDrivingEvent;
+                            TimelineDayColumnEventsDto dayEvents = new TimelineDayColumnEventsDto();
                             if (additionalDriving) {
                                 dayEvents.setDriving(new DrivingDto(carDto, instructor, schoolDrivingEvent.getDuration()));
                             } else {
                                 dayEvents.setAdditionalDriving(new DrivingDto(carDto, instructor, schoolDrivingEvent.getDuration()));
                             }
+                            dayColumn.setColumnEvents(dayEvents);
                             break;
                         default:
                             throw new IllegalStateException(String.format("Not implemented yet: %s", event));
