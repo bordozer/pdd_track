@@ -16,8 +16,18 @@ define(function (require) {
 
         render: function () {
             var jmodel = this.model.toJSON();
+
             var data = _.extend({}, jmodel.timelineDay, {});
             this.$el.html(template(data));
+
+            if (jmodel.timelineDay.dayEvents.lecture) {
+                this.$el.addClass('lecture');
+            }
+
+            if (jmodel.timelineDay.dayEvents.study) {
+                this.$el.addClass('study');
+            }
+
             return this;
         }
     });

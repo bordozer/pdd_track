@@ -43,9 +43,10 @@
     float: none;
 }
 
-/*
-.vertical-text{
-    width:1px;
-    word-wrap: break-word;
-    white-space:pre-wrap;
-}*/
+.lecture {
+    background-color: #9acfea;
+}
+
+.study {
+    background-color: #9fda58;
+}
