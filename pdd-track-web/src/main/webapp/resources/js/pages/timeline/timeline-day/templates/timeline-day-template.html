@@ -11,14 +11,12 @@
 <% } %>
 
 <% if(dayEvents.study) { %>
-    <strong class="fa fa-graduation-cap text-warning" title="Study"></strong>
+    <strong class="fa fa-university text-warning" title="Study"></strong>
 <% } %>
 
-<% if(dayEvents.dayHints && dayEvents.dayHints.length > 0) { %>
-    <% var dayHint = dayEvents.dayHints[0]%>
-    <small>
-        <strong class="text-danger fa fa-exclamation" title="Needs restudy"></strong>
-    </small>
+<% if(dayHints && dayHints.length > 0) { %>
+    <% var dayHint = dayHints[0]%>
+    <span class="text-danger fa fa-graduation-cap" title="Needs restudy!"></span>
 <% } %>
 
 &nbsp;
