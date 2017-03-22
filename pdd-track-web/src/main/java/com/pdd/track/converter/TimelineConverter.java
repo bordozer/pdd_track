@@ -148,14 +148,16 @@ public class TimelineConverter {
                 .forEach(tlItem -> {
                     TimelineItem pddSectionLectureEvent = getLastPddSectionEvent(tlItem.getPddSection().getKey(), TimeLineItemEventType.LECTURE, entity);
                     TimelineItem pddSectionStudyEvent = getLastPddSectionEvent(tlItem.getPddSection().getKey(), TimeLineItemEventType.STUDY, entity);
-                    TimelineItem lastPddSectionTesting = getLastPddSectionEvent(tlItem.getPddSection().getKey(), TimeLineItemEventType.TESTING, entity);
-                    PddSectionTesting pddSectionTesting = (PddSectionTesting) lastPddSectionTesting.getEvent();
 
                     TimelineItemSummaryDto timelineItemSummary = new TimelineItemSummaryDto();
                     timelineItemSummary.setLecture(pddSectionLectureEvent != null);
                     timelineItemSummary.setStudy(pddSectionStudyEvent != null);
-                    timelineItemSummary.setLastTestSuccessful(pddSectionTesting.getTesting().isPassed());
 
+                    TimelineItem lastPddSectionTesting = getLastPddSectionEvent(tlItem.getPddSection().getKey(), TimeLineItemEventType.TESTING, entity);
+                    if (lastPddSectionTesting != null) {
+                        PddSectionTesting pddSectionTesting = (PddSectionTesting) lastPddSectionTesting.getEvent();
+                        timelineItemSummary.setLastTestSuccessful(pddSectionTesting.getTesting().isPassed());
+                    }
 
                     VHolder vHolder = calculateTimelinePddSectionSummary(entity, tlItem.getPddSection().getKey());
                     double averageTestingScore = vHolder.getValue() / vHolder.getCount();
@@ -169,7 +171,7 @@ public class TimelineConverter {
     }
 
     private static TimelineItem getLastPddSectionEvent(final String pddSectionKey, final TimeLineItemEventType eventType, final TimelineEntity entity) {
-        List<PddSectionTimelineItem> timelineItems = entity.getPddSectionTimelineItems().stream()
+        List<PddSectionTimelineItem> pddSectionTimelineItems = entity.getPddSectionTimelineItems().stream()
                 .filter(sectionItem -> {
                     if (!sectionItem.getPddSection().getKey().equals(pddSectionKey)) {
                         return false;
@@ -180,8 +182,16 @@ public class TimelineConverter {
                     return !collect.isEmpty();
                 })
                 .collect(Collectors.toList());
-        List<TimelineItem> timelineItems1 = timelineItems.get(timelineItems.size() - 1).getTimelineItems();
-        return timelineItems1.get(timelineItems1.size() - 1);
+        List<TimelineItem> timelineTestingItems = pddSectionTimelineItems.stream()
+                .map(PddSectionTimelineItem::getTimelineItems)
+                .flatMap(List::stream)
+                .filter(tlItem -> tlItem.getEvent().getEventType().equals(TimeLineItemEventType.TESTING))
+                .collect(Collectors.toList());
+        if (timelineTestingItems.isEmpty()) {
+            return null;
+        }
+
+        return timelineTestingItems.get(timelineTestingItems.size() - 1);
     }
 
     private static List<TimelineDayDto> convertTimelineDaysForPddSection(final String pddSectionKey, final TimelineEntity entity, final List<TimelineDayColumn> dayColumns) {

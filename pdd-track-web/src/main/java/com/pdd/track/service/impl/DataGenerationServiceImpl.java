@@ -105,29 +105,54 @@ public class DataGenerationServiceImpl implements DataGenerationService {
 
     private List<PddSectionTimelineItem> constructPddSectionTimelineItems() {
 
+        // 1
         TimelineItem lecture1 = new TimelineItem(LocalDate.of(2017, 3, 4), new LectureEvent());
+        TimelineItem lecture1_2 = new TimelineItem(LocalDate.of(2017, 3, 18), new LectureEvent());
+        TimelineItem lecture1_3 = new TimelineItem(LocalDate.of(2017, 3, 19), new LectureEvent());
         TimelineItem study1 = new TimelineItem(LocalDate.of(2017, 3, 6), new PddSectionStudy());
+
         TimelineItem testing1_1 = new TimelineItem(LocalDate.of(2017, 3, 7), new PddSectionTesting(123, 136, true));
         TimelineItem testing1_2 = new TimelineItem(LocalDate.of(2017, 3, 9), new PddSectionTesting(32, 34, true));
         TimelineItem testing1_3 = new TimelineItem(LocalDate.of(2017, 3, 14), new PddSectionTesting(107, 116, true));
         TimelineItem testing1_4 = new TimelineItem(LocalDate.of(2017, 3, 15), new PddSectionTesting(75, 80, true));
-        TimelineItem lecture2 = new TimelineItem(LocalDate.of(2017, 3, 18), new LectureEvent());
-        TimelineItem lecture3 = new TimelineItem(LocalDate.of(2017, 3, 19), new LectureEvent());
-        TimelineItem testing1_5 = new TimelineItem(LocalDate.of(2017, 3, 19), new PddSectionTesting(10, 15, false));
 
         PddSectionTimelineItem sectionTimelineItem1 = new PddSectionTimelineItem();
         sectionTimelineItem1.setPddSection(PDD_SECTION_01);
-        sectionTimelineItem1.setTimelineItems(Lists.newArrayList(lecture1, study1, testing1_1, testing1_2, testing1_3, testing1_4, lecture2, lecture3, testing1_5));
+        sectionTimelineItem1.setTimelineItems(Lists.newArrayList(lecture1, study1, testing1_1, testing1_2, testing1_3, testing1_4, lecture1_2, lecture1_3));
 
-        TimelineItem lecture2_1 = new TimelineItem(LocalDate.of(2017, 2, 25), new LectureEvent());
-        TimelineItem study2_2 = new TimelineItem(LocalDate.of(2017, 3, 8), new PddSectionStudy());
+        // 2
+        TimelineItem lecture2 = new TimelineItem(LocalDate.of(2017, 2, 25), new LectureEvent());
+        TimelineItem study2 = new TimelineItem(LocalDate.of(2017, 3, 8), new PddSectionStudy());
         TimelineItem testing2_1 = new TimelineItem(LocalDate.of(2017, 3, 8), new PddSectionTesting(76, 85, false));
-        TimelineItem testing2_2 = new TimelineItem(LocalDate.of(2017, 3, 15), new PddSectionTesting(81, 85, true));
+        TimelineItem testing2_2 = new TimelineItem(LocalDate.of(2017, 3, 10), new PddSectionTesting(81, 85, true));
+        TimelineItem testing2_3 = new TimelineItem(LocalDate.of(2017, 3, 15), new PddSectionTesting(81, 85, true));
 
         PddSectionTimelineItem sectionTimelineItem2 = new PddSectionTimelineItem();
         sectionTimelineItem2.setPddSection(PDD_SECTION_02);
-        sectionTimelineItem2.setTimelineItems(Lists.newArrayList(lecture2_1, study2_2, testing2_1, testing2_2));
+        sectionTimelineItem2.setTimelineItems(Lists.newArrayList(lecture2, study2, testing2_1, testing2_2, testing2_3));
 
-        return Lists.newArrayList(sectionTimelineItem1, sectionTimelineItem2);
+        // 3
+        PddSectionTimelineItem sectionTimelineItem3 = new PddSectionTimelineItem();
+        sectionTimelineItem3.setPddSection(PDD_SECTION_03);
+        sectionTimelineItem3.setTimelineItems(Lists.newArrayList());
+
+        // 4
+        TimelineItem lecture4_1 = new TimelineItem(LocalDate.of(2017, 3, 4), new LectureEvent());
+        TimelineItem study4 = new TimelineItem(LocalDate.of(2017, 3, 6), new PddSectionStudy());
+        TimelineItem testing4_1 = new TimelineItem(LocalDate.of(2017, 3, 7), new PddSectionTesting(17, 20, false));
+        TimelineItem testing4_2 = new TimelineItem(LocalDate.of(2017, 3, 8), new PddSectionTesting(26, 28, true));
+        TimelineItem testing4_3 = new TimelineItem(LocalDate.of(2017, 3, 13), new PddSectionTesting(27, 28, true));
+        TimelineItem testing4_4 = new TimelineItem(LocalDate.of(2017, 3, 15), new PddSectionTesting(28, 28, true));
+
+        PddSectionTimelineItem sectionTimelineItem4 = new PddSectionTimelineItem();
+        sectionTimelineItem4.setPddSection(PDD_SECTION_04);
+        sectionTimelineItem4.setTimelineItems(Lists.newArrayList(lecture4_1, study4, testing4_1, testing4_2, testing4_3, testing4_4));
+
+        return Lists.newArrayList(
+                sectionTimelineItem1,
+                sectionTimelineItem2,
+                sectionTimelineItem3,
+                sectionTimelineItem4
+        );
     }
 }
