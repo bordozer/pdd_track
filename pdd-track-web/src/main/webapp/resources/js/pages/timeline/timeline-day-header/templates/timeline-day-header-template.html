@@ -1,11 +1,21 @@
-<strong class="text-muted"><%=dayIndex%></strong>
+<div class="row">
+    <div class="col-xs-12">
+        <strong class="text-muted"><%=dayIndex%></strong>
 
-<% if(columnEvents) { %>
-    <% if(columnEvents.driving) { %>
-        <strong class="pull-right fa fa-car text-primary" title="<%=columnEvents.driving.car.model%> (<%=columnEvents.driving.instructor.name%>) - <%=columnEvents.driving.duration%> m"></strong>
-    <% } %>
+        <% if(columnEvents) { %>
+            <% if(columnEvents.driving) { %>
+                <strong class="pull-right fa fa-car text-primary" title="<%=columnEvents.driving.car.model%> (<%=columnEvents.driving.instructor.name%>) - <%=columnEvents.driving.duration%> m"></strong>
+            <% } %>
 
-    <% if(columnEvents.additionalDriving) { %>
-        <strong class="pull-right fa fa-car text-success" title="<%=columnEvents.additionalDriving.car.model%> (<%=columnEvents.additionalDriving.instructor.name%>) - <%=columnEvents.additionalDriving.duration%> m"></strong>
-    <% } %>
-<% } %>
+            <% if(columnEvents.additionalDriving) { %>
+                <strong class="pull-right fa fa-car text-success" title="<%=columnEvents.additionalDriving.car.model%> (<%=columnEvents.additionalDriving.instructor.name%>) - <%=columnEvents.additionalDriving.duration%> m"></strong>
+            <% } %>
+        <% } %>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-xs-12">
+        <small><%=date%></small>
+    </div>
+</div>
