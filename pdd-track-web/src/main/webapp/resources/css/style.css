@@ -19,10 +19,12 @@
     border: 1px silver solid;
 }
 
-.col-fixed-80 {
-    width: 80px;
+.col-fixed-timeline-day {
+    width: 120px;
     height: 100%;
     border: 1px silver solid;
+    padding: 0 !important;
+    margin: 0 !important;
 }
 
 .col-fixed-pdd-section {
