@@ -16,7 +16,6 @@ define(function (require) {
 
         render: function () {
             var jmodel = this.model.toJSON();
-            console.log(jmodel);
             var data = _.extend({}, jmodel.timelineDay, {});
             this.$el.html(template(data));
             return this;

@@ -20,7 +20,7 @@ define(function (require) {
         render: function () {
             var jmodel = this.model.toJSON();
             var data = _.extend({}, jmodel, {});
-            console.log('DATA', data);
+            console.log(data);
             this.$el.html(template(data));
 
             var self = this;

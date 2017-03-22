@@ -9,11 +9,16 @@
 
 <% if(dayEvents.testing) { %>
     <% var testing = dayEvents.testing%>
-    <strong><%=(testing.passedQuestions / testing.totalQuestions).toFixed(4) * 100%>%</strong> <sup><small class="text-muted"><%=testing.passedQuestions%> / <%=testing.totalQuestions%></small></sup>
+    <small><strong class="<%=dayEvents.testing.passed ? 'text-success' : 'text-danger'%>"><%=(testing.passedQuestions / testing.totalQuestions).toFixed(4) * 100%>%</strong>
+    <sup class="text-muted"><%=testing.passedQuestions%>/<%=testing.totalQuestions%></sup></small>
 <% } %>
 
 <% if(dayEvents.driving) { %>
-    <strong> D </strong>
+    <strong class="fa fa-car text-primary" title="<%=dayEvents.driving.car.model%> (<%=dayEvents.driving.instructor.name%>) - <%=dayEvents.driving.duration%> m"></strong>
+<% } %>
+
+<% if(dayEvents.additionalDriving) { %>
+    <strong class="fa fa-car text-success" title="<%=dayEvents.additionalDriving.car.model%> (<%=dayEvents.additionalDriving.instructor.name%>) - <%=dayEvents.additionalDriving.duration%> m"></strong>
 <% } %>
 
 &nbsp;

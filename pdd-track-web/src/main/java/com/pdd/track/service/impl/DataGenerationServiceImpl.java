@@ -94,7 +94,7 @@ public class DataGenerationServiceImpl implements DataGenerationService {
                 new StudyingTimelineItem(new TimelineItem(LocalDate.of(2017, 3, 17), new SchoolDrivingEvent(SCHOOL_INSTRUCTOR, SCHOOL_CAR, 50))),
                 new StudyingTimelineItem(new TimelineItem(LocalDate.of(2017, 3, 18), new AdditionalDrivingEvent(ADDITIONAL_INSTRUCTOR, ADDITIONAL_CAR, 90))),
                 new StudyingTimelineItem(new TimelineItem(LocalDate.of(2017, 3, 19), new AdditionalDrivingEvent(ADDITIONAL_INSTRUCTOR, ADDITIONAL_CAR, 90))),
-                new StudyingTimelineItem(new TimelineItem(LocalDate.of(2017, 3, 21), new AdditionalDrivingEvent(SCHOOL_INSTRUCTOR, SCHOOL_CAR, 110)))
+                new StudyingTimelineItem(new TimelineItem(LocalDate.of(2017, 3, 21), new SchoolDrivingEvent(SCHOOL_INSTRUCTOR, SCHOOL_CAR, 110)))
         );
     }
 
