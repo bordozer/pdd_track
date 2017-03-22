@@ -8,5 +8,6 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class TimelineDaySummaryDto {
-    private String value;
+    private double value;
+    private String valueFormatted;
 }

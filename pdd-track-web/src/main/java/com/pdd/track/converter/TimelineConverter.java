@@ -79,10 +79,10 @@ public class TimelineConverter {
                             .map(testingEvent -> ((double) testingEvent.getTesting().getPassedQuestions() / testingEvent.getTesting().getTotalQuestions()) * 100)
                             .collect(Collectors.toList());
                     if (collect1.isEmpty()) {
-                        return new TimelineDaySummaryDto("");
+                        return new TimelineDaySummaryDto(0, "");
                     }
                     double dayDouble = collect1.stream().mapToDouble(Double::valueOf).average().getAsDouble();
-                    return new TimelineDaySummaryDto(formatDouble(dayDouble));
+                    return new TimelineDaySummaryDto(dayDouble, formatDouble(dayDouble));
                 })
                 .collect(Collectors.toList());
     }

@@ -30,7 +30,13 @@
             <div class="col-xs-1 col-fixed-pdd-section">&nbsp;</div>
             <div class="col-xs-1 col-fixed-60 text-center">&nbsp;</div>
             <% _.each(summaryColumns, function(summaryColumn) { %>
-                <div class="col-xs-1 text-center col-fixed-timeline-day"><%=summaryColumn.value ? summaryColumn.value : '&nbsp;'%></div>
+                <div class="col-xs-1 text-center col-fixed-timeline-day bg-info">
+                    <% if(summaryColumn.value > 90) { %>
+                        <small class="<%=summaryColumn.value > 90 ? 'text-success' : 'text-danger'%>"><strong><%=summaryColumn.valueFormatted%>%</strong></small>
+                    <% } else { %>
+                        &nbsp;
+                    <% } %>
+                </div>
             <% }) %>
         </div>
     </div>
