@@ -57,18 +57,32 @@ public class TimelineConverter {
     }
 
     private static List<TimelineDaySummaryDto> calculateTimelineDaySummary(final TimelineEntity entity, final List<TimelineDayColumn> dayColumns) {
+
+        List<TimelineItem> collect = dayColumns.stream()
+                .map(dayColumn -> entity.getPddSectionTimelineItems().stream()
+                        .map(item -> item.getTimelineItems().stream()
+                                .filter(tlItem -> tlItem.getDate().equals(dayColumn.getDate()))
+                                .collect(Collectors.toList())
+                        )
+                        .flatMap(List::stream)
+                        .collect(Collectors.toList()))
+                .flatMap(List::stream)
+                .filter(tlItem -> tlItem.getEvent() != null && TimeLineItemEventType.TESTING.equals(tlItem.getEvent().getEventType()))
+                .collect(Collectors.toList());
+
+
         return dayColumns.stream()
                 .map(dayColumn -> {
-                    double averageTestingPercent = entity.getPddSectionTimelineItems().stream()
-                            .mapToDouble(item -> item.getTimelineItems().stream()
-                                    .mapToDouble(tlItem -> {
-                                        if (tlItem.getEvent() != null && TimeLineItemEventType.TESTING.equals(tlItem.getEvent().getEventType())) {
-                                            PddSectionTesting testingEvent = (PddSectionTesting) tlItem.getEvent();
-                                            return testingEvent.getTesting().getPassedQuestions() / testingEvent.getTesting().getTotalQuestions();
-                                        }
-                                        return 0;
-                                    }).sum()).sum();
-                    return new TimelineDaySummaryDto(formatDouble(averageTestingPercent));
+                    List<Double> collect1 = collect.stream()
+                            .filter(tlItem -> tlItem.getDate().equals(dayColumn.getDate()))
+                            .map(tli -> (PddSectionTesting) tli.getEvent())
+                            .map(testingEvent -> ((double) testingEvent.getTesting().getPassedQuestions() / testingEvent.getTesting().getTotalQuestions()) * 100)
+                            .collect(Collectors.toList());
+                    if (collect1.isEmpty()) {
+                        return new TimelineDaySummaryDto("");
+                    }
+                    double dayDouble = collect1.stream().mapToDouble(Double::valueOf).average().getAsDouble();
+                    return new TimelineDaySummaryDto(formatDouble(dayDouble));
                 })
                 .collect(Collectors.toList());
     }
@@ -186,7 +200,7 @@ public class TimelineConverter {
     }
 
     private static TestingDto convertTestingEvent(final Testing testing) {
-        String percentage = formatDouble((double)testing.getPassedQuestions() / testing.getTotalQuestions() * 100);
+        String percentage = formatDouble((double) testing.getPassedQuestions() / testing.getTotalQuestions() * 100);
         return new TestingDto(testing.getPassedQuestions(), testing.getTotalQuestions(), testing.isPassed(), percentage);
     }
 
