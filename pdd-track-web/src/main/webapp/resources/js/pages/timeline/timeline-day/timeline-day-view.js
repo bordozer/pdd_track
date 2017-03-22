@@ -17,7 +17,9 @@ define(function (require) {
         render: function () {
             var jmodel = this.model.toJSON();
 
-            var data = _.extend({}, jmodel.timelineDay, {});
+            var data = _.extend({}, jmodel.timelineDay, {
+                getHintIcon: this._getHintIcon
+            });
             this.$el.html(template(data));
 
             if (jmodel.timelineDay.dayEvents.lecture) {
@@ -29,6 +31,15 @@ define(function (require) {
             }
 
             return this;
+        },
+
+        _getHintIcon: function(timeLineDayHintType) {
+            if (timeLineDayHintType == 'NEEDS_STUDY') {
+                return 'fa fa-university';
+            }
+            if (timeLineDayHintType == 'NEEDS_RESTUDY') {
+                return 'fa fa-graduation-cap';
+            }
         }
     });
 });

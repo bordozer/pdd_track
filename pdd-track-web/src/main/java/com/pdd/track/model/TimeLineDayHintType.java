@@ -1,5 +1,6 @@
 package com.pdd.track.model;
 
 public enum TimeLineDayHintType {
-    NEEDS_RESTUDY;
+    NEEDS_STUDY,
+    NEEDS_RESTUDY,
 }

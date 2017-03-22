@@ -18,7 +18,7 @@
 
 <% if(dayHints && dayHints.length > 0) { %>
     <% var dayHint = dayHints[0]%>
-    <span class="text-danger fa fa-graduation-cap" title="Needs restudy!"></span>
+    <span class="text-danger <%=getHintIcon(dayHint.dayHintType)%>" title="Needs restudy!"></span>
 <% } %>
 
 &nbsp;

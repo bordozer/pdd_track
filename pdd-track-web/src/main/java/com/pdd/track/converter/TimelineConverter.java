@@ -47,6 +47,7 @@ public class TimelineConverter {
 
     private static final LocalDate TODAY = LocalDate.now();
     public static final int SECTION_TOO_LONG_WITHOUT_REPEAT_DAYS = 5;
+    public static final int SECTION_TOO_LONG_WITHOUT_STUDY_DAYS = 5;
 
     public static TimelineDto toDto(final TimelineEntity entity) {
         TimelineDto result = new TimelineDto();
@@ -181,6 +182,10 @@ public class TimelineConverter {
                                 if (day.getDayDate().equals(TODAY)) {
                                     TimelineItem pddSectionStudyEvent = getLastPddSectionEvent(item.getPddSection().getKey(), TimeLineItemEventType.STUDY, entity);
                                     if (pddSectionStudyEvent == null) {
+                                        TimelineItem pddSectionLectureEvent = getLastPddSectionEvent(item.getPddSection().getKey(), TimeLineItemEventType.LECTURE, entity);
+                                        if (pddSectionLectureEvent != null && ChronoUnit.DAYS.between(pddSectionLectureEvent.getDate(), TODAY) > SECTION_TOO_LONG_WITHOUT_STUDY_DAYS) {
+                                            day.setDayHints(Lists.newArrayList(new TimeLineDayHintDto(TimeLineDayHintType.NEEDS_STUDY)));
+                                        }
                                         return;
                                     }
                                     TimelineItem lastTesting = getLastPddSectionEvent(item.getPddSection().getKey(), TimeLineItemEventType.TESTING, entity);
@@ -211,7 +216,7 @@ public class TimelineConverter {
         List<TimelineItem> timelineTestingItems = pddSectionTimelineItems.stream()
                 .map(PddSectionTimelineItem::getTimelineItems)
                 .flatMap(List::stream)
-                .filter(tlItem -> tlItem.getEvent().getEventType().equals(TimeLineItemEventType.TESTING))
+                .filter(tlItem -> tlItem.getEvent().getEventType().equals(eventType))
                 .collect(Collectors.toList());
         if (timelineTestingItems.isEmpty()) {
             return null;
