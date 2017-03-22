@@ -1,17 +1,19 @@
 
+
+
+<% if(dayEvents.lecture) { %>
+<strong class="fa fa-book text-warning" title="Lecture"></strong>
+<% } %>
+
+<% if(dayEvents.study) { %>
+<strong class="fa fa-university text-warning" title="Study"></strong>
+<% } %>
+
 <% if(dayEvents.testing) { %>
     <% var testing = dayEvents.testing%>
     <small>
         <strong class="<%=dayEvents.testing.passed ? 'text-success' : 'text-danger'%>" title="<%=testing.passedQuestions%>/<%=testing.totalQuestions%>"><%=testing.percentage%>%</strong>
     </small>
-<% } %>
-
-<% if(dayEvents.lecture) { %>
-    <strong class="fa fa-book text-warning" title="Lecture"></strong>
-<% } %>
-
-<% if(dayEvents.study) { %>
-    <strong class="fa fa-university text-warning" title="Study"></strong>
 <% } %>
 
 <% if(dayHints && dayHints.length > 0) { %>
