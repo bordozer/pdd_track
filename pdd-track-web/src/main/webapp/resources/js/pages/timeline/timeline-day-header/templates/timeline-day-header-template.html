@@ -1,6 +1,6 @@
 <div class="row">
     <div class="col-xs-12">
-        <strong class="text-muted"><%=dayIndex%></strong>
+        <small class="text-muted"><%=dayIndex%></small>
 
         <% if(columnEvents) { %>
             <% if(columnEvents.driving) { %>
@@ -16,6 +16,8 @@
 
 <div class="row">
     <div class="col-xs-12">
-        <small><%=date%></small>
+        <small><strong><%=dateTimeService.formatDateFullDisplay(date)%></strong></small>
+        <br />
+        <small><%=dateTimeService.formatDateDayOfWeek(date)%></small>
     </div>
 </div>

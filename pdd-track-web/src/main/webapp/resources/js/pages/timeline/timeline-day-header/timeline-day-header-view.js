@@ -8,6 +8,8 @@ define(function (require) {
 
     var template = _.template(require('text!./templates/timeline-day-header-template.html'));
 
+    var dateTimeService = require( '/resources/js/services/date-time-service.js' );
+
     return Backbone.View.extend({
 
         initialize: function (options) {
@@ -18,7 +20,7 @@ define(function (require) {
             var jmodel = this.model.toJSON();
             //console.log(jmodel);
 
-            var data = _.extend({}, jmodel.dayColumn, {});
+            var data = _.extend({}, jmodel.dayColumn, {dateTimeService: dateTimeService});
             this.$el.html(template(data));
 
             if (jmodel.dayColumn.columnEvents.dayPassed) {
