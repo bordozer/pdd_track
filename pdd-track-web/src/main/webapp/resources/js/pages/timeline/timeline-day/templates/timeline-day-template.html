@@ -2,7 +2,7 @@
 <% if(dayEvents.testing) { %>
     <% var testing = dayEvents.testing%>
     <small>
-        <strong class="<%=dayEvents.testing.passed ? 'text-success' : 'text-danger'%>" title="<%=testing.passedQuestions%>/<%=testing.totalQuestions%>"><%=(testing.passedQuestions / testing.totalQuestions).toFixed(4) * 100%>%</strong>
+        <strong class="<%=dayEvents.testing.passed ? 'text-success' : 'text-danger'%>" title="<%=testing.passedQuestions%>/<%=testing.totalQuestions%>"><%=testing.percentage%>%</strong>
     </small>
 <% } %>
 

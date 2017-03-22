@@ -11,4 +11,5 @@ public class TestingDto {
     private int passedQuestions;
     private int totalQuestions;
     private boolean passed;
+    private String percentage;
 }

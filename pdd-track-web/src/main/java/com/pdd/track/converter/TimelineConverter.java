@@ -186,7 +186,8 @@ public class TimelineConverter {
     }
 
     private static TestingDto convertTestingEvent(final Testing testing) {
-        return new TestingDto(testing.getPassedQuestions(), testing.getTotalQuestions(), testing.isPassed());
+        String percentage = formatDouble((double)testing.getPassedQuestions() / testing.getTotalQuestions() * 100);
+        return new TestingDto(testing.getPassedQuestions(), testing.getTotalQuestions(), testing.isPassed(), percentage);
     }
 
     private static CarDto convertCar(final Car car) {
