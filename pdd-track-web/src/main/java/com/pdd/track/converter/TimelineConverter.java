@@ -52,12 +52,23 @@ public class TimelineConverter {
 
     private static List<TimelineDayColumn> getDayColumns() {
         int index = 1;
+        LocalDate today = LocalDate.now();
         LocalDate currentDay = DataGenerationServiceImpl.STUDY_START_DAY;
         List<TimelineDayColumn> result = new ArrayList<>();
         while (currentDay.isBefore(DataGenerationServiceImpl.STUDY_END_DAY.plusDays(1))) {
             TimelineDayColumn dayColumn = new TimelineDayColumn();
             dayColumn.setIndex(index);
             dayColumn.setDate(currentDay);
+
+            TimelineDayColumnEventsDto columnEvents = new TimelineDayColumnEventsDto();
+            if (currentDay.isBefore(today)) {
+                columnEvents.setDayPassed(true);
+            }
+            if (currentDay.equals(today)) {
+                columnEvents.setToday(true);
+            }
+            dayColumn.setColumnEvents(columnEvents);
+
             result.add(dayColumn);
 
             currentDay = currentDay.plusDays(1);
@@ -113,13 +124,12 @@ public class TimelineConverter {
                             CarDto carDto = convertCar(schoolDrivingEvent.getCar());
                             InstructorDto instructor = convertInstructor(schoolDrivingEvent.getInstructor());
                             boolean additionalDriving = event instanceof AdditionalDrivingEvent;
-                            TimelineDayColumnEventsDto dayEvents = new TimelineDayColumnEventsDto();
+                            TimelineDayColumnEventsDto dayEvents = dayColumn.getColumnEvents();
                             if (additionalDriving) {
                                 dayEvents.setDriving(new DrivingDto(carDto, instructor, schoolDrivingEvent.getDuration()));
                             } else {
                                 dayEvents.setAdditionalDriving(new DrivingDto(carDto, instructor, schoolDrivingEvent.getDuration()));
                             }
-                            dayColumn.setColumnEvents(dayEvents);
                             break;
                         default:
                             throw new IllegalStateException(String.format("Not implemented yet: %s", event));

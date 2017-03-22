@@ -1,8 +1,9 @@
 
 <% if(dayEvents.testing) { %>
     <% var testing = dayEvents.testing%>
-    <small><strong class="<%=dayEvents.testing.passed ? 'text-success' : 'text-danger'%>"><%=(testing.passedQuestions / testing.totalQuestions).toFixed(4) * 100%>%</strong>
-    <sup class="text-muted"><%=testing.passedQuestions%>/<%=testing.totalQuestions%></sup></small>
+    <small>
+        <strong class="<%=dayEvents.testing.passed ? 'text-success' : 'text-danger'%>" title="<%=testing.passedQuestions%>/<%=testing.totalQuestions%>"><%=(testing.passedQuestions / testing.totalQuestions).toFixed(4) * 100%>%</strong>
+    </small>
 <% } %>
 
 <% if(dayEvents.lecture) { %>
