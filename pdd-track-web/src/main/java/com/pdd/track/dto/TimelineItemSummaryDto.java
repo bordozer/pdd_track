@@ -5,9 +5,10 @@ import lombok.Data;
 @Data
 public class TimelineItemSummaryDto {
     private int testsCount;
-    private int testsAveragePercentage;
+    private double testsAveragePercentage;
+    private String testsAveragePercentageFormatted;
     private boolean lecture;
     private boolean study;
-    private boolean greenStatus;
+    private boolean lastTestSuccessful;
     private boolean studySuccess;
 }

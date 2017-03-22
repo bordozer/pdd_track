@@ -86,6 +86,25 @@ public class TimelineConverter {
                 .collect(Collectors.toList());
     }
 
+    private static VHolder calculateTimelinePddSectionSummary(final TimelineEntity entity, final String pddSectionKey) {
+        final VHolder vHolder = new VHolder();
+        entity.getPddSectionTimelineItems().stream()
+                .forEach(item -> {
+                    if (!item.getPddSection().getKey().equals(pddSectionKey)) {
+                        return;
+                    }
+                    item.getTimelineItems().stream()
+                            .forEach(tlItem -> {
+                                if (tlItem.getEvent() == null || !TimeLineItemEventType.TESTING.equals(tlItem.getEvent().getEventType())) {
+                                    return;
+                                }
+                                PddSectionTesting testingEvent = (PddSectionTesting) tlItem.getEvent();
+                                vHolder.add(((double) testingEvent.getTesting().getPassedQuestions() / testingEvent.getTesting().getTotalQuestions()) * 100);
+                            });
+                });
+        return vHolder;
+    }
+
     private static List<TimelineDayColumn> getDayColumns() {
         int index = 1;
         LocalDate today = LocalDate.now();
@@ -135,11 +154,15 @@ public class TimelineConverter {
                     TimelineItemSummaryDto timelineItemSummary = new TimelineItemSummaryDto();
                     timelineItemSummary.setLecture(pddSectionLectureEvent != null);
                     timelineItemSummary.setStudy(pddSectionStudyEvent != null);
-                    timelineItemSummary.setGreenStatus(pddSectionTesting.getTesting().isPassed());
+                    timelineItemSummary.setLastTestSuccessful(pddSectionTesting.getTesting().isPassed());
 
-                    timelineItemSummary.setTestsCount(1);
-                    timelineItemSummary.setTestsAveragePercentage(0);
-                    timelineItemSummary.setStudySuccess(true);
+
+                    VHolder vHolder = calculateTimelinePddSectionSummary(entity, tlItem.getPddSection().getKey());
+                    double averageTestingScore = vHolder.getValue() / vHolder.getCount();
+                    timelineItemSummary.setTestsCount(vHolder.getCount());
+                    timelineItemSummary.setTestsAveragePercentage(averageTestingScore);
+                    timelineItemSummary.setTestsAveragePercentageFormatted(formatDouble(averageTestingScore));
+                    timelineItemSummary.setStudySuccess(averageTestingScore > 90);
                     tlItem.setTimelineItemSummary(timelineItemSummary);
                 });
         return result;

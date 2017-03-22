@@ -23,7 +23,10 @@ define(function (require) {
             var jmodel = this.model.toJSON();
             console.log(jmodel);
 
-            var data = _.extend({}, jmodel, {});
+            var data = _.extend({}, jmodel, {
+                percentageClass: this._percentageClass,
+                minTestForSuccess: 2 // TODO: read from settings
+            });
             this.$el.html(template(data));
 
             _.each(jmodel.dayColumns, function(dayColumn) {
@@ -42,6 +45,10 @@ define(function (require) {
             });
 
             return this;
+        },
+
+        _percentageClass: function(value) {
+            return value > 90 ? 'text-success' : 'text-danger';
         }
     });
 });
