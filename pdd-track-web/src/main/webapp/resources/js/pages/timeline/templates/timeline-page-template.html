@@ -31,20 +31,41 @@
                     <% _.each(item.timelineDays, function(timelineDay) { %>
                         <div class="col-xs-1 text-center col-fixed-timeline-day js-timeline-day-<%=item.pddSection.number%>-<%=timelineDay.dayIndex%>">&nbsp;</div>
                     <% }) %>
-                    <div class="col-xs-1 col-fixed-60 text-center text-muted"><span class="<%=item.timelineItemSummary.lecture ? 'fa fa-check' : ''%>"></span></div>
-                    <div class="col-xs-1 col-fixed-60 text-center text-muted"><span class="<%=item.timelineItemSummary.study ? 'fa fa-check' : ''%>"></span></div>
+                    <div class="col-xs-1 col-fixed-60 text-center text-muted"><span class="<%=item.timelineItemSummary.lecture ? 'fa fa-check' : ''%>">&nbsp;</span></div>
+                    <div class="col-xs-1 col-fixed-60 text-center text-muted"><span class="<%=item.timelineItemSummary.study ? 'fa fa-check' : ''%>">&nbsp;</span></div>
 
                     <div class="col-xs-1 col-fixed-60 text-center no-padding">
-                        <small><strong class="<%=item.timelineItemSummary.testsCount > minTestForSuccess ? 'text-success' : 'text-danger'%>"><%=item.timelineItemSummary.testsCount%></strong></small>
+                        <small><strong class="<%=item.timelineItemSummary.testsCount > minTestForSuccess ? 'text-success' : 'text-danger'%>">
+                            <% if(item.timelineItemSummary.study) { %>
+                                <%=item.timelineItemSummary.testsCount%>
+                            <% } else { %>
+                                &nbsp;
+                            <% } %>
+                        </strong></small>
                     </div>
                     <div class="col-xs-1 col-fixed-60 text-center no-padding">
-                        <small><strong class="<%=percentageClass(item.timelineItemSummary.testsAveragePercentage)%>"><%=item.timelineItemSummary.testsAveragePercentageFormatted%>%</strong></small>
+                        <small><strong class="<%=percentageClass(item.timelineItemSummary.testsAveragePercentage)%>">
+                            <% if(item.timelineItemSummary.testsCount > 0) { %>
+                                <%=item.timelineItemSummary.testsAveragePercentageFormatted%>%
+                            <% } else { %>
+                                &nbsp;
+                            <% } %>
+                        </strong></small>
                     </div>
 
-
-                    <div class="col-xs-1 col-fixed-60 text-center text-muted"><span class="<%=item.timelineItemSummary.lastTestSuccessful ? 'text-success fa fa-check-circle-o' : 'text-danger fa fa-circle-o'%>"></span></div>
                     <div class="col-xs-1 col-fixed-60 text-center text-muted">
+                        <% if(item.timelineItemSummary.testsCount > 0) { %>
+                            <span class="<%=item.timelineItemSummary.lastTestSuccessful ? 'text-success fa fa-check-circle-o' : 'text-danger fa fa-circle-o'%>"></span>
+                        <% } else { %>
+                            &nbsp;
+                        <% } %>
+                    </div>
+                    <div class="col-xs-1 col-fixed-60 text-center text-muted">
+                        <% if(item.timelineItemSummary.testsCount > 0) { %>
                         <span class="<%=item.timelineItemSummary.testsCount > minTestForSuccess && item.timelineItemSummary.lastTestSuccessful && item.timelineItemSummary.studySuccess ? 'text-success fa fa-check-square-o ' : 'text-danger fa fa-bug'%>"></span>
+                        <% } else { %>
+                            &nbsp;
+                        <% } %>
                     </div>
                 </div>
             </div>
