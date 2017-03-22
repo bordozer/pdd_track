@@ -136,9 +136,10 @@ public class TimelineConverter {
                     timelineItemSummary.setLecture(pddSectionLectureEvent != null);
                     timelineItemSummary.setStudy(pddSectionStudyEvent != null);
                     timelineItemSummary.setGreenStatus(pddSectionTesting.getTesting().isPassed());
-                    timelineItemSummary.setStudySuccess(true);
+
                     timelineItemSummary.setTestsCount(1);
                     timelineItemSummary.setTestsAveragePercentage(0);
+                    timelineItemSummary.setStudySuccess(true);
                     tlItem.setTimelineItemSummary(timelineItemSummary);
                 });
         return result;
