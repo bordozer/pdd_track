@@ -106,10 +106,13 @@ public class DataGenerationServiceImpl implements DataGenerationService {
         TimelineItem testing1_2 = new TimelineItem(LocalDate.of(2017, 3, 9), new PddSectionTesting(32, 34, true));
         TimelineItem testing1_3 = new TimelineItem(LocalDate.of(2017, 3, 14), new PddSectionTesting(107, 116, true));
         TimelineItem testing1_4 = new TimelineItem(LocalDate.of(2017, 3, 15), new PddSectionTesting(75, 80, true));
+        TimelineItem lecture2 = new TimelineItem(LocalDate.of(2017, 3, 18), new LectureEvent());
+        TimelineItem lecture3 = new TimelineItem(LocalDate.of(2017, 3, 19), new LectureEvent());
+        TimelineItem testing1_5 = new TimelineItem(LocalDate.of(2017, 3, 19), new PddSectionTesting(10, 15, false));
 
         PddSectionTimelineItem sectionTimelineItem = new PddSectionTimelineItem();
         sectionTimelineItem.setPddSection(PDD_SECTION_01);
-        sectionTimelineItem.setTimelineItems(Lists.newArrayList(lecture1, study1, testing1_1, testing1_2, testing1_3, testing1_4));
+        sectionTimelineItem.setTimelineItems(Lists.newArrayList(lecture1, study1, testing1_1, testing1_2, testing1_3, testing1_4, lecture2, lecture3, testing1_5));
 
         return Lists.newArrayList(sectionTimelineItem);
     }

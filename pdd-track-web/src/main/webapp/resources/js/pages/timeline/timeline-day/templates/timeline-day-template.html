@@ -1,24 +1,24 @@
 
-<% if(dayEvents.lecture) { %>
-    <strong> L </strong>
-<% } %>
-
-<% if(dayEvents.study) { %>
-    <strong> S </strong>
-<% } %>
-
 <% if(dayEvents.testing) { %>
     <% var testing = dayEvents.testing%>
     <small><strong class="<%=dayEvents.testing.passed ? 'text-success' : 'text-danger'%>"><%=(testing.passedQuestions / testing.totalQuestions).toFixed(4) * 100%>%</strong>
     <sup class="text-muted"><%=testing.passedQuestions%>/<%=testing.totalQuestions%></sup></small>
 <% } %>
 
+<% if(dayEvents.lecture) { %>
+    <strong class="pull-right fa fa-book text-warning"></strong>
+<% } %>
+
+<% if(dayEvents.study) { %>
+    <strong class="pull-right fa fa-graduation-cap text-warning"></strong>
+<% } %>
+
 <% if(dayEvents.driving) { %>
-    <strong class="fa fa-car text-primary" title="<%=dayEvents.driving.car.model%> (<%=dayEvents.driving.instructor.name%>) - <%=dayEvents.driving.duration%> m"></strong>
+    <strong class="pull-right fa fa-car text-primary" title="<%=dayEvents.driving.car.model%> (<%=dayEvents.driving.instructor.name%>) - <%=dayEvents.driving.duration%> m"></strong>
 <% } %>
 
 <% if(dayEvents.additionalDriving) { %>
-    <strong class="fa fa-car text-success" title="<%=dayEvents.additionalDriving.car.model%> (<%=dayEvents.additionalDriving.instructor.name%>) - <%=dayEvents.additionalDriving.duration%> m"></strong>
+    <strong class="pull-right fa fa-car text-success" title="<%=dayEvents.additionalDriving.car.model%> (<%=dayEvents.additionalDriving.instructor.name%>) - <%=dayEvents.additionalDriving.duration%> m"></strong>
 <% } %>
 
 &nbsp;
