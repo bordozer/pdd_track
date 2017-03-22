@@ -27,6 +27,7 @@ import com.pdd.track.model.events.PddSectionTesting;
 import com.pdd.track.model.events.TimelineEvent;
 import com.pdd.track.service.impl.DataGenerationServiceImpl;
 import lombok.AccessLevel;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import java.text.DecimalFormat;
@@ -57,32 +58,29 @@ public class TimelineConverter {
     }
 
     private static List<TimelineDaySummaryDto> calculateTimelineDaySummary(final TimelineEntity entity, final List<TimelineDayColumn> dayColumns) {
-
-        List<TimelineItem> collect = dayColumns.stream()
-                .map(dayColumn -> entity.getPddSectionTimelineItems().stream()
-                        .map(item -> item.getTimelineItems().stream()
-                                .filter(tlItem -> tlItem.getDate().equals(dayColumn.getDate()))
-                                .collect(Collectors.toList())
-                        )
-                        .flatMap(List::stream)
-                        .collect(Collectors.toList()))
-                .flatMap(List::stream)
-                .filter(tlItem -> tlItem.getEvent() != null && TimeLineItemEventType.TESTING.equals(tlItem.getEvent().getEventType()))
-                .collect(Collectors.toList());
-
-
         return dayColumns.stream()
                 .map(dayColumn -> {
-                    List<Double> collect1 = collect.stream()
-                            .filter(tlItem -> tlItem.getDate().equals(dayColumn.getDate()))
-                            .map(tli -> (PddSectionTesting) tli.getEvent())
-                            .map(testingEvent -> ((double) testingEvent.getTesting().getPassedQuestions() / testingEvent.getTesting().getTotalQuestions()) * 100)
-                            .collect(Collectors.toList());
-                    if (collect1.isEmpty()) {
+                    final VHolder vHolder = new VHolder();
+                    entity.getPddSectionTimelineItems().stream()
+                            .forEach(item -> {
+                                item.getTimelineItems().stream()
+                                        .forEach(tlItem -> {
+                                            if (!tlItem.getDate().equals(dayColumn.getDate())) {
+                                                return;
+                                            }
+                                            if (tlItem.getEvent() == null || !TimeLineItemEventType.TESTING.equals(tlItem.getEvent().getEventType())) {
+                                                return;
+                                            }
+                                            PddSectionTesting testingEvent = (PddSectionTesting) tlItem.getEvent();
+                                            vHolder.add(((double) testingEvent.getTesting().getPassedQuestions() / testingEvent.getTesting().getTotalQuestions()) * 100);
+                                        });
+                            });
+
+                    if (vHolder.getValue() == 0) {
                         return new TimelineDaySummaryDto(0, "");
                     }
-                    double dayDouble = collect1.stream().mapToDouble(Double::valueOf).average().getAsDouble();
-                    return new TimelineDaySummaryDto(dayDouble, formatDouble(dayDouble));
+                    double value = vHolder.getValue() / vHolder.getCount();
+                    return new TimelineDaySummaryDto(value, formatDouble(value));
                 })
                 .collect(Collectors.toList());
     }
@@ -228,5 +226,16 @@ public class TimelineConverter {
 
     private static String formatDouble(final double value) {
         return value == 0 ? "" : new DecimalFormat("#0.00").format(value);
+    }
+
+    @Getter
+    private static class VHolder {
+        private double value = 0D;
+        private int count = 0;
+
+        void add(final double value) {
+            this.value += value;
+            this.count++;
+        }
     }
 }
