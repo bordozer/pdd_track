@@ -25,7 +25,7 @@ define(function (require) {
 
             var data = _.extend({}, jmodel, {
                 percentageClass: this._percentageClass,
-                minTestForSuccess: 2 // TODO: read from settings
+                minTestForSuccess: 3 // TODO: read from settings
             });
             this.$el.html(template(data));
 

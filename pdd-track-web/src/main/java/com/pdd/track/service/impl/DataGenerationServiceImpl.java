@@ -47,16 +47,16 @@ public class DataGenerationServiceImpl implements DataGenerationService {
     private static final PddSection PDD_SECTION_08 = new PddSection("8", "Regulirovanie dorozhnogo dvizheniya", 239);
     private static final PddSection PDD_SECTION_09 = new PddSection("9", "Preduprezhdayushchie signaly", 44);
     private static final PddSection PDD_SECTION_10 = new PddSection("10", "Nachalo dvizheniya i izmenenie ego napravleniya", 67);
-    private static final PddSection PDD_SECTION_11 = new PddSection("1", "General", 116);
-    private static final PddSection PDD_SECTION_12 = new PddSection("1", "General", 116);
-    private static final PddSection PDD_SECTION_13 = new PddSection("1", "General", 116);
-    private static final PddSection PDD_SECTION_14 = new PddSection("1", "General", 116);
-    private static final PddSection PDD_SECTION_15 = new PddSection("1", "General", 116);
-    private static final PddSection PDD_SECTION_16 = new PddSection("1", "General", 116);
-    private static final PddSection PDD_SECTION_17 = new PddSection("1", "General", 116);
-    private static final PddSection PDD_SECTION_18 = new PddSection("1", "General", 116);
-    private static final PddSection PDD_SECTION_19 = new PddSection("1", "General", 116);
-    private static final PddSection PDD_SECTION_20 = new PddSection("1", "General", 116);
+    private static final PddSection PDD_SECTION_11 = new PddSection("11", "General", 116);
+    private static final PddSection PDD_SECTION_12 = new PddSection("12", "General", 116);
+    private static final PddSection PDD_SECTION_13 = new PddSection("13", "General", 116);
+    private static final PddSection PDD_SECTION_14 = new PddSection("14", "General", 116);
+    private static final PddSection PDD_SECTION_15 = new PddSection("15", "Ostanovka i stoyanka", 116);
+    private static final PddSection PDD_SECTION_16 = new PddSection("16", "General", 116);
+    private static final PddSection PDD_SECTION_17 = new PddSection("17", "General", 116);
+    private static final PddSection PDD_SECTION_18 = new PddSection("18", "General", 116);
+    private static final PddSection PDD_SECTION_19 = new PddSection("19", "General", 116);
+    private static final PddSection PDD_SECTION_20 = new PddSection("20", "General", 116);
     private static final PddSection PDD_SECTION_21 = new PddSection("1", "General", 116);
     private static final PddSection PDD_SECTION_22 = new PddSection("1", "General", 116);
     private static final PddSection PDD_SECTION_23 = new PddSection("1", "General", 116);
@@ -69,7 +69,7 @@ public class DataGenerationServiceImpl implements DataGenerationService {
     private static final PddSection PDD_SECTION_30 = new PddSection("1", "General", 116);
     private static final PddSection PDD_SECTION_31 = new PddSection("1", "General", 116);
     private static final PddSection PDD_SECTION_32 = new PddSection("1", "General", 116);
-    private static final PddSection PDD_SECTION_33 = new PddSection("1", "General", 116);
+    private static final PddSection PDD_SECTION_33 = new PddSection("33", "Znaki", 116);
     private static final PddSection PDD_SECTION_34 = new PddSection("1", "General", 116);
 
     public static final LocalDate STUDY_START_DAY = LocalDate.of(2017, 2, 25);
@@ -137,7 +137,7 @@ public class DataGenerationServiceImpl implements DataGenerationService {
         sectionTimelineItem3.setTimelineItems(Lists.newArrayList());
 
         // 4
-        TimelineItem lecture4_1 = new TimelineItem(LocalDate.of(2017, 3, 4), new LectureEvent());
+        TimelineItem lecture4 = new TimelineItem(LocalDate.of(2017, 3, 4), new LectureEvent());
         TimelineItem study4 = new TimelineItem(LocalDate.of(2017, 3, 6), new PddSectionStudy());
         TimelineItem testing4_1 = new TimelineItem(LocalDate.of(2017, 3, 7), new PddSectionTesting(17, 20, false));
         TimelineItem testing4_2 = new TimelineItem(LocalDate.of(2017, 3, 8), new PddSectionTesting(26, 28, true));
@@ -146,13 +146,32 @@ public class DataGenerationServiceImpl implements DataGenerationService {
 
         PddSectionTimelineItem sectionTimelineItem4 = new PddSectionTimelineItem();
         sectionTimelineItem4.setPddSection(PDD_SECTION_04);
-        sectionTimelineItem4.setTimelineItems(Lists.newArrayList(lecture4_1, study4, testing4_1, testing4_2, testing4_3, testing4_4));
+        sectionTimelineItem4.setTimelineItems(Lists.newArrayList(lecture4, study4, testing4_1, testing4_2, testing4_3, testing4_4));
+
+        // 15
+        TimelineItem lecture15 = new TimelineItem(LocalDate.of(2017, 3, 12), new LectureEvent());
+
+        PddSectionTimelineItem sectionTimelineItem15 = new PddSectionTimelineItem();
+        sectionTimelineItem15.setPddSection(PDD_SECTION_15);
+        sectionTimelineItem15.setTimelineItems(Lists.newArrayList(lecture15));
+
+        // 33
+        TimelineItem lecture33 = new TimelineItem(LocalDate.of(2017, 3, 18), new LectureEvent());
+        TimelineItem study33 = new TimelineItem(LocalDate.of(2017, 3, 19), new PddSectionStudy());
+        TimelineItem testing33_1 = new TimelineItem(LocalDate.of(2017, 3, 20), new PddSectionTesting(314, 368, false));
+        TimelineItem testing33_2 = new TimelineItem(LocalDate.of(2017, 3, 22), new PddSectionTesting(141, 153, true));
+
+        PddSectionTimelineItem sectionTimelineItem33 = new PddSectionTimelineItem();
+        sectionTimelineItem33.setPddSection(PDD_SECTION_33);
+        sectionTimelineItem33.setTimelineItems(Lists.newArrayList(lecture33, study33, testing33_1, testing33_2));
 
         return Lists.newArrayList(
                 sectionTimelineItem1,
                 sectionTimelineItem2,
                 sectionTimelineItem3,
-                sectionTimelineItem4
+                sectionTimelineItem4,
+                sectionTimelineItem15,
+                sectionTimelineItem33
         );
     }
 }
