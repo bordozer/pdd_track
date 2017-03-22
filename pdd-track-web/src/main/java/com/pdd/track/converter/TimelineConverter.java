@@ -37,6 +37,8 @@ public class TimelineConverter {
 
     public static TimelineDto toDto(final TimelineEntity entity) {
         TimelineDto result = new TimelineDto();
+        result.setStartDate(DataGenerationServiceImpl.STUDY_START_DAY);
+        result.setEndDate(DataGenerationServiceImpl.STUDY_END_DAY);
 
         List<TimelineDayColumn> dayColumns = getDayColumns();
         result.setDayColumns(dayColumns);

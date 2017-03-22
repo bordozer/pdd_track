@@ -28,13 +28,13 @@ define(function (require) {
 
         getDateTimeFormat: function () {
             return DATE_FORMAT + ' ' + TIME_FORMAT;
-        }/*,
+        },
 
         fromNow: function (time) {
-            return moment.duration(moment(time, this.getDateTimeFormat()).diff(moment(this.timeNow(), this.getDateTimeFormat()))).humanize({
+            return moment.duration(moment(time, this.getDateTimeFormat()).diff(moment(new Date(), this.getDateTimeFormat()))).humanize({
                 suffix: true,
                 precise: true
             });
-        }*/
+        }
     }
 });

@@ -21,13 +21,18 @@ define(function (require) {
         render: function () {
             var self = this;
             var jmodel = this.model.toJSON();
-            console.log(jmodel);
+            //console.log(jmodel);
 
             var data = _.extend({}, jmodel, {});
             this.$el.html(template(data));
 
             _.each(jmodel.dayColumns, function(dayColumn) {
-                timelineDayHeaderView(self.$('.js-timeline-day-header-'+ dayColumn.dayIndex), dayColumn);
+                var options = {
+                    dayColumn: dayColumn,
+                    startDate: jmodel.startDate,
+                    endDate: jmodel.endDate
+                };
+                timelineDayHeaderView(self.$('.js-timeline-day-header-'+ dayColumn.dayIndex), options);
             });
 
             _.each(jmodel.items, function(item) {

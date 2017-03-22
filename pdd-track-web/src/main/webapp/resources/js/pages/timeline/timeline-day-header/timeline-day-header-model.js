@@ -9,7 +9,9 @@ define(function (require) {
         defaults: {},
 
         initialize: function (options) {
-            this.dayColumn = options.dayColumn;
+            this.set('dayColumn', options.options.dayColumn);
+            this.set('startDate', options.options.startDate);
+            this.set('endDate', options.options.endDate);
         }
     });
 });

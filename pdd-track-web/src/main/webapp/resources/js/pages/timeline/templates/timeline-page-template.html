@@ -15,7 +15,7 @@
         <div class="col-xs-12">
             <% _.each(items, function(item) { %>
                 <div class="col-xs-1 col-fixed-60 text-center"><strong><%=item.pddSection.number%></strong></div>
-                <div class="col-xs-1 col-fixed-pdd-section ">&nbsp;<%=item.pddSection.name%></div>
+                <div class="col-xs-1 col-fixed-pdd-section "><%=item.pddSection.name%></div>
                 <div class="col-xs-1 col-fixed-60 text-center text-muted"><%=item.pddSection.questionsCount%></div>
                 <% _.each(item.timelineDays, function(timelineDay) { %>
                     <div class="col-xs-1 text-center col-fixed-timeline-day js-timeline-day-<%=item.pddSection.number%>-<%=timelineDay.dayIndex%>">&nbsp;</div>

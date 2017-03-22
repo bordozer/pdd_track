@@ -20,7 +20,10 @@ define(function (require) {
             var jmodel = this.model.toJSON();
             //console.log(jmodel);
 
-            var data = _.extend({}, jmodel.dayColumn, {dateTimeService: dateTimeService});
+            var data = _.extend({}, jmodel.dayColumn, {
+                dateTimeService: dateTimeService,
+                endDate: dateTimeService.fromNow(jmodel.endDate)
+            });
             this.$el.html(template(data));
 
             if (jmodel.dayColumn.columnEvents.dayPassed) {
