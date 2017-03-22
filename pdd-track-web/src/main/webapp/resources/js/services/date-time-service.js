@@ -19,7 +19,7 @@ define(function (require) {
         },
 
         formatDateDayOfWeek: function (time) {
-            return moment(this.parseDate(time)).format('dddd');
+            return moment(this.parseDate(time)).format('ddd');
         },
 
         parseDate: function (time) {

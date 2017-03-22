@@ -21,7 +21,7 @@ define(function (require) {
         render: function () {
             var self = this;
             var jmodel = this.model.toJSON();
-            //console.log(jmodel);
+            console.log(jmodel);
 
             var data = _.extend({}, jmodel, {});
             this.$el.html(template(data));

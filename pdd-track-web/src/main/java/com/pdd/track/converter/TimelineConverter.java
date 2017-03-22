@@ -12,6 +12,7 @@ import com.pdd.track.dto.TimelineDayEventsDto;
 import com.pdd.track.dto.TimelineDaySummaryDto;
 import com.pdd.track.dto.TimelineDto;
 import com.pdd.track.dto.TimelineItemDto;
+import com.pdd.track.dto.TimelineItemSummaryDto;
 import com.pdd.track.entity.TimelineEntity;
 import com.pdd.track.model.Car;
 import com.pdd.track.model.Instructor;
@@ -116,7 +117,7 @@ public class TimelineConverter {
     }
 
     private static List<TimelineItemDto> convertItems(final TimelineEntity entity, final List<TimelineDayColumn> dayColumns) {
-        return groupPddSections(entity.getPddSectionTimelineItems()).stream()
+        List<TimelineItemDto> result = groupPddSections(entity.getPddSectionTimelineItems()).stream()
                 .map(sectionDto -> {
                     TimelineItemDto item = new TimelineItemDto();
                     item.setPddSection(sectionDto);
@@ -124,6 +125,39 @@ public class TimelineConverter {
                     return item;
                 })
                 .collect(Collectors.toList());
+        result.stream()
+                .forEach(tlItem -> {
+                    TimelineItem pddSectionLectureEvent = getLastPddSectionEvent(tlItem.getPddSection().getKey(), TimeLineItemEventType.LECTURE, entity);
+                    TimelineItem pddSectionStudyEvent = getLastPddSectionEvent(tlItem.getPddSection().getKey(), TimeLineItemEventType.STUDY, entity);
+                    TimelineItem lastPddSectionTesting = getLastPddSectionEvent(tlItem.getPddSection().getKey(), TimeLineItemEventType.TESTING, entity);
+                    PddSectionTesting pddSectionTesting = (PddSectionTesting) lastPddSectionTesting.getEvent();
+
+                    TimelineItemSummaryDto timelineItemSummary = new TimelineItemSummaryDto();
+                    timelineItemSummary.setLecture(pddSectionLectureEvent != null);
+                    timelineItemSummary.setStudy(pddSectionStudyEvent != null);
+                    timelineItemSummary.setGreenStatus(pddSectionTesting.getTesting().isPassed());
+                    timelineItemSummary.setStudySuccess(true);
+                    timelineItemSummary.setTestsCount(1);
+                    timelineItemSummary.setTestsAveragePercentage(0);
+                    tlItem.setTimelineItemSummary(timelineItemSummary);
+                });
+        return result;
+    }
+
+    private static TimelineItem getLastPddSectionEvent(final String pddSectionKey, final TimeLineItemEventType eventType, final TimelineEntity entity) {
+        List<PddSectionTimelineItem> timelineItems = entity.getPddSectionTimelineItems().stream()
+                .filter(sectionItem -> {
+                    if (!sectionItem.getPddSection().getKey().equals(pddSectionKey)) {
+                        return false;
+                    }
+                    List<TimelineItem> collect = sectionItem.getTimelineItems().stream()
+                            .filter(tlItem -> eventType.equals(tlItem.getEvent().getEventType()))
+                            .collect(Collectors.toList());
+                    return !collect.isEmpty();
+                })
+                .collect(Collectors.toList());
+        List<TimelineItem> timelineItems1 = timelineItems.get(timelineItems.size() - 1).getTimelineItems();
+        return timelineItems1.get(timelineItems1.size() - 1);
     }
 
     private static List<TimelineDayDto> convertTimelineDaysForPddSection(final String pddSectionKey, final TimelineEntity entity, final List<TimelineDayColumn> dayColumns) {

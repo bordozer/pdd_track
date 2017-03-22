@@ -8,4 +8,5 @@ import java.util.List;
 public class TimelineItemDto {
     private PddSectionDto pddSection;
     private List<TimelineDayDto> timelineDays;
+    private TimelineItemSummaryDto timelineItemSummary;
 }

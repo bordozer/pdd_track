@@ -10,6 +10,14 @@
                 <% _.each(dayColumns, function(dayColumn) { %>
                     <div class="col-xs-1 text-center col-fixed-timeline-day js-timeline-day-header-<%=dayColumn.dayIndex%>"></div>
                 <% }) %>
+                <div class="col-xs-1 col-fixed-60 text-center no-padding">Lecture</div>
+                <div class="col-xs-1 col-fixed-60 text-center no-padding">Study</div>
+
+                <div class="col-xs-1 col-fixed-60 text-center no-padding">Tests</div>
+                <div class="col-xs-1 col-fixed-60 text-center no-padding">Avg %</div>
+
+                <div class="col-xs-1 col-fixed-60 text-center no-padding">Last test</div>
+                <div class="col-xs-1 col-fixed-60 text-center no-padding">Success</div>
             </div>
         </div>
 
@@ -23,6 +31,17 @@
                     <% _.each(item.timelineDays, function(timelineDay) { %>
                         <div class="col-xs-1 text-center col-fixed-timeline-day js-timeline-day-<%=item.pddSection.number%>-<%=timelineDay.dayIndex%>">&nbsp;</div>
                     <% }) %>
+                    <div class="col-xs-1 col-fixed-60 text-center text-muted"><span class="<%=item.timelineItemSummary.lecture ? 'fa fa-check' : ''%>"></span></div>
+                    <div class="col-xs-1 col-fixed-60 text-center text-muted"><span class="<%=item.timelineItemSummary.study ? 'fa fa-check' : ''%>"></span></div>
+
+                    <div class="col-xs-1 col-fixed-60 text-center text-muted"><%=item.timelineItemSummary.testsCount%></div>
+                    <div class="col-xs-1 col-fixed-60 text-center text-muted"><%=item.timelineItemSummary.testsAveragePercentage%></div>
+
+
+                    <div class="col-xs-1 col-fixed-60 text-center text-muted"><span class="<%=item.timelineItemSummary.greenStatus ? 'text-success fa fa-check-square-o ' : 'text-danger fa fa-bug'%>"></span></div>
+                    <div class="col-xs-1 col-fixed-60 text-center text-muted">
+                        <span class="<%=item.timelineItemSummary.greenStatus && item.timelineItemSummary.studySuccess ? 'text-success fa fa-check-square-o ' : 'text-danger fa fa-bug'%>"></span>
+                    </div>
                 </div>
             </div>
         <% }) %>
