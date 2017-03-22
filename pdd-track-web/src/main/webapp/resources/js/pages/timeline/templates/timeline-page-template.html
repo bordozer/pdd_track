@@ -5,19 +5,7 @@
             <div class="col-xs-1 col-fixed-pdd-section no-padding text-center">PDD Section name</div>
             <div class="col-xs-1 col-fixed-60 no-padding text-center">???</div>
             <% _.each(dayColumns, function(dayColumn) { %>
-                <div class="col-xs-1 text-center col-fixed-timeline-day">
-                    <strong class="text-muted"><%=dayColumn.index%></strong>
-
-                    <% if(dayColumn.columnEvents) { %>
-                        <% if(dayColumn.columnEvents.driving) { %>
-                            <strong class="pull-right fa fa-car text-primary" title="<%=dayColumn.columnEvents.driving.car.model%> (<%=dayColumn.columnEvents.driving.instructor.name%>) - <%=dayColumn.columnEvents.driving.duration%> m"></strong>
-                        <% } %>
-
-                        <% if(dayColumn.columnEvents.additionalDriving) { %>
-                                <strong class="pull-right fa fa-car text-success" title="<%=dayColumn.columnEvents.additionalDriving.car.model%> (<%=dayColumn.columnEvents.additionalDriving.instructor.name%>) - <%=dayColumn.columnEvents.additionalDriving.duration%> m"></strong>
-                        <% } %>
-                    <% } %>
-                </div>
+                <div class="col-xs-1 text-center col-fixed-timeline-day js-timeline-day-header-<%=dayColumn.dayIndex%>"></div>
             <% }) %>
         </div>
     </div>

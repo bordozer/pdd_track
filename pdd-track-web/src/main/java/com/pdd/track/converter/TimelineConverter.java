@@ -57,7 +57,7 @@ public class TimelineConverter {
         List<TimelineDayColumn> result = new ArrayList<>();
         while (currentDay.isBefore(DataGenerationServiceImpl.STUDY_END_DAY.plusDays(1))) {
             TimelineDayColumn dayColumn = new TimelineDayColumn();
-            dayColumn.setIndex(index);
+            dayColumn.setDayIndex(index);
             dayColumn.setDate(currentDay);
 
             TimelineDayColumnEventsDto columnEvents = new TimelineDayColumnEventsDto();
@@ -93,7 +93,7 @@ public class TimelineConverter {
         return dayColumns.stream()
                 .map(dayColumn -> {
                     TimelineDayDto timelineDay = new TimelineDayDto();
-                    timelineDay.setDayIndex(dayColumn.getIndex());
+                    timelineDay.setDayIndex(dayColumn.getDayIndex());
                     timelineDay.setDayDate(dayColumn.getDate());
 
                     TimelineDayEventsDto dayEvents = new TimelineDayEventsDto();

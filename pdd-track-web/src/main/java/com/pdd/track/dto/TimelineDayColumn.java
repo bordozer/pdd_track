@@ -6,7 +6,7 @@ import java.time.LocalDate;
 
 @Data
 public class TimelineDayColumn {
-    private int index;
+    private int dayIndex;
     private LocalDate date;
     private TimelineDayColumnEventsDto columnEvents;
 }

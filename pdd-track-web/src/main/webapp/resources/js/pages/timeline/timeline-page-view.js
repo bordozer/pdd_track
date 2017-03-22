@@ -9,6 +9,7 @@ define(function (require) {
     var template = _.template(require('text!./templates/timeline-page-template.html'));
 
     var timelineDayView = require( 'js/pages/timeline/timeline-day/timeline-day' );
+    var timelineDayHeaderView = require( 'js/pages/timeline/timeline-day-header/timeline-day-header' );
 
     return Backbone.View.extend({
 
@@ -18,12 +19,17 @@ define(function (require) {
         },
 
         render: function () {
+            var self = this;
             var jmodel = this.model.toJSON();
+            console.log(jmodel);
+
             var data = _.extend({}, jmodel, {});
-            console.log(data);
             this.$el.html(template(data));
 
-            var self = this;
+            _.each(jmodel.dayColumns, function(dayColumn) {
+                timelineDayHeaderView(self.$('.js-timeline-day-header-'+ dayColumn.dayIndex), dayColumn);
+            });
+
             _.each(jmodel.items, function(item) {
                 _.each(item.timelineDays, function (timelineDay) {
                     timelineDayView(self.$('.js-timeline-day-' + item.pddSection.number + '-' + timelineDay.dayIndex), timelineDay);
