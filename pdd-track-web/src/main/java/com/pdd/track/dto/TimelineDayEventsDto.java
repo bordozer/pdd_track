@@ -8,6 +8,7 @@ public class TimelineDayEventsDto {
     private boolean study;
     private TestingDto testing;
     private TimelineDayStatus dayStatus;
+    private int questionCount;
 
     public enum TimelineDayStatus {
         NO_STUDYING,

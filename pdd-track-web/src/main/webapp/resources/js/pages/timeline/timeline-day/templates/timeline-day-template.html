@@ -1,11 +1,12 @@
 
+<% var questionCount = dayEvents ? dayEvents.questionCount : 0;%>
 
 <% if(dayEvents.lecture) { %>
-    <strong class="fa fa-university text-warning" title="Lecture"></strong>
+    <strong class="fa fa-university text-warning" title="Lecture"> <sup><small><%=!dayEvents.testing ? questionCount : ''%></small></sup></strong>
 <% } %>
 
 <% if(dayEvents.study) { %>
-    <strong class="fa fa-book text-warning" title="Study"></strong>
+    <strong class="fa fa-book text-warning" title="Study"> <sup><small><%=!dayEvents.testing ? questionCount : ''%></small></sup></strong>
 <% } %>
 
 <% if(dayEvents.testing) { %>
@@ -13,6 +14,7 @@
     <small>
         <strong class="<%=dayEvents.testing.passed ? 'text-success' : 'text-danger'%>" title="Testing: <%=testing.passedQuestions%>/<%=testing.totalQuestions%>">
             <span class="<%=testing.percentage == 100 ? 'timeline-day-testing-100' : ''%>"><%=testing.percentageFormatted%>%</span>
+            <sup><small><%=questionCount%></small></sup>
         </strong>
     </small>
 <% } %>

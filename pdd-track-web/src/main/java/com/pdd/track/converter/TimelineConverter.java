@@ -210,7 +210,7 @@ public class TimelineConverter {
                 .map(sectionDto -> {
                     TimelineItemDto item = new TimelineItemDto();
                     item.setPddSection(sectionDto);
-                    item.setTimelineDays(convertTimelineDaysForPddSection(sectionDto.getKey(), entity, dayColumns, onDate));
+                    item.setTimelineDays(convertTimelineDaysForPddSection(sectionDto, entity, dayColumns, onDate));
                     return item;
                 })
                 .collect(Collectors.toList());
@@ -349,8 +349,8 @@ public class TimelineConverter {
         return timelineTestingItems.get(timelineTestingItems.size() - 1);
     }
 
-    private static List<TimelineDayDto> convertTimelineDaysForPddSection(final String pddSectionKey, final TimelineEntity entity, final List<TimelineDayColumn> dayColumns, final LocalDate onDate) {
-        List<TimelineItem> pddSectionTimelineItems = filterTimelineItemsByPddSectionKey(pddSectionKey, entity.getPddSectionTimelineItems());
+    private static List<TimelineDayDto> convertTimelineDaysForPddSection(final PddSectionDto pddSection, final TimelineEntity entity, final List<TimelineDayColumn> dayColumns, final LocalDate onDate) {
+        List<TimelineItem> pddSectionTimelineItems = filterTimelineItemsByPddSectionKey(pddSection.getKey(), entity.getPddSectionTimelineItems());
         return dayColumns.stream()
                 .map(dayColumn -> {
                     TimelineDayDto timelineDay = new TimelineDayDto();
@@ -359,6 +359,7 @@ public class TimelineConverter {
 
                     TimelineDayEventsDto dayEvents = new TimelineDayEventsDto();
                     populatePddSectionDayEvents(dayColumn.getDate(), pddSectionTimelineItems, dayEvents);
+                    dayEvents.setQuestionCount(pddSection.getQuestionsCount());
                     timelineDay.setDayEvents(dayEvents);
                     timelineDay.setWeekend(WEEKENDS.contains(dayColumn.getDate().getDayOfWeek()));
                     timelineDay.setToday(onDate.equals(dayColumn.getDate()));
