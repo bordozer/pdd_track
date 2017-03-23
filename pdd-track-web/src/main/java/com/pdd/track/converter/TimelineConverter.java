@@ -204,6 +204,11 @@ public class TimelineConverter {
                 })
                 .collect(Collectors.toList());
         populateHintsOnDate(entity, result, onDate);
+        LocalDate aDate = onDate.plusDays(1);
+        while(aDate.isBefore(DataGenerationServiceImpl.STUDY_END_DAY.plusDays(1))) {
+            populateHintsOnDate(entity, result, aDate);
+            aDate = aDate.plusDays(1);
+        }
         populateTimelineSummary(entity, result, onDate);
         return result;
     }
