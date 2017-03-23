@@ -141,12 +141,8 @@
                                     <% } %>
                                 </div>
                                 <div class="col-xs-1 col-fixed-60 text-center text-muted">
-                                    <% if(item.timelineItemSummary.testsCount > 0) { %>
-                                        <% var status = pddSectionSummaryStatusClass(item.timelineItemSummary.timelineItemSummaryStatus); %>
-                                        <span class="<%=status.icon%> <%=status.color%>" title="<%=status.hint%>"></span>
-                                    <% } else { %>
-                                        &nbsp;
-                                    <% } %>
+                                    <% var status = pddSectionSummaryStatusClass(item.timelineItemSummary.timelineItemSummaryStatus); %>
+                                    <span class="<%=status.icon%> <%=status.color%>" title="<%=status.hint%>">&nbsp;</span>
                                 </div>
                             </div>
                         </div>

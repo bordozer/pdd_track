@@ -62,7 +62,13 @@ define(function (require) {
             if (status == 'NOT_READY') {
                 return {icon: 'fa fa-bug', color: 'text-danger', hint: 'The section is NOT ready'}
             }
-            return {icon: '', color: ''}
+            if (status == 'TO_STUDY') {
+                return {icon: 'fa fa-book', color: 'text-danger', hint: 'The section is NOT ready'}
+            }
+            if (status == 'NO_LECTURE_YET') {
+                return {icon: 'fa fa-hourglass-o', color: 'text-muted', hint: 'No lecture yet'}
+            }
+            return {icon: '', color: '', hint: ''}
         }
     });
 });

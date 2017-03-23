@@ -219,11 +219,18 @@ public class TimelineConverter {
                     timelineItemSummary.setStudySuccess(testPercentageIsCool);
 
                     TimelineItemSummaryStatus pddSummaryStatus = TimelineItemSummaryStatus.NONE;
-                    if (vHolder.getCount() < MIN_TESTS_COUNT) {
+                    boolean itWasLectureButItIsNotStudied = pddSectionLectureEvent != null && pddSectionStudyEvent == null;
+                    if (itWasLectureButItIsNotStudied) {
+                        pddSummaryStatus = TimelineItemSummaryStatus.TO_STUDY;
+                    }
+                    if (!itWasLectureButItIsNotStudied && vHolder.getCount() > 0 && vHolder.getCount() < MIN_TESTS_COUNT) {
                         pddSummaryStatus = TimelineItemSummaryStatus.NOT_READY;
                     }
                     if (vHolder.getCount() >= MIN_TESTS_COUNT && testPercentageIsCool && lastTestSuccessful) {
                         pddSummaryStatus = TimelineItemSummaryStatus.READY;
+                    }
+                    if (pddSectionLectureEvent == null) {
+                        pddSummaryStatus = TimelineItemSummaryStatus.NO_LECTURE_YET;
                     }
                     timelineItemSummary.setTimelineItemSummaryStatus(pddSummaryStatus);
                     tlItem.setTimelineItemSummary(timelineItemSummary);
