@@ -63,10 +63,10 @@ define(function (require) {
                 return {icon: 'fa fa-check-square-o', color: 'text-warning', hint: 'The section is ready but under a risk - repeat testing, please'}
             }
             if (status == 'NOT_READY') {
-                return {icon: 'fa fa-bug', color: 'text-danger', hint: 'The section is NOT ready'}
+                return {icon: 'fa fa-bug', color: 'text-danger', hint: 'The section is NOT ready: red tests'}
             }
             if (status == 'TO_STUDY') {
-                return {icon: 'fa fa-book', color: 'text-danger', hint: 'The section is NOT ready'}
+                return {icon: 'fa fa-book', color: 'text-danger', hint: 'The section is NOT ready: not studied'}
             }
             if (status == 'NO_LECTURE_YET') {
                 return {icon: 'fa fa-hourglass-o', color: 'text-muted', hint: 'No lecture yet'}
