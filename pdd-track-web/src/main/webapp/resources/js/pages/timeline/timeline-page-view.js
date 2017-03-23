@@ -49,6 +49,9 @@ define(function (require) {
         },
 
         _percentageClass: function(value) {
+            if (value == 100) {
+                return 'timeline-day-testing-100'
+            }
             return value > 90 ? 'text-success' : 'text-danger';
         },
 
