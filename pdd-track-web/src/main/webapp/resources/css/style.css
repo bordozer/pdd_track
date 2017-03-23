@@ -43,6 +43,16 @@
     float: none;
 }
 
+.row-fluid1 {
+    /*overflow: auto;*/
+    white-space: nowrap;
+}
+
+.row-fluid1 .col-xs-1 {
+    display: inline-block;
+    float: none;
+}
+
 .lecture {
     background-color: #dff0d8;
 }
@@ -61,4 +71,10 @@
 
 .timeline-day-header-lecture-day {
     background-color: #fdeeb3;
+}
+
+.timeline-header {
+    line-height: 66px;
+    padding: 0 !important;
+    margin: 0 !important;
 }
