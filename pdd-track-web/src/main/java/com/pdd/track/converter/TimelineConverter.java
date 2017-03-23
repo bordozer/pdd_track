@@ -51,9 +51,11 @@ public class TimelineConverter {
 
     private static final LocalDate TODAY = LocalDate.now();
     private static final int SECTION_TOO_LONG_WITHOUT_REPEAT_DAYS = 5;
+    private static final int GREEN_SECTION_TOO_LONG_WITHOUT_REPEAT_DAYS = 7;
     private static final int SECTION_TOO_LONG_WITHOUT_STUDY_DAYS = 5;
     private static final int MIN_TESTS_COUNT = 3;
     private static final EnumSet<DayOfWeek> WEEKENDS = EnumSet.of(DayOfWeek.SATURDAY, DayOfWeek.SUNDAY);
+    public static final int GOOD_TEST_PERSENTAGE = 90;
 
     public static TimelineDto toDto(final TimelineEntity entity) {
         TimelineDto result = new TimelineDto();
@@ -212,15 +214,16 @@ public class TimelineConverter {
                                 if (!day.getDayDate().equals(date)) {
                                     return;
                                 }
-                                TimelineItem pddSectionStudyEvent = getLastPddSectionEvent(item.getPddSection().getKey(), TimeLineItemEventType.STUDY, entity);
+                                String sectionKey = item.getPddSection().getKey();
+                                TimelineItem pddSectionStudyEvent = getLastPddSectionEvent(sectionKey, TimeLineItemEventType.STUDY, entity);
                                 if (pddSectionStudyEvent == null) {
-                                    TimelineItem pddSectionLectureEvent = getLastPddSectionEvent(item.getPddSection().getKey(), TimeLineItemEventType.LECTURE, entity);
+                                    TimelineItem pddSectionLectureEvent = getLastPddSectionEvent(sectionKey, TimeLineItemEventType.LECTURE, entity);
                                     if (pddSectionLectureEvent != null && ageInDays(pddSectionLectureEvent.getDate()) > SECTION_TOO_LONG_WITHOUT_STUDY_DAYS) {
                                         day.setDayHints(Lists.newArrayList(new TimeLineDayHintDto(TimeLineDayHintType.NEEDS_STUDY, ageInDays(pddSectionLectureEvent.getDate()))));
                                     }
                                     return;
                                 }
-                                TimelineItem lastTesting = getLastPddSectionEvent(item.getPddSection().getKey(), TimeLineItemEventType.TESTING, entity);
+                                TimelineItem lastTesting = getLastPddSectionEvent(sectionKey, TimeLineItemEventType.TESTING, entity);
                                 if (lastTesting == null) {
                                     return;
                                 }
@@ -228,39 +231,48 @@ public class TimelineConverter {
                                 if (!pddSectionTestingEvent.getTesting().isPassed()) {
                                     day.setDayHints(Lists.newArrayList(new TimeLineDayHintDto(TimeLineDayHintType.RED_TESTS, ageInDays(lastTesting.getDate()))));
                                 }
-                                if (ageInDays(lastTesting.getDate()) > SECTION_TOO_LONG_WITHOUT_REPEAT_DAYS) {
+//                                double testsAveragePercentage = item.getTimelineItemSummary().getTestsAveragePercentage();
+                                if (isSectionTooLongWithoutRepeating(sectionKey, entity)) {
                                     day.setDayHints(Lists.newArrayList(new TimeLineDayHintDto(TimeLineDayHintType.ADVICE_REFRESH_TESTS, ageInDays(lastTesting.getDate()))));
                                 }
                             });
                 });
     }
 
+    private static boolean isSectionTooLongWithoutRepeating(final String sessionKey, final TimelineEntity entity) {
+        TimelineItem lastPddSectionTesting = getLastPddSectionEvent(sessionKey, TimeLineItemEventType.TESTING, entity);
+        if (lastPddSectionTesting == null) {
+            return false;
+        }
+        return ageInDays(lastPddSectionTesting.getDate()) > SECTION_TOO_LONG_WITHOUT_REPEAT_DAYS;
+    }
+
     private static void populateTimelineSummary(final TimelineEntity entity, final List<TimelineItemDto> result) {
         result.stream()
                 .forEach(item -> {
-                    TimelineItem pddSectionLectureEvent = getLastPddSectionEvent(item.getPddSection().getKey(), TimeLineItemEventType.LECTURE, entity);
-                    TimelineItem pddSectionStudyEvent = getLastPddSectionEvent(item.getPddSection().getKey(), TimeLineItemEventType.STUDY, entity);
+                    String sectionKey = item.getPddSection().getKey();
+                    TimelineItem pddSectionLectureEvent = getLastPddSectionEvent(sectionKey, TimeLineItemEventType.LECTURE, entity);
+                    TimelineItem pddSectionStudyEvent = getLastPddSectionEvent(sectionKey, TimeLineItemEventType.STUDY, entity);
 
                     TimelineItemSummaryDto timelineItemSummary = new TimelineItemSummaryDto();
                     timelineItemSummary.setLecture(pddSectionLectureEvent != null);
                     timelineItemSummary.setStudy(pddSectionStudyEvent != null);
 
-                    boolean lastSectionTestingWasLongTimeAgo = false;
+
                     boolean lastTestSuccessful = false;
-                    TimelineItem lastPddSectionTesting = getLastPddSectionEvent(item.getPddSection().getKey(), TimeLineItemEventType.TESTING, entity);
+                    TimelineItem lastPddSectionTesting = getLastPddSectionEvent(sectionKey, TimeLineItemEventType.TESTING, entity);
                     if (lastPddSectionTesting != null) {
                         PddSectionTesting lastSectionTesting = (PddSectionTesting) lastPddSectionTesting.getEvent();
                         lastTestSuccessful = lastSectionTesting.getTesting().isPassed();
                         timelineItemSummary.setLastTestSuccessful(lastTestSuccessful);
-                        lastSectionTestingWasLongTimeAgo = ageInDays(lastPddSectionTesting.getDate()) > SECTION_TOO_LONG_WITHOUT_REPEAT_DAYS;
                     }
 
-                    VHolder vHolder = calculateTimelinePddSectionSummary(entity, item.getPddSection().getKey());
+                    VHolder vHolder = calculateTimelinePddSectionSummary(entity, sectionKey);
                     double averageTestingScore = vHolder.getValue() / vHolder.getCount();
                     timelineItemSummary.setTestsCount(vHolder.getCount());
                     timelineItemSummary.setTestsAveragePercentage(averageTestingScore);
                     timelineItemSummary.setTestsAveragePercentageFormatted(formatDouble(averageTestingScore));
-                    boolean testPercentageIsCool = averageTestingScore > 90;
+                    boolean testPercentageIsGood = averageTestingScore > GOOD_TEST_PERSENTAGE;
 
                     TimelineItemSummaryStatus pddSummaryStatus = TimelineItemSummaryStatus.NONE;
                     boolean itWasLectureButItIsNotStudied = pddSectionLectureEvent != null && pddSectionStudyEvent == null;
@@ -270,14 +282,14 @@ public class TimelineConverter {
                     if (!itWasLectureButItIsNotStudied && vHolder.getCount() > 0 && vHolder.getCount() < MIN_TESTS_COUNT) {
                         pddSummaryStatus = TimelineItemSummaryStatus.NOT_READY;
                     }
-                    if (vHolder.getCount() >= MIN_TESTS_COUNT && testPercentageIsCool && lastTestSuccessful) {
-                        if (lastSectionTestingWasLongTimeAgo) {
+                    if (vHolder.getCount() >= MIN_TESTS_COUNT && testPercentageIsGood && lastTestSuccessful) {
+                        if (isSectionTooLongWithoutRepeating(sectionKey, entity)) {
                             pddSummaryStatus = TimelineItemSummaryStatus.READY_WITH_RISK;
                         } else {
                             pddSummaryStatus = TimelineItemSummaryStatus.COMPLETELY_READY;
                         }
                     }
-                    if (vHolder.getCount() >= MIN_TESTS_COUNT && !testPercentageIsCool && lastTestSuccessful) {
+                    if (vHolder.getCount() >= MIN_TESTS_COUNT && !testPercentageIsGood && lastTestSuccessful) {
                         pddSummaryStatus = TimelineItemSummaryStatus.NOT_READY;
                     }
                     if (pddSectionLectureEvent == null) {
