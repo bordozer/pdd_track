@@ -49,7 +49,6 @@ import java.util.stream.Collectors;
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 public class TimelineConverter {
 
-    private static final LocalDate TODAY = LocalDate.now();
     private static final int SECTION_TOO_LONG_WITHOUT_REPEAT_DAYS = 5;
     private static final int COOL_SECTION_TOO_LONG_WITHOUT_REPEAT_DAYS = 7;
     private static final int EXCELLENT_SECTION_TOO_LONG_WITHOUT_REPEAT_DAYS = 10;
@@ -60,19 +59,19 @@ public class TimelineConverter {
     public static final int COLL_TEST_PERCENTAGE = 96;
     public static final int EXCELLENT_TEST_PERCENTAGE = 100;
 
-    public static TimelineDto toDto(final TimelineEntity entity) {
+    public static TimelineDto toDto(final TimelineEntity entity, final LocalDate onDate) {
         TimelineDto result = new TimelineDto();
         result.setStartDate(DataGenerationServiceImpl.STUDY_START_DAY);
         result.setEndDate(DataGenerationServiceImpl.STUDY_END_DAY);
 
-        List<TimelineDayColumn> dayColumns = getDayColumns();
+        List<TimelineDayColumn> dayColumns = getDayColumns(onDate);
         result.setDayColumns(dayColumns);
         dayColumns.stream()
                 .forEach(dayColumn -> {
                     populateGlobalDayEvents(dayColumn, entity.getStudyingTimelineItems());
                 });
 
-        result.setItems(convertItems(entity, dayColumns));
+        result.setItems(convertItems(entity, dayColumns, onDate));
         result.setSummaryColumns(calculateTimelineDaySummary(entity, dayColumns));
         result.setTimelineStatistics(collectStatistics(result));
 
@@ -166,7 +165,7 @@ public class TimelineConverter {
         return vHolder;
     }
 
-    private static List<TimelineDayColumn> getDayColumns() {
+    private static List<TimelineDayColumn> getDayColumns(final LocalDate onDate) {
         int index = 1;
         LocalDate currentDay = DataGenerationServiceImpl.STUDY_START_DAY;
         List<TimelineDayColumn> result = new ArrayList<>();
@@ -176,10 +175,10 @@ public class TimelineConverter {
             dayColumn.setDate(currentDay);
 
             TimelineDayColumnEventsDto columnEvents = new TimelineDayColumnEventsDto();
-            if (currentDay.isBefore(TODAY)) {
+            if (currentDay.isBefore(onDate)) {
                 columnEvents.setDayPassed(true);
             }
-            if (currentDay.equals(TODAY)) {
+            if (currentDay.equals(onDate)) {
                 columnEvents.setToday(true);
             }
             if (DataGenerationServiceImpl.LECTURE_WEEK_DAYS.contains(currentDay.getDayOfWeek())) {
@@ -195,7 +194,7 @@ public class TimelineConverter {
         return result;
     }
 
-    private static List<TimelineItemDto> convertItems(final TimelineEntity entity, final List<TimelineDayColumn> dayColumns) {
+    private static List<TimelineItemDto> convertItems(final TimelineEntity entity, final List<TimelineDayColumn> dayColumns, final LocalDate onDate) {
         List<TimelineItemDto> result = groupPddSections(entity.getPddSectionTimelineItems()).stream()
                 .map(sectionDto -> {
                     TimelineItemDto item = new TimelineItemDto();
@@ -204,25 +203,25 @@ public class TimelineConverter {
                     return item;
                 })
                 .collect(Collectors.toList());
-        populateHintsOnDate(entity, result, TODAY);
-        populateTimelineSummary(entity, result);
+        populateHintsOnDate(entity, result, onDate);
+        populateTimelineSummary(entity, result, onDate);
         return result;
     }
 
-    private static void populateHintsOnDate(final TimelineEntity entity, final List<TimelineItemDto> result, final LocalDate date) {
+    private static void populateHintsOnDate(final TimelineEntity entity, final List<TimelineItemDto> result, final LocalDate onDate) {
         result.stream()
                 .forEach(item -> {
                     item.getTimelineDays().stream()
                             .forEach(day -> {
-                                if (!day.getDayDate().equals(date)) {
+                                if (!day.getDayDate().equals(onDate)) {
                                     return;
                                 }
                                 String sectionKey = item.getPddSection().getKey();
                                 TimelineItem pddSectionStudyEvent = getLastPddSectionEvent(sectionKey, TimeLineItemEventType.STUDY, entity);
                                 if (pddSectionStudyEvent == null) {
                                     TimelineItem pddSectionLectureEvent = getLastPddSectionEvent(sectionKey, TimeLineItemEventType.LECTURE, entity);
-                                    if (pddSectionLectureEvent != null && ageInDays(pddSectionLectureEvent.getDate()) > SECTION_TOO_LONG_WITHOUT_STUDY_DAYS) {
-                                        day.setDayHints(Lists.newArrayList(new TimeLineDayHintDto(TimeLineDayHintType.NEEDS_STUDY, ageInDays(pddSectionLectureEvent.getDate()))));
+                                    if (pddSectionLectureEvent != null && ageInDays(pddSectionLectureEvent.getDate(), onDate) > SECTION_TOO_LONG_WITHOUT_STUDY_DAYS) {
+                                        day.setDayHints(Lists.newArrayList(new TimeLineDayHintDto(TimeLineDayHintType.NEEDS_STUDY, ageInDays(pddSectionLectureEvent.getDate(), onDate))));
                                     }
                                     return;
                                 }
@@ -232,32 +231,32 @@ public class TimelineConverter {
                                 }
                                 PddSectionTesting pddSectionTestingEvent = (PddSectionTesting) lastTesting.getEvent();
                                 if (!pddSectionTestingEvent.getTesting().isPassed()) {
-                                    day.setDayHints(Lists.newArrayList(new TimeLineDayHintDto(TimeLineDayHintType.RED_TESTS, ageInDays(lastTesting.getDate()))));
+                                    day.setDayHints(Lists.newArrayList(new TimeLineDayHintDto(TimeLineDayHintType.RED_TESTS, ageInDays(lastTesting.getDate(), onDate))));
                                 }
 //                                double testsAveragePercentage = item.getTimelineItemSummary().getTestsAveragePercentage();
-                                if (isSectionTooLongWithoutRepeating(sectionKey, entity)) {
-                                    day.setDayHints(Lists.newArrayList(new TimeLineDayHintDto(TimeLineDayHintType.ADVICE_REFRESH_TESTS, ageInDays(lastTesting.getDate()))));
+                                if (isSectionTooLongWithoutRepeating(sectionKey, entity, onDate)) {
+                                    day.setDayHints(Lists.newArrayList(new TimeLineDayHintDto(TimeLineDayHintType.ADVICE_REFRESH_TESTS, ageInDays(lastTesting.getDate(), onDate))));
                                 }
                             });
                 });
     }
 
-    private static boolean isSectionTooLongWithoutRepeating(final String sessionKey, final TimelineEntity entity) {
+    private static boolean isSectionTooLongWithoutRepeating(final String sessionKey, final TimelineEntity entity, final LocalDate onDate) {
         TimelineItem lastPddSectionTesting = getLastPddSectionEvent(sessionKey, TimeLineItemEventType.TESTING, entity);
         if (lastPddSectionTesting == null) {
             return false;
         }
         PddSectionTesting lastSectionTesting = (PddSectionTesting) lastPddSectionTesting.getEvent();
         if (getPercentage(lastSectionTesting.getTesting()) >= EXCELLENT_TEST_PERCENTAGE) {
-            return ageInDays(lastPddSectionTesting.getDate()) > EXCELLENT_SECTION_TOO_LONG_WITHOUT_REPEAT_DAYS;
+            return ageInDays(lastPddSectionTesting.getDate(), onDate) > EXCELLENT_SECTION_TOO_LONG_WITHOUT_REPEAT_DAYS;
         }
         if (getPercentage(lastSectionTesting.getTesting()) >= COLL_TEST_PERCENTAGE) {
-            return ageInDays(lastPddSectionTesting.getDate()) > COOL_SECTION_TOO_LONG_WITHOUT_REPEAT_DAYS;
+            return ageInDays(lastPddSectionTesting.getDate(), onDate) > COOL_SECTION_TOO_LONG_WITHOUT_REPEAT_DAYS;
         }
-        return ageInDays(lastPddSectionTesting.getDate()) > SECTION_TOO_LONG_WITHOUT_REPEAT_DAYS;
+        return ageInDays(lastPddSectionTesting.getDate(), onDate) > SECTION_TOO_LONG_WITHOUT_REPEAT_DAYS;
     }
 
-    private static void populateTimelineSummary(final TimelineEntity entity, final List<TimelineItemDto> result) {
+    private static void populateTimelineSummary(final TimelineEntity entity, final List<TimelineItemDto> result, final LocalDate onDate) {
         result.stream()
                 .forEach(item -> {
                     String sectionKey = item.getPddSection().getKey();
@@ -293,7 +292,7 @@ public class TimelineConverter {
                         pddSummaryStatus = TimelineItemSummaryStatus.NOT_READY;
                     }
                     if (vHolder.getCount() >= MIN_TESTS_COUNT && testPercentageIsGood && lastTestSuccessful) {
-                        if (isSectionTooLongWithoutRepeating(sectionKey, entity)) {
+                        if (isSectionTooLongWithoutRepeating(sectionKey, entity, onDate)) {
                             pddSummaryStatus = TimelineItemSummaryStatus.READY_WITH_RISK;
                         } else {
                             pddSummaryStatus = TimelineItemSummaryStatus.COMPLETELY_READY;
@@ -441,8 +440,8 @@ public class TimelineConverter {
         return value == 0 ? "" : new DecimalFormat("#0.00").format(value);
     }
 
-    private static long ageInDays(final LocalDate date) {
-        return ChronoUnit.DAYS.between(date, TODAY);
+    private static long ageInDays(final LocalDate date, final LocalDate onDate) {
+        return ChronoUnit.DAYS.between(date, onDate);
     }
 
     @Getter

@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.inject.Inject;
+import java.time.LocalDate;
 
 @RestController
 @RequestMapping(value = "/student/timeline")
@@ -24,7 +25,7 @@ public class StudentTimelineController {
 
     @RequestMapping(method = RequestMethod.GET, value = "/{studentKey}/")
     public TimelineDto getStudentTimeline(@PathVariable("studentKey") final String studentKey) {
-        return TimelineConverter.toDto(timelineService.getForStudent(studentKey));
+        return TimelineConverter.toDto(timelineService.getForStudent(studentKey), LocalDate.now());
     }
 
     @RequestMapping(method = RequestMethod.PUT, value = "/data-create/")
