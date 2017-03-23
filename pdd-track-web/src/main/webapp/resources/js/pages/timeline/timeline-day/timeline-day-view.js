@@ -29,11 +29,10 @@ define(function (require) {
                 this.$el.addClass('timeline-day-today');
             }
             if (jmodel.timelineDay.dayEvents.lecture) {
-                this.$el.addClass('lecture');
+                this.$el.addClass('timeline-day-lecture');
             }
-
             if (jmodel.timelineDay.dayEvents.study) {
-                this.$el.addClass('study');
+                this.$el.addClass('timeline-day-study');
             }
 
             return this;

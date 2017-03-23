@@ -1,22 +1,18 @@
 
 
 <% if(dayEvents.lecture) { %>
-<strong class="fa fa-university text-warning" title="Lecture"></strong>
+    <strong class="fa fa-university text-warning" title="Lecture"></strong>
 <% } %>
 
 <% if(dayEvents.study) { %>
-<strong class="fa fa-book text-warning" title="Study"></strong>
+    <strong class="fa fa-book text-warning" title="Study"></strong>
 <% } %>
 
 <% if(dayEvents.testing) { %>
     <% var testing = dayEvents.testing%>
     <small>
         <strong class="<%=dayEvents.testing.passed ? 'text-success' : 'text-danger'%>" title="Testing: <%=testing.passedQuestions%>/<%=testing.totalQuestions%>">
-            <% if(testing.percentage < 100) {%>
-                <%=testing.percentageFormatted%>%
-            <%} else {%>
-                <span class="fa fa-gift"></span>
-            <%}%>
+            <span class="<%=testing.percentage == 100 ? 'timeline-day-testing-100' : ''%>"><%=testing.percentageFormatted%>%</span>
         </strong>
     </small>
 <% } %>

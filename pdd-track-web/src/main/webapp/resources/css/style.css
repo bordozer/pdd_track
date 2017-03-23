@@ -53,14 +53,6 @@
     float: none;
 }
 
-.lecture {
-    background-color: #dff0d8;
-}
-
-.study {
-    background-color: #9fda58;
-}
-
 .timeline-day-header-today {
     background-color: #e0f2be;
 }
@@ -85,6 +77,19 @@
 
 .timeline-day-today {
     background-color: #e0f2be;
+}
+
+.timeline-day-lecture {
+    background-color: #D2E0E6;
+}
+
+.timeline-day-study {
+    background-color: #dff0d8;
+}
+
+.timeline-day-testing-100 {
+    font-size: 14px;
+    color: darkgreen;
 }
 
 .pdd-section-ready {
