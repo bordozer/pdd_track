@@ -38,15 +38,17 @@ define(function (require) {
             return this;
         },
 
-        _getHintIcon: function(timeLineDayHintType) {
+        _getHintIcon: function(dayHint) {
+            var timeLineDayHintType = dayHint.dayHintType;
+            var text = dayHint.ageInDays + 'd';
             if (timeLineDayHintType == 'NEEDS_STUDY') {
-                return {icon: 'fa fa-book', color: 'text-danger', hint: 'Not studied section'};
+                return {icon: 'fa fa-book', color: 'text-danger', hint: 'Not studied section', text: text};
             }
             if (timeLineDayHintType == 'ADVICE_REFRESH_TESTS') {
-                return {icon: 'fa fa-clock-o', color: 'text-muted', hint: 'Advice: refresh tests'};
+                return {icon: 'fa fa-clock-o', color: 'text-muted', hint: 'Advice: refresh tests', text: text};
             }
             if (timeLineDayHintType == 'RED_TESTS') {
-                return {icon: 'fa fa-exclamation-triangle', color: 'text-danger', hint: 'Your tests results are red!'};
+                return {icon: 'fa fa-exclamation-triangle', color: 'text-danger', hint: 'Your tests results are red!', text: text};
             }
         }
     });

@@ -119,9 +119,19 @@ public class TimelineConverter {
     }
 
     private static List<TimelineDaySummaryDto> calculateTimelineDaySummary(final TimelineEntity entity, final List<TimelineDayColumn> dayColumns) {
+
+        @Getter
+        class QuestionsAggregator {
+            private int value;
+
+            public void add(final int value) {
+                this.value += value;
+            }
+        }
         return dayColumns.stream()
                 .map(dayColumn -> {
-                    final VHolder vHolder = new VHolder();
+                    final ValuesAggregator valuesAggregator = new ValuesAggregator();
+                    final QuestionsAggregator questionsAggregator = new QuestionsAggregator();
                     entity.getPddSectionTimelineItems().stream()
                             .forEach(item -> {
                                 item.getTimelineItems().stream()
@@ -133,21 +143,22 @@ public class TimelineConverter {
                                                 return;
                                             }
                                             PddSectionTesting testingEvent = (PddSectionTesting) tlItem.getEvent();
-                                            vHolder.add(((double) testingEvent.getTesting().getPassedQuestions() / testingEvent.getTesting().getTotalQuestions()) * 100);
+                                            valuesAggregator.add(((double) testingEvent.getTesting().getPassedQuestions() / testingEvent.getTesting().getTotalQuestions()) * 100);
+                                            questionsAggregator.add(item.getPddSection().getQuestionsCount());
                                         });
                             });
 
-                    if (vHolder.getValue() == 0) {
-                        return new TimelineDaySummaryDto(0, "");
+                    if (valuesAggregator.getValue() == 0) {
+                        return new TimelineDaySummaryDto(0, "", 0);
                     }
-                    double value = vHolder.getValue() / vHolder.getCount();
-                    return new TimelineDaySummaryDto(value, formatDouble(value));
+                    double value = valuesAggregator.getValue() / valuesAggregator.getCount();
+                    return new TimelineDaySummaryDto(value, formatDouble(value), questionsAggregator.getValue());
                 })
                 .collect(Collectors.toList());
     }
 
-    private static VHolder calculateTimelinePddSectionSummary(final TimelineEntity entity, final String pddSectionKey) {
-        final VHolder vHolder = new VHolder();
+    private static ValuesAggregator calculateTimelinePddSectionSummary(final TimelineEntity entity, final String pddSectionKey) {
+        final ValuesAggregator valuesAggregator = new ValuesAggregator();
         entity.getPddSectionTimelineItems().stream()
                 .forEach(item -> {
                     if (!item.getPddSection().getKey().equals(pddSectionKey)) {
@@ -159,10 +170,10 @@ public class TimelineConverter {
                                     return;
                                 }
                                 PddSectionTesting testingEvent = (PddSectionTesting) tlItem.getEvent();
-                                vHolder.add(((double) testingEvent.getTesting().getPassedQuestions() / testingEvent.getTesting().getTotalQuestions()) * 100);
+                                valuesAggregator.add(((double) testingEvent.getTesting().getPassedQuestions() / testingEvent.getTesting().getTotalQuestions()) * 100);
                             });
                 });
-        return vHolder;
+        return valuesAggregator;
     }
 
     private static List<TimelineDayColumn> getDayColumns(final LocalDate onDate) {
@@ -281,9 +292,9 @@ public class TimelineConverter {
                         timelineItemSummary.setLastTestSuccessful(lastTestSuccessful);
                     }
 
-                    VHolder vHolder = calculateTimelinePddSectionSummary(entity, sectionKey);
-                    double averageTestingScore = vHolder.getValue() / vHolder.getCount();
-                    timelineItemSummary.setTestsCount(vHolder.getCount());
+                    ValuesAggregator valuesAggregator = calculateTimelinePddSectionSummary(entity, sectionKey);
+                    double averageTestingScore = valuesAggregator.getValue() / valuesAggregator.getCount();
+                    timelineItemSummary.setTestsCount(valuesAggregator.getCount());
                     timelineItemSummary.setTestsAveragePercentage(averageTestingScore);
                     timelineItemSummary.setTestsAveragePercentageFormatted(formatDouble(averageTestingScore));
                     boolean testPercentageIsGood = averageTestingScore > GOOD_TEST_PERCENTAGE;
@@ -293,17 +304,17 @@ public class TimelineConverter {
                     if (itWasLectureButItIsNotStudied) {
                         pddSummaryStatus = TimelineItemSummaryStatus.TO_STUDY;
                     }
-                    if (!itWasLectureButItIsNotStudied && vHolder.getCount() > 0 && vHolder.getCount() < MIN_TESTS_COUNT) {
+                    if (!itWasLectureButItIsNotStudied && valuesAggregator.getCount() > 0 && valuesAggregator.getCount() < MIN_TESTS_COUNT) {
                         pddSummaryStatus = TimelineItemSummaryStatus.NOT_READY;
                     }
-                    if (vHolder.getCount() >= MIN_TESTS_COUNT && testPercentageIsGood && lastTestSuccessful) {
+                    if (valuesAggregator.getCount() >= MIN_TESTS_COUNT && testPercentageIsGood && lastTestSuccessful) {
                         if (isSectionTooLongWithoutRepeating(sectionKey, entity, onDate)) {
                             pddSummaryStatus = TimelineItemSummaryStatus.READY_WITH_RISK;
                         } else {
                             pddSummaryStatus = TimelineItemSummaryStatus.COMPLETELY_READY;
                         }
                     }
-                    if (vHolder.getCount() >= MIN_TESTS_COUNT && !testPercentageIsGood && lastTestSuccessful) {
+                    if (valuesAggregator.getCount() >= MIN_TESTS_COUNT && !testPercentageIsGood && lastTestSuccessful) {
                         pddSummaryStatus = TimelineItemSummaryStatus.NOT_READY;
                     }
                     if (pddSectionLectureEvent == null) {
@@ -452,7 +463,7 @@ public class TimelineConverter {
     }
 
     @Getter
-    private static class VHolder {
+    private static class ValuesAggregator {
         private double value = 0D;
         private int count = 0;
 

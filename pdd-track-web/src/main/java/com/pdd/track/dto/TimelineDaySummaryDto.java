@@ -10,4 +10,5 @@ import lombok.NoArgsConstructor;
 public class TimelineDaySummaryDto {
     private double value;
     private String valueFormatted;
+    private int potentialQuestionsCountToRepeat;
 }
