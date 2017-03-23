@@ -274,6 +274,7 @@ public class DataGenerationServiceImpl implements DataGenerationService {
                         new TimelineItem(LocalDate.of(2017, 3, 16), new PddSectionTesting(75, 78, true)),
                         new TimelineItem(LocalDate.of(2017, 3, 16), new PddSectionTesting(78, 78, true))
                 )),
+                sectionTimelineItem15,
                 new PddSectionTimelineItem(PDD_SECTION_15, Arrays.asList(
                         new TimelineItem(LocalDate.of(2017, 3, 12), new LectureEvent())
                 )),
@@ -357,8 +358,39 @@ public class DataGenerationServiceImpl implements DataGenerationService {
                         new TimelineItem(LocalDate.of(2017, 3, 17), new PddSectionTesting(8, 8, true)),
                         new TimelineItem(LocalDate.of(2017, 3, 19), new PddSectionTesting(8, 8, true))
                 )),
-                sectionTimelineItem15,
-                sectionTimelineItem33
+                new PddSectionTimelineItem(PDD_SECTION_26, Arrays.asList(
+                        new TimelineItem(LocalDate.of(2017, 3, 5), new LectureEvent()),
+                        new TimelineItem(LocalDate.of(2017, 3, 8), new PddSectionStudy()),
+                        new TimelineItem(LocalDate.of(2017, 3, 8), new PddSectionTesting(15, 18, false)),
+                        new TimelineItem(LocalDate.of(2017, 3, 9), new PddSectionTesting(18, 18, true)),
+                        new TimelineItem(LocalDate.of(2017, 3, 13), new PddSectionTesting(18, 18, true)),
+                        new TimelineItem(LocalDate.of(2017, 3, 15), new PddSectionTesting(18, 18, true)),
+                        new TimelineItem(LocalDate.of(2017, 3, 17), new PddSectionTesting(18, 18, true))
+                )),
+                new PddSectionTimelineItem(PDD_SECTION_27, Arrays.asList(
+                        new TimelineItem(LocalDate.of(2017, 3, 18), new LectureEvent()),
+                        new TimelineItem(LocalDate.of(2017, 3, 19), new PddSectionStudy()),
+                        new TimelineItem(LocalDate.of(2017, 3, 19), new PddSectionTesting(11, 12, true)),
+                        new TimelineItem(LocalDate.of(2017, 3, 20), new PddSectionTesting(11, 12, true)),
+                        new TimelineItem(LocalDate.of(2017, 3, 21), new PddSectionTesting(12, 12, true))
+                )),
+                new PddSectionTimelineItem(PDD_SECTION_28, Arrays.asList(
+                        new TimelineItem(LocalDate.of(2017, 3, 18), new LectureEvent()),
+                        new TimelineItem(LocalDate.of(2017, 3, 19), new PddSectionStudy()),
+                        new TimelineItem(LocalDate.of(2017, 3, 19), new PddSectionTesting(9, 12, false)),
+                        new TimelineItem(LocalDate.of(2017, 3, 20), new PddSectionTesting(12, 12, true)),
+                        new TimelineItem(LocalDate.of(2017, 3, 21), new PddSectionTesting(12, 12, true))
+                )),
+                new PddSectionTimelineItem(PDD_SECTION_29, Arrays.asList(
+
+                )),
+                new PddSectionTimelineItem(PDD_SECTION_32, Arrays.asList(
+
+                )),
+                sectionTimelineItem33,
+                new PddSectionTimelineItem(PDD_SECTION_34, Arrays.asList(
+
+                ))
         );
     }
 }
