@@ -57,21 +57,21 @@ public class DataGenerationServiceImpl implements DataGenerationService {
     private static final PddSection PDD_SECTION_17 = new PddSection("17", "Preimushchestva marshrutnyh transportnyh sredstv", 9);
     private static final PddSection PDD_SECTION_18 = new PddSection("18", "Proezd peshekhodnyh perekhodov i ostanovok transportnyh sredstv", 29);
     private static final PddSection PDD_SECTION_19 = new PddSection("19", "Ispol'zovanie vneshnih svetovyh priborov", 15);
-    private static final PddSection PDD_SECTION_20 = new PddSection("20", "General", 116);
-    private static final PddSection PDD_SECTION_21 = new PddSection("1", "General", 116);
-    private static final PddSection PDD_SECTION_22 = new PddSection("1", "General", 116);
-    private static final PddSection PDD_SECTION_23 = new PddSection("1", "General", 116);
-    private static final PddSection PDD_SECTION_24 = new PddSection("1", "General", 116);
-    private static final PddSection PDD_SECTION_25 = new PddSection("1", "General", 116);
-    private static final PddSection PDD_SECTION_26 = new PddSection("1", "General", 116);
-    private static final PddSection PDD_SECTION_27 = new PddSection("1", "General", 116);
-    private static final PddSection PDD_SECTION_28 = new PddSection("1", "General", 116);
-    private static final PddSection PDD_SECTION_29 = new PddSection("1", "General", 116);
-    private static final PddSection PDD_SECTION_30 = new PddSection("1", "General", 116);
-    private static final PddSection PDD_SECTION_31 = new PddSection("1", "General", 116);
-    private static final PddSection PDD_SECTION_32 = new PddSection("1", "General", 116);
-    private static final PddSection PDD_SECTION_33 = new PddSection("33", "Znaki", 116);
-    private static final PddSection PDD_SECTION_34 = new PddSection("1", "General", 116);
+    private static final PddSection PDD_SECTION_20 = new PddSection("20", "Dvizhenie cherez zheleznodorozhnye pereezdy", 32);
+    private static final PddSection PDD_SECTION_21 = new PddSection("21", "Perevozka passazhirov", 11);
+    private static final PddSection PDD_SECTION_22 = new PddSection("22", "Perevozka gruza", 14);
+    private static final PddSection PDD_SECTION_23 = new PddSection("23", "Buksirovka i ehkspluataciya transportnyh sostavov", 34);
+    private static final PddSection PDD_SECTION_24 = new PddSection("24", "Uchebnaya ezda", 9);
+    private static final PddSection PDD_SECTION_25 = new PddSection("25", "Dvizhenie transportnyh sredstv v kolonnah", 8);
+    private static final PddSection PDD_SECTION_26 = new PddSection("26", "Dvizhenie v zhiloj i peshekhodnoj zone", 18);
+    private static final PddSection PDD_SECTION_27 = new PddSection("27", "Dvizhenie po avtomagistralyam i dorogam dlya avtomobilej", 12);
+    private static final PddSection PDD_SECTION_28 = new PddSection("28", "Dvizhenie po gornym dorogam i na krutyh spuskah", 12);
+    private static final PddSection PDD_SECTION_29 = new PddSection("29", "Mezhdunarodnoe dvizhenie", 3);
+    private static final PddSection PDD_SECTION_30 = new PddSection("30", "Nomernye, opoznavatel'nye znaki, nadpisi i oboznacheniya", 24);
+    private static final PddSection PDD_SECTION_31 = new PddSection("31", "Tekhnicheskoe sostoyanie transportnyh sredstv i ih osnashchenie", 71);
+    private static final PddSection PDD_SECTION_32 = new PddSection("32", "Voprosy dorozhnogo dvizheniya, kotorye trebuyut soglasovaniya s GAI", 6);
+    private static final PddSection PDD_SECTION_33 = new PddSection("33", "Znaki", 368);
+    private static final PddSection PDD_SECTION_34 = new PddSection("34", "Dorozhnaya razmetka", 46);
 
     public static final LocalDate STUDY_START_DAY = LocalDate.of(2017, 2, 25);
     public static final LocalDate STUDY_END_DAY = LocalDate.of(2017, 4, 23);
@@ -257,6 +257,62 @@ public class DataGenerationServiceImpl implements DataGenerationService {
                         new TimelineItem(LocalDate.of(2017, 3, 14), new PddSectionTesting(59, 64, true)),
                         new TimelineItem(LocalDate.of(2017, 3, 16), new PddSectionTesting(63, 64, true)),
                         new TimelineItem(LocalDate.of(2017, 3, 17), new PddSectionTesting(63, 64, true))
+                )),
+                new PddSectionTimelineItem(PDD_SECTION_13, Arrays.asList(
+                        new TimelineItem(LocalDate.of(2017, 2, 26), new LectureEvent()),
+                        new TimelineItem(LocalDate.of(2017, 3, 8), new PddSectionStudy()),
+                        new TimelineItem(LocalDate.of(2017, 3, 8), new PddSectionTesting(10, 14, false)),
+                        new TimelineItem(LocalDate.of(2017, 3, 9), new PddSectionTesting(14, 14, true)),
+                        new TimelineItem(LocalDate.of(2017, 3, 13), new PddSectionTesting(13, 14, true)),
+                        new TimelineItem(LocalDate.of(2017, 3, 15), new PddSectionTesting(14, 14, true)),
+                        new TimelineItem(LocalDate.of(2017, 3, 16), new PddSectionTesting(14, 14, true))
+                )),
+                new PddSectionTimelineItem(PDD_SECTION_14, Arrays.asList(
+                        new TimelineItem(LocalDate.of(2017, 3, 12), new LectureEvent()),
+                        new TimelineItem(LocalDate.of(2017, 3, 15), new PddSectionStudy()),
+                        new TimelineItem(LocalDate.of(2017, 3, 15), new PddSectionTesting(70, 78, false)),
+                        new TimelineItem(LocalDate.of(2017, 3, 16), new PddSectionTesting(75, 78, true)),
+                        new TimelineItem(LocalDate.of(2017, 3, 16), new PddSectionTesting(78, 78, true))
+                )),
+                new PddSectionTimelineItem(PDD_SECTION_15, Arrays.asList(
+                        new TimelineItem(LocalDate.of(2017, 3, 12), new LectureEvent())
+                )),
+                new PddSectionTimelineItem(PDD_SECTION_16, Arrays.asList(
+
+                )),
+                new PddSectionTimelineItem(PDD_SECTION_17, Arrays.asList(
+                        new TimelineItem(LocalDate.of(2017, 3, 11), new LectureEvent()),
+                        new TimelineItem(LocalDate.of(2017, 3, 12), new PddSectionStudy()),
+                        new TimelineItem(LocalDate.of(2017, 3, 12), new PddSectionTesting(8, 9, false)),
+                        new TimelineItem(LocalDate.of(2017, 3, 13), new PddSectionTesting(11, 12, true)),
+                        new TimelineItem(LocalDate.of(2017, 3, 15), new PddSectionTesting(8, 9, false)),
+                        new TimelineItem(LocalDate.of(2017, 3, 16), new PddSectionTesting(9, 9, true)),
+                        new TimelineItem(LocalDate.of(2017, 3, 17), new PddSectionTesting(8, 9, true))
+                )),
+                new PddSectionTimelineItem(PDD_SECTION_18, Arrays.asList(
+                        new TimelineItem(LocalDate.of(2017, 3, 12), new LectureEvent()),
+                        new TimelineItem(LocalDate.of(2017, 3, 13), new PddSectionStudy()),
+                        new TimelineItem(LocalDate.of(2017, 3, 13), new PddSectionTesting(28, 29, false)),
+                        new TimelineItem(LocalDate.of(2017, 3, 14), new PddSectionTesting(29, 29, true)),
+                        new TimelineItem(LocalDate.of(2017, 3, 15), new PddSectionTesting(29, 29, true)),
+                        new TimelineItem(LocalDate.of(2017, 3, 22), new PddSectionTesting(29, 29, true))
+                )),
+                new PddSectionTimelineItem(PDD_SECTION_19, Arrays.asList(
+                        new TimelineItem(LocalDate.of(2017, 3, 5), new LectureEvent()),
+                        new TimelineItem(LocalDate.of(2017, 3, 7), new PddSectionStudy()),
+                        new TimelineItem(LocalDate.of(2017, 3, 7), new PddSectionTesting(19, 20, true)),
+                        new TimelineItem(LocalDate.of(2017, 3, 11), new PddSectionTesting(15, 15, true)),
+                        new TimelineItem(LocalDate.of(2017, 3, 13), new PddSectionTesting(15, 15, true)),
+                        new TimelineItem(LocalDate.of(2017, 3, 17), new PddSectionTesting(14, 15, true)),
+                        new TimelineItem(LocalDate.of(2017, 3, 19), new PddSectionTesting(15, 15, true))
+                )),
+                new PddSectionTimelineItem(PDD_SECTION_20, Arrays.asList(
+                        new TimelineItem(LocalDate.of(2017, 3, 5), new LectureEvent()),
+                        new TimelineItem(LocalDate.of(2017, 3, 8), new PddSectionStudy()),
+                        new TimelineItem(LocalDate.of(2017, 3, 8), new PddSectionTesting(31, 32, true)),
+                        new TimelineItem(LocalDate.of(2017, 3, 11), new PddSectionTesting(30, 32, true)),
+                        new TimelineItem(LocalDate.of(2017, 3, 15), new PddSectionTesting(31, 32, true)),
+                        new TimelineItem(LocalDate.of(2017, 3, 17), new PddSectionTesting(14, 32, true))
                 )),
                 sectionTimelineItem15,
                 sectionTimelineItem33
