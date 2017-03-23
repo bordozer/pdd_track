@@ -107,8 +107,6 @@ public class DataGenerationServiceImpl implements DataGenerationService {
 
         // 1
         TimelineItem lecture1 = new TimelineItem(LocalDate.of(2017, 3, 4), new LectureEvent());
-//        TimelineItem lecture1_2 = new TimelineItem(LocalDate.of(2017, 3, 18), new LectureEvent());
-//        TimelineItem lecture1_3 = new TimelineItem(LocalDate.of(2017, 3, 19), new LectureEvent());
         TimelineItem study1 = new TimelineItem(LocalDate.of(2017, 3, 6), new PddSectionStudy());
 
         TimelineItem testing1_1 = new TimelineItem(LocalDate.of(2017, 3, 7), new PddSectionTesting(123, 136, true));
@@ -127,10 +125,11 @@ public class DataGenerationServiceImpl implements DataGenerationService {
         TimelineItem testing2_1 = new TimelineItem(LocalDate.of(2017, 3, 8), new PddSectionTesting(76, 85, false));
         TimelineItem testing2_2 = new TimelineItem(LocalDate.of(2017, 3, 10), new PddSectionTesting(81, 85, true));
         TimelineItem testing2_3 = new TimelineItem(LocalDate.of(2017, 3, 15), new PddSectionTesting(81, 85, true));
+        TimelineItem testing2_4 = new TimelineItem(LocalDate.of(2017, 3, 23), new PddSectionTesting(83, 85, true));
 
         PddSectionTimelineItem sectionTimelineItem2 = new PddSectionTimelineItem();
         sectionTimelineItem2.setPddSection(PDD_SECTION_02);
-        sectionTimelineItem2.setTimelineItems(Lists.newArrayList(lecture2, study2, testing2_1, testing2_2, testing2_3));
+        sectionTimelineItem2.setTimelineItems(Lists.newArrayList(lecture2, study2, testing2_1, testing2_2, testing2_3, testing2_4));
 
         // 3
         PddSectionTimelineItem sectionTimelineItem3 = new PddSectionTimelineItem();
