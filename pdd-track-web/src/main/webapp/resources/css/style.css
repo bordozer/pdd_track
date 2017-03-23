@@ -86,3 +86,7 @@
 .pdd-section-ready {
     font-weight: bold;
 }
+
+.bottom-lined {
+    border-bottom: 1px dotted silver;
+}

@@ -161,113 +161,25 @@
 <div class="row">
     <div class="col-xs-4">
 
-        <div class="row">
-            <div class="col-xs-4">
-                Section total
+        <% _.each(timelineStatistics.holders, function(holder){ %>
+            <div class="row bottom-lined">
+                <div class="col-xs-4 no-padding">
+                    <%=holder.title%>
+                </div>
+                <div class="col-xs-1 text-right no-padding">
+                    <strong><%=holder.sectionsCount%></strong>
+                </div>
+                <div class="col-xs-3 no-padding">
+                    <sup class="text-muted"><small><%=holder.sectionsPercentage%> %</small></sup>
+                </div>
+                <div class="col-xs-1 text-right no-padding">
+                    <%=holder.sectionsQuestionsCount%>
+                </div>
+                <div class="col-xs-3 no-padding">
+                    <sup class="text-muted"><small><%=holder.questionPercentage%> %</small></sup>
+                </div>
             </div>
-            <div class="col-xs-1 text-right">
-                <%=timelineStatistics.section.sectionsCount%>
-            </div>
-            <div class="col-xs-3 text-right">
-                <%=timelineStatistics.section.sectionsPercentage%> %
-            </div>
-            <div class="col-xs-1 text-right">
-                <%=timelineStatistics.section.sectionsQuestionsCount%>
-            </div>
-            <div class="col-xs-3 text-right">
-                <%=timelineStatistics.section.questionPercentage%> %
-            </div>
-        </div>
-
-        <div class="row">
-            <div class="col-xs-4">
-                Lectured
-            </div>
-            <div class="col-xs-1 text-right">
-                <%=timelineStatistics.sectionLectures.sectionsCount%>
-            </div>
-            <div class="col-xs-3 text-right">
-                <%=timelineStatistics.sectionLectures.sectionsPercentage%> %
-            </div>
-            <div class="col-xs-1 text-right">
-                <%=timelineStatistics.sectionLectures.sectionsQuestionsCount%>
-            </div>
-            <div class="col-xs-3 text-right">
-                <%=timelineStatistics.sectionLectures.questionPercentage%> %
-            </div>
-        </div>
-
-        <div class="row">
-            <div class="col-xs-4">
-                Study
-            </div>
-            <div class="col-xs-1 text-right">
-                <%=timelineStatistics.sectionStudy.sectionsCount%>
-            </div>
-            <div class="col-xs-3 text-right">
-                <%=timelineStatistics.sectionStudy.sectionsPercentage%> %
-            </div>
-            <div class="col-xs-1 text-right">
-                <%=timelineStatistics.sectionStudy.sectionsQuestionsCount%>
-            </div>
-            <div class="col-xs-3 text-right">
-                <%=timelineStatistics.sectionStudy.questionPercentage%> %
-            </div>
-        </div>
-
-        <div class="row">
-            <div class="col-xs-4">
-                Not studied or red tests
-            </div>
-            <div class="col-xs-1 text-right">
-                <%=timelineStatistics.sectionNotReady.sectionsCount%>
-            </div>
-            <div class="col-xs-3 text-right">
-                <%=timelineStatistics.sectionNotReady.sectionsPercentage%> %
-            </div>
-            <div class="col-xs-1 text-right">
-                <%=timelineStatistics.sectionNotReady.sectionsQuestionsCount%>
-            </div>
-            <div class="col-xs-3 text-right">
-                <%=timelineStatistics.sectionNotReady.questionPercentage%> %
-            </div>
-        </div>
-
-        <div class="row">
-            <div class="col-xs-4">
-                Ready with risks
-            </div>
-            <div class="col-xs-1 text-right">
-                <%=timelineStatistics.sectionReadyWithRisks.sectionsCount%>
-            </div>
-            <div class="col-xs-3 text-right">
-                <%=timelineStatistics.sectionReadyWithRisks.sectionsPercentage%> %
-            </div>
-            <div class="col-xs-1 text-right">
-                <%=timelineStatistics.sectionReadyWithRisks.sectionsQuestionsCount%>
-            </div>
-            <div class="col-xs-3 text-right">
-                <%=timelineStatistics.sectionReadyWithRisks.questionPercentage%> %
-            </div>
-        </div>
-
-        <div class="row">
-            <div class="col-xs-4">
-                Ready
-            </div>
-            <div class="col-xs-1 text-right">
-                <%=timelineStatistics.sectionReady.sectionsCount%>
-            </div>
-            <div class="col-xs-3 text-right">
-                <%=timelineStatistics.sectionReady.sectionsPercentage%> %
-            </div>
-            <div class="col-xs-1 text-right">
-                <%=timelineStatistics.sectionReady.sectionsQuestionsCount%>
-            </div>
-            <div class="col-xs-3 text-right">
-                <%=timelineStatistics.sectionReady.questionPercentage%> %
-            </div>
-        </div>
+        <% }) %>
 
     </div>
 </div>

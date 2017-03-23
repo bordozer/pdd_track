@@ -4,6 +4,7 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.List;
 
 @Data
@@ -18,17 +19,17 @@ public class TimelineDto {
 
     @Data
     public static class TimelineStatistics {
-        private SectionDataHolder section;
-        private SectionDataHolder sectionLectures;
-        private SectionDataHolder sectionStudy;
-        private SectionDataHolder sectionReady;
-        private SectionDataHolder sectionReadyWithRisks;
-        private SectionDataHolder sectionNotReady;
+        private final List<SectionDataHolder> holders = new ArrayList<>();
+
+        public void add(final SectionDataHolder holder) {
+            this.holders.add(holder);
+        }
     }
 
     @Data
     @AllArgsConstructor
     public static class SectionDataHolder {
+        private final String title;
         private final int sectionsCount;
         private final String sectionsPercentage;
         private final int sectionsQuestionsCount;
