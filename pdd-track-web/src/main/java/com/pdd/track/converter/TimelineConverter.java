@@ -83,17 +83,19 @@ public class TimelineConverter {
         SectionDataHolder sectionDataHolder = new SectionDataHolder(totalSectionsCount, formatDouble(100), totalQuestionsCount, formatDouble(100));
         statistics.setSection(sectionDataHolder);
 
-        List<TimelineItemDto> studySections = result.getItems().stream().filter(item -> item.getTimelineItemSummary().isLecture()).collect(Collectors.toList());
-        int lectureQuestionsCount = studySections.stream().mapToInt(item -> item.getPddSection().getQuestionsCount()).sum();
-        String lectureSectionsPercentage = formatDouble((double) lectureQuestionsCount / totalSectionsCount * 100);
+        List<TimelineItemDto> lectureSections = result.getItems().stream().filter(item -> item.getTimelineItemSummary().isLecture()).collect(Collectors.toList());
+        int lectureSectionsCount = lectureSections.size();
+        int lectureQuestionsCount = lectureSections.stream().mapToInt(item -> item.getPddSection().getQuestionsCount()).sum();
+        String lectureSectionsPercentage = formatDouble((double) lectureSectionsCount / totalSectionsCount * 100);
         String lectureQuestionsPercentage = formatDouble((double) lectureQuestionsCount / totalQuestionsCount * 100);
-        statistics.setSectionLectures(new SectionDataHolder(studySections.size(), lectureSectionsPercentage, lectureQuestionsCount, lectureQuestionsPercentage));
+        statistics.setSectionLectures(new SectionDataHolder(lectureSectionsCount, lectureSectionsPercentage, lectureQuestionsCount, lectureQuestionsPercentage));
 
-        List<TimelineItemDto> studySections1 = result.getItems().stream().filter(item -> item.getTimelineItemSummary().isStudy()).collect(Collectors.toList());
-        int studyQuestionsCount = studySections1.stream().mapToInt(item -> item.getPddSection().getQuestionsCount()).sum();
-        String studySectionsPercentage = formatDouble((double) studyQuestionsCount / totalQuestionsCount * 100);
+        List<TimelineItemDto> studySections = result.getItems().stream().filter(item -> item.getTimelineItemSummary().isStudy()).collect(Collectors.toList());
+        int studySectionsCount = studySections.size();
+        int studyQuestionsCount = studySections.stream().mapToInt(item -> item.getPddSection().getQuestionsCount()).sum();
+        String studySectionsPercentage = formatDouble((double) studySectionsCount / totalSectionsCount * 100);
         String studyQuestionsPercentage = formatDouble((double) studyQuestionsCount / totalQuestionsCount * 100);
-        statistics.setSectionStudy(new SectionDataHolder(studySections1.size(), studySectionsPercentage, studyQuestionsCount, studyQuestionsPercentage));
+        statistics.setSectionStudy(new SectionDataHolder(studySectionsCount, studySectionsPercentage, studyQuestionsCount, studyQuestionsPercentage));
 
         statistics.setSectionReady(getSectionDataHolder(result, totalSectionsCount, totalQuestionsCount, TimelineItemSummaryStatus.COMPLETELY_READY));
         statistics.setSectionReadyWithRisks(getSectionDataHolder(result, totalSectionsCount, totalQuestionsCount, TimelineItemSummaryStatus.COMPLETELY_READY, TimelineItemSummaryStatus.READY_WITH_RISK));
