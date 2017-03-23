@@ -234,6 +234,13 @@ public class DataGenerationServiceImpl implements DataGenerationService {
                 sectionTimelineItem7,
                 sectionTimelineItem8,
                 sectionTimelineItem9,
+                new PddSectionTimelineItem(PDD_SECTION_10, Lists.newArrayList(
+                        new TimelineItem(LocalDate.of(2017, 3, 11), new LectureEvent()),
+                        new TimelineItem(LocalDate.of(2017, 3, 13), new PddSectionStudy()),
+                        new TimelineItem(LocalDate.of(2017, 3, 13), new PddSectionTesting(55, 67, false)),
+                        new TimelineItem(LocalDate.of(2017, 3, 14), new PddSectionTesting(62, 67, true)),
+                        new TimelineItem(LocalDate.of(2017, 3, 16), new PddSectionTesting(65, 67, true))
+                )),
                 sectionTimelineItem15,
                 sectionTimelineItem33
         );
