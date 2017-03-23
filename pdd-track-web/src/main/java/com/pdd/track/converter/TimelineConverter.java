@@ -234,13 +234,12 @@ public class TimelineConverter {
                                 if (lastTesting == null) {
                                     return;
                                 }
+                                if (isSectionTooLongWithoutRepeating(sectionKey, entity, onDate)) {
+                                    day.setDayHints(Lists.newArrayList(new TimeLineDayHintDto(TimeLineDayHintType.ADVICE_REFRESH_TESTS, ageInDays(lastTesting.getDate(), onDate))));
+                                }
                                 PddSectionTesting pddSectionTestingEvent = (PddSectionTesting) lastTesting.getEvent();
                                 if (!pddSectionTestingEvent.getTesting().isPassed()) {
                                     day.setDayHints(Lists.newArrayList(new TimeLineDayHintDto(TimeLineDayHintType.RED_TESTS, ageInDays(lastTesting.getDate(), onDate))));
-                                }
-//                                double testsAveragePercentage = item.getTimelineItemSummary().getTestsAveragePercentage();
-                                if (isSectionTooLongWithoutRepeating(sectionKey, entity, onDate)) {
-                                    day.setDayHints(Lists.newArrayList(new TimeLineDayHintDto(TimeLineDayHintType.ADVICE_REFRESH_TESTS, ageInDays(lastTesting.getDate(), onDate))));
                                 }
                             });
                 });
