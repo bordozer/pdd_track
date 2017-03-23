@@ -77,20 +77,30 @@ public class TimelineConverter {
     private static TimelineStatistics collectStatistics(final TimelineDto result) {
         TimelineStatistics statistics = new TimelineStatistics();
 
-        statistics.setSection(getSectionDataHolder(result, TimelineItemSummaryStatus.values()));
-        statistics.setSectionLectures(getSectionDataHolder(result, TimelineItemSummaryStatus.NONE, TimelineItemSummaryStatus.NO_LECTURE_YET));
-        statistics.setSectionStudy(getSectionDataHolder(result, TimelineItemSummaryStatus.COMPLETELY_READY, TimelineItemSummaryStatus.READY_WITH_RISK, TimelineItemSummaryStatus.NOT_READY));
-        statistics.setSectionReady(getSectionDataHolder(result, TimelineItemSummaryStatus.COMPLETELY_READY));
-        statistics.setSectionReadyWithRisks(getSectionDataHolder(result, TimelineItemSummaryStatus.COMPLETELY_READY, TimelineItemSummaryStatus.READY_WITH_RISK));
-        statistics.setSectionNotReady(getSectionDataHolder(result, TimelineItemSummaryStatus.NOT_READY, TimelineItemSummaryStatus.TO_STUDY));
+        List<TimelineItemDto> totalSections = result.getItems().stream().collect(Collectors.toList());
+        int totalQuestionsCount = totalSections.stream().mapToInt(item -> item.getPddSection().getQuestionsCount()).sum();
+        SectionDataHolder sectionDataHolder = new SectionDataHolder(totalSections.size(), totalQuestionsCount, formatDouble(100));
+        statistics.setSection(sectionDataHolder);
+
+        List<TimelineItemDto> studySections = result.getItems().stream().filter(item -> item.getTimelineItemSummary().isLecture()).collect(Collectors.toList());
+        int lectureQuestionsCount = studySections.stream().mapToInt(item -> item.getPddSection().getQuestionsCount()).sum();
+        statistics.setSectionLectures(new SectionDataHolder(studySections.size(), lectureQuestionsCount, formatDouble((double) lectureQuestionsCount / totalQuestionsCount * 100)));
+
+        List<TimelineItemDto> studySections1 = result.getItems().stream().filter(item -> item.getTimelineItemSummary().isStudy()).collect(Collectors.toList());
+        int studyQuestionsCount = studySections1.stream().mapToInt(item -> item.getPddSection().getQuestionsCount()).sum();
+        statistics.setSectionStudy(new SectionDataHolder(studySections1.size(), studyQuestionsCount, formatDouble((double) studyQuestionsCount / totalQuestionsCount * 100)));
+
+        statistics.setSectionReady(getSectionDataHolder(result, totalQuestionsCount, TimelineItemSummaryStatus.COMPLETELY_READY));
+        statistics.setSectionReadyWithRisks(getSectionDataHolder(result, totalQuestionsCount, TimelineItemSummaryStatus.COMPLETELY_READY, TimelineItemSummaryStatus.READY_WITH_RISK));
+        statistics.setSectionNotReady(getSectionDataHolder(result, totalQuestionsCount, TimelineItemSummaryStatus.NOT_READY, TimelineItemSummaryStatus.TO_STUDY));
 
         return statistics;
     }
 
-    private static SectionDataHolder getSectionDataHolder(final TimelineDto result, final TimelineItemSummaryStatus... summaryStatuses) {
+    private static SectionDataHolder getSectionDataHolder(final TimelineDto result, final int totalQuestionsCount, final TimelineItemSummaryStatus... summaryStatuses) {
         List<TimelineItemDto> studySections = result.getItems().stream().filter(item -> Lists.newArrayList(summaryStatuses).contains(item.getTimelineItemSummary().getTimelineItemSummaryStatus())).collect(Collectors.toList());
         int questionsCount = studySections.stream().mapToInt(item -> item.getPddSection().getQuestionsCount()).sum();
-        return new SectionDataHolder(studySections.size(), questionsCount, formatDouble((double) questionsCount / 1983 * 100));
+        return new SectionDataHolder(studySections.size(), questionsCount, formatDouble((double) questionsCount / totalQuestionsCount * 100));
     }
 
     private static List<TimelineDaySummaryDto> calculateTimelineDaySummary(final TimelineEntity entity, final List<TimelineDayColumn> dayColumns) {
