@@ -13,6 +13,8 @@ import com.pdd.track.dto.TimelineDayDto;
 import com.pdd.track.dto.TimelineDayEventsDto;
 import com.pdd.track.dto.TimelineDaySummaryDto;
 import com.pdd.track.dto.TimelineDto;
+import com.pdd.track.dto.TimelineDto.SectionDataHolder;
+import com.pdd.track.dto.TimelineDto.TimelineStatistics;
 import com.pdd.track.dto.TimelineItemDto;
 import com.pdd.track.dto.TimelineItemSummaryDto;
 import com.pdd.track.dto.TimelineItemSummaryDto.TimelineItemSummaryStatus;
@@ -67,8 +69,28 @@ public class TimelineConverter {
 
         result.setItems(convertItems(entity, dayColumns));
         result.setSummaryColumns(calculateTimelineDaySummary(entity, dayColumns));
+        result.setTimelineStatistics(collectStatistics(result));
 
         return result;
+    }
+
+    private static TimelineStatistics collectStatistics(final TimelineDto result) {
+        TimelineStatistics statistics = new TimelineStatistics();
+
+        statistics.setSection(getSectionDataHolder(result, TimelineItemSummaryStatus.values()));
+        statistics.setSectionLectures(getSectionDataHolder(result, TimelineItemSummaryStatus.NONE, TimelineItemSummaryStatus.NO_LECTURE_YET));
+        statistics.setSectionStudy(getSectionDataHolder(result, TimelineItemSummaryStatus.COMPLETELY_READY, TimelineItemSummaryStatus.READY_WITH_RISK, TimelineItemSummaryStatus.NOT_READY));
+        statistics.setSectionReady(getSectionDataHolder(result, TimelineItemSummaryStatus.COMPLETELY_READY));
+        statistics.setSectionReadyWithRisks(getSectionDataHolder(result, TimelineItemSummaryStatus.COMPLETELY_READY, TimelineItemSummaryStatus.READY_WITH_RISK));
+        statistics.setSectionNotReady(getSectionDataHolder(result, TimelineItemSummaryStatus.NOT_READY, TimelineItemSummaryStatus.TO_STUDY));
+
+        return statistics;
+    }
+
+    private static SectionDataHolder getSectionDataHolder(final TimelineDto result, final TimelineItemSummaryStatus... summaryStatuses) {
+        List<TimelineItemDto> studySections = result.getItems().stream().filter(item -> Lists.newArrayList(summaryStatuses).contains(item.getTimelineItemSummary().getTimelineItemSummaryStatus())).collect(Collectors.toList());
+        int questionsCount = studySections.stream().mapToInt(item -> item.getPddSection().getQuestionsCount()).sum();
+        return new SectionDataHolder(studySections.size(), questionsCount, formatDouble((double) questionsCount / 1983 * 100));
     }
 
     private static List<TimelineDaySummaryDto> calculateTimelineDaySummary(final TimelineEntity entity, final List<TimelineDayColumn> dayColumns) {
@@ -187,8 +209,8 @@ public class TimelineConverter {
                                 }
                                 if (ChronoUnit.DAYS.between(lastTesting.getDate(), TODAY) > SECTION_TOO_LONG_WITHOUT_REPEAT_DAYS) {
                                     day.setDayHints(Lists.newArrayList(new TimeLineDayHintDto(TimeLineDayHintType.ADVICE_REFRESH_TESTS)));
-                                    /*if (item.getTimelineItemSummary() != null  && item.getTimelineItemSummary().getTimelineItemSummaryStatus().equals(TimelineItemSummaryStatus.READY)) {
-                                        item.getTimelineItemSummary().setTimelineItemSummaryStatus(TimelineItemSummaryStatus.UNDER_THE_RISK);
+                                    /*if (item.getTimelineItemSummary() != null  && item.getTimelineItemSummary().getTimelineItemSummaryStatus().equals(TimelineItemSummaryStatus.COMPLETELY_READY)) {
+                                        item.getTimelineItemSummary().setTimelineItemSummaryStatus(TimelineItemSummaryStatus.READY_WITH_RISK);
                                     }*/
                                 }
                             });
@@ -221,7 +243,6 @@ public class TimelineConverter {
                     timelineItemSummary.setTestsAveragePercentage(averageTestingScore);
                     timelineItemSummary.setTestsAveragePercentageFormatted(formatDouble(averageTestingScore));
                     boolean testPercentageIsCool = averageTestingScore > 90;
-                    timelineItemSummary.setStudySuccess(testPercentageIsCool);
 
                     TimelineItemSummaryStatus pddSummaryStatus = TimelineItemSummaryStatus.NONE;
                     boolean itWasLectureButItIsNotStudied = pddSectionLectureEvent != null && pddSectionStudyEvent == null;
@@ -233,9 +254,9 @@ public class TimelineConverter {
                     }
                     if (vHolder.getCount() >= MIN_TESTS_COUNT && testPercentageIsCool && lastTestSuccessful) {
                         if (lastSectionTestingWasLongTimeAgo) {
-                            pddSummaryStatus = TimelineItemSummaryStatus.UNDER_THE_RISK;
+                            pddSummaryStatus = TimelineItemSummaryStatus.READY_WITH_RISK;
                         } else {
-                            pddSummaryStatus = TimelineItemSummaryStatus.READY;
+                            pddSummaryStatus = TimelineItemSummaryStatus.COMPLETELY_READY;
                         }
                     }
                     if (vHolder.getCount() >= MIN_TESTS_COUNT && !testPercentageIsCool && lastTestSuccessful) {

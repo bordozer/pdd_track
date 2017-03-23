@@ -10,13 +10,12 @@ public class TimelineItemSummaryDto {
     private boolean lecture;
     private boolean study;
     private boolean lastTestSuccessful;
-    private boolean studySuccess;
     private TimelineItemSummaryStatus timelineItemSummaryStatus;
 
     public enum TimelineItemSummaryStatus {
         NONE,
-        READY,
-        UNDER_THE_RISK,
+        COMPLETELY_READY,
+        READY_WITH_RISK,
         NOT_READY,
         TO_STUDY,
         NO_LECTURE_YET
