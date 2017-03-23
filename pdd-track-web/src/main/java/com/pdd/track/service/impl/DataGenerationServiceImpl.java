@@ -334,6 +334,29 @@ public class DataGenerationServiceImpl implements DataGenerationService {
                         new TimelineItem(LocalDate.of(2017, 3, 16), new PddSectionTesting(14, 14, true)),
                         new TimelineItem(LocalDate.of(2017, 3, 30), new PddSectionTesting(14, 14, true))
                 )),
+                new PddSectionTimelineItem(PDD_SECTION_23, Arrays.asList(
+                        new TimelineItem(LocalDate.of(2017, 2, 26), new LectureEvent()),
+                        new TimelineItem(LocalDate.of(2017, 3, 7), new PddSectionStudy()),
+                        new TimelineItem(LocalDate.of(2017, 3, 7), new PddSectionTesting(39, 47, false)),
+                        new TimelineItem(LocalDate.of(2017, 3, 8), new PddSectionTesting(33, 34, true)),
+                        new TimelineItem(LocalDate.of(2017, 3, 13), new PddSectionTesting(33, 34, true)),
+                        new TimelineItem(LocalDate.of(2017, 3, 15), new PddSectionTesting(34, 34, true)),
+                        new TimelineItem(LocalDate.of(2017, 3, 22), new PddSectionTesting(34, 34, true))
+                )),
+                new PddSectionTimelineItem(PDD_SECTION_24, Arrays.asList(
+
+                )),
+                new PddSectionTimelineItem(PDD_SECTION_25, Arrays.asList(
+                        new TimelineItem(LocalDate.of(2017, 3, 5), new LectureEvent()),
+                        new TimelineItem(LocalDate.of(2017, 3, 8), new PddSectionStudy()),
+                        new TimelineItem(LocalDate.of(2017, 3, 8), new PddSectionTesting(7, 8, false)),
+                        new TimelineItem(LocalDate.of(2017, 3, 9), new PddSectionTesting(8, 8, true)),
+                        new TimelineItem(LocalDate.of(2017, 3, 13), new PddSectionTesting(8, 8, true)),
+                        new TimelineItem(LocalDate.of(2017, 3, 15), new PddSectionTesting(8, 8, true)),
+                        new TimelineItem(LocalDate.of(2017, 3, 16), new PddSectionTesting(8, 8, true)),
+                        new TimelineItem(LocalDate.of(2017, 3, 17), new PddSectionTesting(8, 8, true)),
+                        new TimelineItem(LocalDate.of(2017, 3, 19), new PddSectionTesting(8, 8, true))
+                )),
                 sectionTimelineItem15,
                 sectionTimelineItem33
         );
