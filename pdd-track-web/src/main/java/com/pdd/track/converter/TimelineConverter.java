@@ -153,17 +153,17 @@ public class TimelineConverter {
                     return item;
                 })
                 .collect(Collectors.toList());
+        populateHintsOnDate(entity, result, TODAY);
         populateTimelineSummary(entity, result);
-        populateTodayHints(entity, result);
         return result;
     }
 
-    private static void populateTodayHints(final TimelineEntity entity, final List<TimelineItemDto> result) {
+    private static void populateHintsOnDate(final TimelineEntity entity, final List<TimelineItemDto> result, final LocalDate date) {
         result.stream()
                 .forEach(item -> {
                     item.getTimelineDays().stream()
                             .forEach(day -> {
-                                if (!day.getDayDate().equals(TODAY)) {
+                                if (!day.getDayDate().equals(date)) {
                                     return;
                                 }
                                 TimelineItem pddSectionStudyEvent = getLastPddSectionEvent(item.getPddSection().getKey(), TimeLineItemEventType.STUDY, entity);
