@@ -163,20 +163,20 @@
 
         <% _.each(timelineStatistics.holders, function(holder){ %>
             <div class="row bottom-lined">
-                <div class="col-xs-4 no-padding">
+                <div class="col-xs-4">
                     <%=holder.title%>
                 </div>
                 <div class="col-xs-1 text-right no-padding">
                     <strong><%=holder.sectionsCount%></strong>
                 </div>
                 <div class="col-xs-3 no-padding">
-                    <sup class="text-muted"><small><%=holder.sectionsPercentage%> %</small></sup>
+                    &nbsp;<sup class="text-muted"><small><%=holder.sectionsPercentage%> %</small></sup>
                 </div>
                 <div class="col-xs-1 text-right no-padding">
-                    <%=holder.sectionsQuestionsCount%>
+                    <strong><%=holder.sectionsQuestionsCount%></strong>
                 </div>
                 <div class="col-xs-3 no-padding">
-                    <sup class="text-muted"><small><%=holder.questionPercentage%> %</small></sup>
+                    &nbsp;<sup class="text-muted"><small><%=holder.questionPercentage%> %</small></sup>
                 </div>
             </div>
         <% }) %>
