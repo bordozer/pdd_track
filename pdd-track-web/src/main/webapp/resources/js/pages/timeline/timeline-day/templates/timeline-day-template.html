@@ -18,7 +18,8 @@
 
 <% if(dayHints && dayHints.length > 0) { %>
     <% var dayHint = dayHints[0]%>
-    <span class="text-danger <%=getHintIcon(dayHint.dayHintType)%>" title="Needs restudy!"></span>
+    <% var hint = getHintIcon(dayHint.dayHintType); %>
+    <span class="<%=hint.icon%> <%=hint.color%>" title="<%=hint.hint%>"></span>
 <% } %>
 
 &nbsp;

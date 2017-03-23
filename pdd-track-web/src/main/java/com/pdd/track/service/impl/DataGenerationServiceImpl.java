@@ -208,15 +208,6 @@ public class DataGenerationServiceImpl implements DataGenerationService {
         sectionTimelineItem9.setPddSection(PDD_SECTION_09);
         sectionTimelineItem9.setTimelineItems(Lists.newArrayList(lecture9, study9, testing9_1, testing9_2, testing9_3, testing9_4));
 
-        // 15
-        TimelineItem lecture15 = new TimelineItem(LocalDate.of(2017, 3, 12), new LectureEvent());
-
-        PddSectionTimelineItem sectionTimelineItem15 = new PddSectionTimelineItem();
-        sectionTimelineItem15.setPddSection(PDD_SECTION_15);
-        sectionTimelineItem15.setTimelineItems(Lists.newArrayList(lecture15));
-
-        // 33
-
         return Lists.newArrayList(
                 sectionTimelineItem1,
                 sectionTimelineItem2,
@@ -266,7 +257,6 @@ public class DataGenerationServiceImpl implements DataGenerationService {
                         new TimelineItem(LocalDate.of(2017, 3, 16), new PddSectionTesting(75, 78, true)),
                         new TimelineItem(LocalDate.of(2017, 3, 16), new PddSectionTesting(78, 78, true))
                 )),
-                sectionTimelineItem15,
                 new PddSectionTimelineItem(PDD_SECTION_15, Arrays.asList(
                         new TimelineItem(LocalDate.of(2017, 3, 12), new LectureEvent())
                 )),

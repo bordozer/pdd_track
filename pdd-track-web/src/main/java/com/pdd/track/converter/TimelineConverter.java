@@ -36,7 +36,6 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import java.text.DecimalFormat;
-import java.time.Duration;
 import java.time.LocalDate;
 import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
@@ -207,8 +206,12 @@ public class TimelineConverter {
                                     if (lastTesting == null) {
                                         return;
                                     }
+                                    PddSectionTesting pddSectionTestingEvent = (PddSectionTesting) lastTesting.getEvent();
+                                    if (!pddSectionTestingEvent.getTesting().isPassed()) {
+                                        day.setDayHints(Lists.newArrayList(new TimeLineDayHintDto(TimeLineDayHintType.RED_TESTS)));
+                                    }
                                     if (ChronoUnit.DAYS.between(lastTesting.getDate(), TODAY) > SECTION_TOO_LONG_WITHOUT_REPEAT_DAYS) {
-                                        day.setDayHints(Lists.newArrayList(new TimeLineDayHintDto(TimeLineDayHintType.NEEDS_RESTUDY)));
+                                        day.setDayHints(Lists.newArrayList(new TimeLineDayHintDto(TimeLineDayHintType.ADVICE_REFRESH_TESTS)));
                                         if (item.getTimelineItemSummary().getTimelineItemSummaryStatus().equals(TimelineItemSummaryStatus.READY)) {
                                             item.getTimelineItemSummary().setTimelineItemSummaryStatus(TimelineItemSummaryStatus.UNDER_THE_RISK);
                                         }
