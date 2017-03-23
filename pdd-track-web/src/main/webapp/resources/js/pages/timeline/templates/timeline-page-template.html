@@ -96,34 +96,34 @@
                                 <div class="col-xs-1 col-fixed-60 text-center no-padding">
                                     <small><strong class="<%=item.timelineItemSummary.testsCount >= minTestForSuccess ? 'text-success' : 'text-danger'%>">
                                         <% if(item.timelineItemSummary.study) { %>
-                                        <%=item.timelineItemSummary.testsCount%>
+                                            <%=item.timelineItemSummary.testsCount%>
                                         <% } else { %>
-                                        &nbsp;
+                                            &nbsp;
                                         <% } %>
                                     </strong></small>
                                 </div>
                                 <div class="col-xs-1 col-fixed-60 text-center no-padding">
                                     <small><strong class="<%=percentageClass(item.timelineItemSummary.testsAveragePercentage)%>">
                                         <% if(item.timelineItemSummary.testsCount > 0) { %>
-                                        <%=item.timelineItemSummary.testsAveragePercentageFormatted%>%
+                                            <%=item.timelineItemSummary.testsAveragePercentageFormatted%>%
                                         <% } else { %>
-                                        &nbsp;
+                                            &nbsp;
                                         <% } %>
                                     </strong></small>
                                 </div>
 
                                 <div class="col-xs-1 col-fixed-60 text-center text-muted">
                                     <% if(item.timelineItemSummary.testsCount > 0) { %>
-                                    <span class="<%=item.timelineItemSummary.lastTestSuccessful ? 'text-success fa fa-check-circle-o' : 'text-danger fa fa-circle-o'%>"></span>
+                                        <span class="<%=item.timelineItemSummary.lastTestSuccessful ? 'text-success fa fa-check-circle-o' : 'text-danger fa fa-circle-o'%>"></span>
                                     <% } else { %>
-                                    &nbsp;
+                                        &nbsp;
                                     <% } %>
                                 </div>
                                 <div class="col-xs-1 col-fixed-60 text-center text-muted">
                                     <% if(item.timelineItemSummary.testsCount > 0) { %>
-                                    <span class="<%=item.timelineItemSummary.testsCount >= minTestForSuccess && item.timelineItemSummary.lastTestSuccessful && item.timelineItemSummary.studySuccess ? 'text-success fa fa-check-square-o ' : 'text-danger fa fa-bug'%>"></span>
+                                        <span class="<%=item.timelineItemSummary.testsCount >= minTestForSuccess && item.timelineItemSummary.lastTestSuccessful && item.timelineItemSummary.studySuccess ? 'text-success fa fa-check-square-o ' : 'text-danger fa fa-bug'%>"></span>
                                     <% } else { %>
-                                    &nbsp;
+                                        &nbsp;
                                     <% } %>
                                 </div>
                             </div>
