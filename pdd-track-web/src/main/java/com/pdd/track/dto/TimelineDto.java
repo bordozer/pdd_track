@@ -30,7 +30,8 @@ public class TimelineDto {
     @AllArgsConstructor
     public static class SectionDataHolder {
         private final int sectionsCount;
+        private final String sectionsPercentage;
         private final int sectionsQuestionsCount;
-        private final String percentage;
+        private final String questionPercentage;
     }
 }
