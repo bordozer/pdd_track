@@ -187,9 +187,9 @@ public class TimelineConverter {
                                 }
                                 if (ChronoUnit.DAYS.between(lastTesting.getDate(), TODAY) > SECTION_TOO_LONG_WITHOUT_REPEAT_DAYS) {
                                     day.setDayHints(Lists.newArrayList(new TimeLineDayHintDto(TimeLineDayHintType.ADVICE_REFRESH_TESTS)));
-                                    if (item.getTimelineItemSummary() != null  && item.getTimelineItemSummary().getTimelineItemSummaryStatus().equals(TimelineItemSummaryStatus.READY)) {
+                                    /*if (item.getTimelineItemSummary() != null  && item.getTimelineItemSummary().getTimelineItemSummaryStatus().equals(TimelineItemSummaryStatus.READY)) {
                                         item.getTimelineItemSummary().setTimelineItemSummaryStatus(TimelineItemSummaryStatus.UNDER_THE_RISK);
-                                    }
+                                    }*/
                                 }
                             });
                 });
@@ -197,23 +197,25 @@ public class TimelineConverter {
 
     private static void populateTimelineSummary(final TimelineEntity entity, final List<TimelineItemDto> result) {
         result.stream()
-                .forEach(tlItem -> {
-                    TimelineItem pddSectionLectureEvent = getLastPddSectionEvent(tlItem.getPddSection().getKey(), TimeLineItemEventType.LECTURE, entity);
-                    TimelineItem pddSectionStudyEvent = getLastPddSectionEvent(tlItem.getPddSection().getKey(), TimeLineItemEventType.STUDY, entity);
+                .forEach(item -> {
+                    TimelineItem pddSectionLectureEvent = getLastPddSectionEvent(item.getPddSection().getKey(), TimeLineItemEventType.LECTURE, entity);
+                    TimelineItem pddSectionStudyEvent = getLastPddSectionEvent(item.getPddSection().getKey(), TimeLineItemEventType.STUDY, entity);
 
                     TimelineItemSummaryDto timelineItemSummary = new TimelineItemSummaryDto();
                     timelineItemSummary.setLecture(pddSectionLectureEvent != null);
                     timelineItemSummary.setStudy(pddSectionStudyEvent != null);
 
+                    boolean lastSectionTestingWasLongTimeAgo = false;
                     boolean lastTestSuccessful = false;
-                    TimelineItem lastPddSectionTesting = getLastPddSectionEvent(tlItem.getPddSection().getKey(), TimeLineItemEventType.TESTING, entity);
+                    TimelineItem lastPddSectionTesting = getLastPddSectionEvent(item.getPddSection().getKey(), TimeLineItemEventType.TESTING, entity);
                     if (lastPddSectionTesting != null) {
-                        PddSectionTesting pddSectionTesting = (PddSectionTesting) lastPddSectionTesting.getEvent();
-                        lastTestSuccessful = pddSectionTesting.getTesting().isPassed();
+                        PddSectionTesting lastSectionTesting = (PddSectionTesting) lastPddSectionTesting.getEvent();
+                        lastTestSuccessful = lastSectionTesting.getTesting().isPassed();
                         timelineItemSummary.setLastTestSuccessful(lastTestSuccessful);
+                        lastSectionTestingWasLongTimeAgo = ChronoUnit.DAYS.between(lastPddSectionTesting.getDate(), TODAY) > SECTION_TOO_LONG_WITHOUT_REPEAT_DAYS;
                     }
 
-                    VHolder vHolder = calculateTimelinePddSectionSummary(entity, tlItem.getPddSection().getKey());
+                    VHolder vHolder = calculateTimelinePddSectionSummary(entity, item.getPddSection().getKey());
                     double averageTestingScore = vHolder.getValue() / vHolder.getCount();
                     timelineItemSummary.setTestsCount(vHolder.getCount());
                     timelineItemSummary.setTestsAveragePercentage(averageTestingScore);
@@ -230,7 +232,11 @@ public class TimelineConverter {
                         pddSummaryStatus = TimelineItemSummaryStatus.NOT_READY;
                     }
                     if (vHolder.getCount() >= MIN_TESTS_COUNT && testPercentageIsCool && lastTestSuccessful) {
-                        pddSummaryStatus = TimelineItemSummaryStatus.READY;
+                        if (lastSectionTestingWasLongTimeAgo) {
+                            pddSummaryStatus = TimelineItemSummaryStatus.UNDER_THE_RISK;
+                        } else {
+                            pddSummaryStatus = TimelineItemSummaryStatus.READY;
+                        }
                     }
                     if (vHolder.getCount() >= MIN_TESTS_COUNT && !testPercentageIsCool && lastTestSuccessful) {
                         pddSummaryStatus = TimelineItemSummaryStatus.NOT_READY;
@@ -239,7 +245,7 @@ public class TimelineConverter {
                         pddSummaryStatus = TimelineItemSummaryStatus.NO_LECTURE_YET;
                     }
                     timelineItemSummary.setTimelineItemSummaryStatus(pddSummaryStatus);
-                    tlItem.setTimelineItemSummary(timelineItemSummary);
+                    item.setTimelineItemSummary(timelineItemSummary);
                 });
     }
 
