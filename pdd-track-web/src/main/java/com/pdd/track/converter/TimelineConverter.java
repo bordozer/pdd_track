@@ -229,6 +229,9 @@ public class TimelineConverter {
                     if (vHolder.getCount() >= MIN_TESTS_COUNT && testPercentageIsCool && lastTestSuccessful) {
                         pddSummaryStatus = TimelineItemSummaryStatus.READY;
                     }
+                    if (vHolder.getCount() >= MIN_TESTS_COUNT && !testPercentageIsCool && lastTestSuccessful) {
+                        pddSummaryStatus = TimelineItemSummaryStatus.NOT_READY;
+                    }
                     if (pddSectionLectureEvent == null) {
                         pddSummaryStatus = TimelineItemSummaryStatus.NO_LECTURE_YET;
                     }
