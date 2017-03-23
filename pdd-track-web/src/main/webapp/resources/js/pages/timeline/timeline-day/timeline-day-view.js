@@ -35,13 +35,13 @@ define(function (require) {
 
         _getHintIcon: function(timeLineDayHintType) {
             if (timeLineDayHintType == 'NEEDS_STUDY') {
-                return {icon: 'fa fa-book', color: 'text-default', hint: 'Not studied section'};
+                return {icon: 'fa fa-book', color: 'text-danger', hint: 'Not studied section'};
             }
             if (timeLineDayHintType == 'ADVICE_REFRESH_TESTS') {
-                return {icon: 'fa fa-book', color: 'text-warning', hint: 'Advice: refresh tests'};
+                return {icon: 'fa fa-book', color: 'text-muted', hint: 'Advice: refresh tests'};
             }
             if (timeLineDayHintType == 'RED_TESTS') {
-                return {icon: 'fa fa-circle-o', color: 'text-danger', hint: 'Your tests results are red!'};
+                return {icon: 'fa fa-exclamation-triangle', color: 'text-danger', hint: 'Your tests results are red!'};
             }
         }
     });

@@ -153,6 +153,12 @@ public class TimelineConverter {
                     return item;
                 })
                 .collect(Collectors.toList());
+        populateTodayHints(entity, result);
+        populateTimelineItemSummary(entity, result);
+        return result;
+    }
+
+    private static void populateTodayHints(final TimelineEntity entity, final List<TimelineItemDto> result) {
         result.stream()
                 .forEach(tlItem -> {
                     TimelineItem pddSectionLectureEvent = getLastPddSectionEvent(tlItem.getPddSection().getKey(), TimeLineItemEventType.LECTURE, entity);
@@ -188,7 +194,9 @@ public class TimelineConverter {
                     timelineItemSummary.setTimelineItemSummaryStatus(pddSummaryStatus);
                     tlItem.setTimelineItemSummary(timelineItemSummary);
                 });
+    }
 
+    private static void populateTimelineItemSummary(final TimelineEntity entity, final List<TimelineItemDto> result) {
         result.stream()
                 .forEach(item -> {
                     item.getTimelineDays().stream()
@@ -219,7 +227,6 @@ public class TimelineConverter {
                                 }
                             });
                 });
-        return result;
     }
 
     private static TimelineItem getLastPddSectionEvent(final String pddSectionKey, final TimeLineItemEventType eventType, final TimelineEntity entity) {
