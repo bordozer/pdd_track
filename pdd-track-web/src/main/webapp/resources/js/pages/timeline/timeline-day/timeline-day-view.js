@@ -35,10 +35,10 @@ define(function (require) {
 
         _getHintIcon: function(timeLineDayHintType) {
             if (timeLineDayHintType == 'NEEDS_STUDY') {
-                return 'fa fa-university';
+                return 'fa fa-book';
             }
             if (timeLineDayHintType == 'NEEDS_RESTUDY') {
-                return 'fa fa-graduation-cap';
+                return 'fa fa-book';
             }
         }
     });

@@ -62,7 +62,7 @@
                     </div>
                     <div class="col-xs-1 col-fixed-60 text-center text-muted">
                         <% if(item.timelineItemSummary.testsCount > 0) { %>
-                        <span class="<%=item.timelineItemSummary.testsCount > minTestForSuccess && item.timelineItemSummary.lastTestSuccessful && item.timelineItemSummary.studySuccess ? 'text-success fa fa-check-square-o ' : 'text-danger fa fa-bug'%>"></span>
+                        <span class="<%=item.timelineItemSummary.testsCount >= minTestForSuccess && item.timelineItemSummary.lastTestSuccessful && item.timelineItemSummary.studySuccess ? 'text-success fa fa-check-square-o ' : 'text-danger fa fa-bug'%>"></span>
                         <% } else { %>
                             &nbsp;
                         <% } %>
