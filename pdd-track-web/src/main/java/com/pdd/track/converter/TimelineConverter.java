@@ -51,11 +51,14 @@ public class TimelineConverter {
 
     private static final LocalDate TODAY = LocalDate.now();
     private static final int SECTION_TOO_LONG_WITHOUT_REPEAT_DAYS = 5;
-    private static final int GREEN_SECTION_TOO_LONG_WITHOUT_REPEAT_DAYS = 7;
+    private static final int COOL_SECTION_TOO_LONG_WITHOUT_REPEAT_DAYS = 7;
+    private static final int EXCELLENT_SECTION_TOO_LONG_WITHOUT_REPEAT_DAYS = 10;
     private static final int SECTION_TOO_LONG_WITHOUT_STUDY_DAYS = 5;
     private static final int MIN_TESTS_COUNT = 3;
     private static final EnumSet<DayOfWeek> WEEKENDS = EnumSet.of(DayOfWeek.SATURDAY, DayOfWeek.SUNDAY);
-    public static final int GOOD_TEST_PERSENTAGE = 90;
+    public static final int GOOD_TEST_PERCENTAGE = 90;
+    public static final int COLL_TEST_PERCENTAGE = 96;
+    public static final int EXCELLENT_TEST_PERCENTAGE = 100;
 
     public static TimelineDto toDto(final TimelineEntity entity) {
         TimelineDto result = new TimelineDto();
@@ -244,6 +247,13 @@ public class TimelineConverter {
         if (lastPddSectionTesting == null) {
             return false;
         }
+        PddSectionTesting lastSectionTesting = (PddSectionTesting) lastPddSectionTesting.getEvent();
+        if (getPercentage(lastSectionTesting.getTesting()) >= EXCELLENT_TEST_PERCENTAGE) {
+            return ageInDays(lastPddSectionTesting.getDate()) > EXCELLENT_SECTION_TOO_LONG_WITHOUT_REPEAT_DAYS;
+        }
+        if (getPercentage(lastSectionTesting.getTesting()) >= COLL_TEST_PERCENTAGE) {
+            return ageInDays(lastPddSectionTesting.getDate()) > COOL_SECTION_TOO_LONG_WITHOUT_REPEAT_DAYS;
+        }
         return ageInDays(lastPddSectionTesting.getDate()) > SECTION_TOO_LONG_WITHOUT_REPEAT_DAYS;
     }
 
@@ -272,7 +282,7 @@ public class TimelineConverter {
                     timelineItemSummary.setTestsCount(vHolder.getCount());
                     timelineItemSummary.setTestsAveragePercentage(averageTestingScore);
                     timelineItemSummary.setTestsAveragePercentageFormatted(formatDouble(averageTestingScore));
-                    boolean testPercentageIsGood = averageTestingScore > GOOD_TEST_PERSENTAGE;
+                    boolean testPercentageIsGood = averageTestingScore > GOOD_TEST_PERCENTAGE;
 
                     TimelineItemSummaryStatus pddSummaryStatus = TimelineItemSummaryStatus.NONE;
                     boolean itWasLectureButItIsNotStudied = pddSectionLectureEvent != null && pddSectionStudyEvent == null;
@@ -397,8 +407,12 @@ public class TimelineConverter {
     }
 
     private static TestingDto convertTestingEvent(final Testing testing) {
-        String percentage = formatDouble((double) testing.getPassedQuestions() / testing.getTotalQuestions() * 100);
+        String percentage = formatDouble(getPercentage(testing));
         return new TestingDto(testing.getPassedQuestions(), testing.getTotalQuestions(), testing.isPassed(), percentage);
+    }
+
+    private static double getPercentage(final Testing testing) {
+        return (double) testing.getPassedQuestions() / testing.getTotalQuestions() * 100;
     }
 
     private static CarDto convertCar(final Car car) {
