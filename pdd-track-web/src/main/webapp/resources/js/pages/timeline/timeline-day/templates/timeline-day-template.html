@@ -11,7 +11,13 @@
 <% if(dayEvents.testing) { %>
     <% var testing = dayEvents.testing%>
     <small>
-        <strong class="<%=dayEvents.testing.passed ? 'text-success' : 'text-danger'%>" title="<%=testing.passedQuestions%>/<%=testing.totalQuestions%>"><%=testing.percentage%>%</strong>
+        <strong class="<%=dayEvents.testing.passed ? 'text-success' : 'text-danger'%>" title="Testing: <%=testing.passedQuestions%>/<%=testing.totalQuestions%>">
+            <% if(testing.percentage < 100) {%>
+                <%=testing.percentageFormatted%>%
+            <%} else {%>
+                <span class="fa fa-gift"></span>
+            <%}%>
+        </strong>
     </small>
 <% } %>
 

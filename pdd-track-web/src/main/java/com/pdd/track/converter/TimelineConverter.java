@@ -412,8 +412,9 @@ public class TimelineConverter {
     }
 
     private static TestingDto convertTestingEvent(final Testing testing) {
-        String percentage = formatDouble(getPercentage(testing));
-        return new TestingDto(testing.getPassedQuestions(), testing.getTotalQuestions(), testing.isPassed(), percentage);
+        double percentage = getPercentage(testing);
+        String percentageFormatted = formatDouble(percentage);
+        return new TestingDto(testing.getPassedQuestions(), testing.getTotalQuestions(), testing.isPassed(), percentage, percentageFormatted);
     }
 
     private static double getPercentage(final Testing testing) {
