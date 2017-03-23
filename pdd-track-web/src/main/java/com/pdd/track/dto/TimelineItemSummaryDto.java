@@ -11,4 +11,12 @@ public class TimelineItemSummaryDto {
     private boolean study;
     private boolean lastTestSuccessful;
     private boolean studySuccess;
+    private TimelineItemSummaryStatus timelineItemSummaryStatus;
+
+    public enum TimelineItemSummaryStatus {
+        NONE,
+        READY,
+        UNDER_THE_RISK,
+        NOT_READY
+    }
 }

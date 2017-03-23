@@ -15,6 +15,7 @@ import com.pdd.track.dto.TimelineDaySummaryDto;
 import com.pdd.track.dto.TimelineDto;
 import com.pdd.track.dto.TimelineItemDto;
 import com.pdd.track.dto.TimelineItemSummaryDto;
+import com.pdd.track.dto.TimelineItemSummaryDto.TimelineItemSummaryStatus;
 import com.pdd.track.entity.TimelineEntity;
 import com.pdd.track.model.Car;
 import com.pdd.track.model.Instructor;
@@ -46,8 +47,9 @@ import java.util.stream.Collectors;
 public class TimelineConverter {
 
     private static final LocalDate TODAY = LocalDate.now();
-    public static final int SECTION_TOO_LONG_WITHOUT_REPEAT_DAYS = 5;
-    public static final int SECTION_TOO_LONG_WITHOUT_STUDY_DAYS = 5;
+    private static final int SECTION_TOO_LONG_WITHOUT_REPEAT_DAYS = 5;
+    private static final int SECTION_TOO_LONG_WITHOUT_STUDY_DAYS = 5;
+    private static final int MIN_TESTS_COUNT = 3;
 
     public static TimelineDto toDto(final TimelineEntity entity) {
         TimelineDto result = new TimelineDto();
@@ -161,10 +163,12 @@ public class TimelineConverter {
                     timelineItemSummary.setLecture(pddSectionLectureEvent != null);
                     timelineItemSummary.setStudy(pddSectionStudyEvent != null);
 
+                    boolean lastTestSuccessful = false;
                     TimelineItem lastPddSectionTesting = getLastPddSectionEvent(tlItem.getPddSection().getKey(), TimeLineItemEventType.TESTING, entity);
                     if (lastPddSectionTesting != null) {
                         PddSectionTesting pddSectionTesting = (PddSectionTesting) lastPddSectionTesting.getEvent();
-                        timelineItemSummary.setLastTestSuccessful(pddSectionTesting.getTesting().isPassed());
+                        lastTestSuccessful = pddSectionTesting.getTesting().isPassed();
+                        timelineItemSummary.setLastTestSuccessful(lastTestSuccessful);
                     }
 
                     VHolder vHolder = calculateTimelinePddSectionSummary(entity, tlItem.getPddSection().getKey());
@@ -172,9 +176,23 @@ public class TimelineConverter {
                     timelineItemSummary.setTestsCount(vHolder.getCount());
                     timelineItemSummary.setTestsAveragePercentage(averageTestingScore);
                     timelineItemSummary.setTestsAveragePercentageFormatted(formatDouble(averageTestingScore));
-                    timelineItemSummary.setStudySuccess(averageTestingScore > 90);
+                    boolean testPercentageIsCool = averageTestingScore > 90;
+                    timelineItemSummary.setStudySuccess(testPercentageIsCool);
+
+                    TimelineItemSummaryStatus pddSummaryStatus = TimelineItemSummaryStatus.NONE;
+                    if (vHolder.getCount() < MIN_TESTS_COUNT) {
+                        pddSummaryStatus = TimelineItemSummaryStatus.NOT_READY;
+                    }
+                    if (vHolder.getCount() >= MIN_TESTS_COUNT && testPercentageIsCool && lastTestSuccessful) {
+                        pddSummaryStatus = TimelineItemSummaryStatus.READY;
+                    }
+                    /*if (pddSummaryStatus.equals(TimelineItemSummaryStatus.READY)) {
+
+                    }*/
+                    timelineItemSummary.setTimelineItemSummaryStatus(pddSummaryStatus);
                     tlItem.setTimelineItemSummary(timelineItemSummary);
                 });
+
         result.stream()
                 .forEach(item -> {
                     item.getTimelineDays().stream()

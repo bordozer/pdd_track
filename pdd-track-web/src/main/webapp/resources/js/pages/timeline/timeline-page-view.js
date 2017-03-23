@@ -25,6 +25,7 @@ define(function (require) {
 
             var data = _.extend({}, jmodel, {
                 percentageClass: this._percentageClass,
+                pddSectionSummaryStatusClass: this._pddSectionSummaryStatusClass,
                 minTestForSuccess: 3 // TODO: read from settings
             });
             this.$el.html(template(data));
@@ -49,6 +50,16 @@ define(function (require) {
 
         _percentageClass: function(value) {
             return value > 90 ? 'text-success' : 'text-danger';
+        },
+
+        _pddSectionSummaryStatusClass: function(status) {
+            if (status == 'READY') {
+                return {icon: 'fa fa-check-square-o', color: 'text-success'}
+            }
+            if (status == 'NOT_READY') {
+                return {icon: 'fa fa-bug', color: 'text-danger'}
+            }
+            return {icon: '', color: ''}
         }
     });
 });
