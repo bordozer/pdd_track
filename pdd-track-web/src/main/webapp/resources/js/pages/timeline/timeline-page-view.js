@@ -54,10 +54,13 @@ define(function (require) {
 
         _pddSectionSummaryStatusClass: function(status) {
             if (status == 'READY') {
-                return {icon: 'fa fa-check-square-o', color: 'text-success'}
+                return {icon: 'fa fa-check-square ', color: 'text-success', hint: 'The section is ready'}
+            }
+            if (status == 'UNDER_THE_RISK') {
+                return {icon: 'fa fa-check-square-o', color: 'text-warning', hint: 'The section is ready but under a risk - repeat testing, please'}
             }
             if (status == 'NOT_READY') {
-                return {icon: 'fa fa-bug', color: 'text-danger'}
+                return {icon: 'fa fa-bug', color: 'text-danger', hint: 'The section is NOT ready'}
             }
             return {icon: '', color: ''}
         }

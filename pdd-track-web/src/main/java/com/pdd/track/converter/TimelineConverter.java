@@ -186,9 +186,6 @@ public class TimelineConverter {
                     if (vHolder.getCount() >= MIN_TESTS_COUNT && testPercentageIsCool && lastTestSuccessful) {
                         pddSummaryStatus = TimelineItemSummaryStatus.READY;
                     }
-                    /*if (pddSummaryStatus.equals(TimelineItemSummaryStatus.READY)) {
-
-                    }*/
                     timelineItemSummary.setTimelineItemSummaryStatus(pddSummaryStatus);
                     tlItem.setTimelineItemSummary(timelineItemSummary);
                 });
@@ -212,6 +209,9 @@ public class TimelineConverter {
                                     }
                                     if (ChronoUnit.DAYS.between(lastTesting.getDate(), TODAY) > SECTION_TOO_LONG_WITHOUT_REPEAT_DAYS) {
                                         day.setDayHints(Lists.newArrayList(new TimeLineDayHintDto(TimeLineDayHintType.NEEDS_RESTUDY)));
+                                        if (item.getTimelineItemSummary().getTimelineItemSummaryStatus().equals(TimelineItemSummaryStatus.READY)) {
+                                            item.getTimelineItemSummary().setTimelineItemSummaryStatus(TimelineItemSummaryStatus.UNDER_THE_RISK);
+                                        }
                                     }
                                 }
                             });
