@@ -78,3 +78,11 @@
     padding: 0 !important;
     margin: 0 !important;
 }
+
+.weekend {
+    background-color: #fef8e4;
+}
+
+.pdd-section-ready {
+    font-weight: bold;
+}

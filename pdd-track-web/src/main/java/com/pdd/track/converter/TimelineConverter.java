@@ -36,9 +36,11 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import java.text.DecimalFormat;
+import java.time.DayOfWeek;
 import java.time.LocalDate;
 import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
+import java.util.EnumSet;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -49,6 +51,7 @@ public class TimelineConverter {
     private static final int SECTION_TOO_LONG_WITHOUT_REPEAT_DAYS = 5;
     private static final int SECTION_TOO_LONG_WITHOUT_STUDY_DAYS = 5;
     private static final int MIN_TESTS_COUNT = 3;
+    private static final EnumSet<DayOfWeek> WEEKENDS = EnumSet.of(DayOfWeek.SATURDAY, DayOfWeek.SUNDAY);
 
     public static TimelineDto toDto(final TimelineEntity entity) {
         TimelineDto result = new TimelineDto();
@@ -184,7 +187,7 @@ public class TimelineConverter {
                                 }
                                 if (ChronoUnit.DAYS.between(lastTesting.getDate(), TODAY) > SECTION_TOO_LONG_WITHOUT_REPEAT_DAYS) {
                                     day.setDayHints(Lists.newArrayList(new TimeLineDayHintDto(TimeLineDayHintType.ADVICE_REFRESH_TESTS)));
-                                    if (item.getTimelineItemSummary().getTimelineItemSummaryStatus().equals(TimelineItemSummaryStatus.READY)) {
+                                    if (item.getTimelineItemSummary() != null  && item.getTimelineItemSummary().getTimelineItemSummaryStatus().equals(TimelineItemSummaryStatus.READY)) {
                                         item.getTimelineItemSummary().setTimelineItemSummaryStatus(TimelineItemSummaryStatus.UNDER_THE_RISK);
                                     }
                                 }
@@ -275,6 +278,7 @@ public class TimelineConverter {
                     TimelineDayEventsDto dayEvents = new TimelineDayEventsDto();
                     populatePddSectionDayEvents(dayColumn.getDate(), pddSectionTimelineItems, dayEvents);
                     timelineDay.setDayEvents(dayEvents);
+                    timelineDay.setWeekend(WEEKENDS.contains(dayColumn.getDate().getDayOfWeek()));
 
                     return timelineDay;
                 })

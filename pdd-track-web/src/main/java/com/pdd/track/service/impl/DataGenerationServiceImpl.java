@@ -38,7 +38,7 @@ public class DataGenerationServiceImpl implements DataGenerationService {
     private static final Instructor ADDITIONAL_INSTRUCTOR = new Instructor("Yuriy");
     private static final Car ADDITIONAL_CAR = new Car("Honda Accord");
 
-    private static final PddSection PDD_SECTION_01 = new PddSection("1", "Obschie polozheniya", 116);
+    private static final PddSection PDD_SECTION_01 = new PddSection("1", "Общие положения", 116);
     private static final PddSection PDD_SECTION_02 = new PddSection("2", "Obyazannosti i prava voditeley TS", 85);
     private static final PddSection PDD_SECTION_03 = new PddSection("3", "Dvizhenie TS so special'nymi signalami", 150);
     private static final PddSection PDD_SECTION_04 = new PddSection("4", "Obyazannosti i prava peshekhodov", 28);

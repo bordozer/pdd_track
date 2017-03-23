@@ -22,6 +22,10 @@ define(function (require) {
             });
             this.$el.html(template(data));
 
+            if (jmodel.timelineDay.weekend) {
+                this.$el.addClass('weekend');
+            }
+
             if (jmodel.timelineDay.dayEvents.lecture) {
                 this.$el.addClass('lecture');
             }

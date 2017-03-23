@@ -11,4 +11,5 @@ public class TimelineDayDto {
     private LocalDate dayDate;
     private TimelineDayEventsDto dayEvents;
     private List<TimeLineDayHintDto> dayHints;
+    private boolean weekend;
 }
