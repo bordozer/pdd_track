@@ -79,8 +79,12 @@
     margin: 0 !important;
 }
 
-.weekend {
+.timeline-day-weekend {
     background-color: #fef8e4;
+}
+
+.timeline-day-today {
+    background-color: #e0f2be;
 }
 
 .pdd-section-ready {

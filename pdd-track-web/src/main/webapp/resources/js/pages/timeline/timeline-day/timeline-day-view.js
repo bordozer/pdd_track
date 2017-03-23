@@ -23,9 +23,11 @@ define(function (require) {
             this.$el.html(template(data));
 
             if (jmodel.timelineDay.weekend) {
-                this.$el.addClass('weekend');
+                this.$el.addClass('timeline-day-weekend');
             }
-
+            if (jmodel.timelineDay.today) {
+                this.$el.addClass('timeline-day-today');
+            }
             if (jmodel.timelineDay.dayEvents.lecture) {
                 this.$el.addClass('lecture');
             }

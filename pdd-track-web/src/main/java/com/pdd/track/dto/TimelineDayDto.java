@@ -12,4 +12,5 @@ public class TimelineDayDto {
     private TimelineDayEventsDto dayEvents;
     private List<TimeLineDayHintDto> dayHints;
     private boolean weekend;
+    private boolean today;
 }

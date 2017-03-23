@@ -199,7 +199,7 @@ public class TimelineConverter {
                 .map(sectionDto -> {
                     TimelineItemDto item = new TimelineItemDto();
                     item.setPddSection(sectionDto);
-                    item.setTimelineDays(convertTimelineDaysForPddSection(sectionDto.getKey(), entity, dayColumns));
+                    item.setTimelineDays(convertTimelineDaysForPddSection(sectionDto.getKey(), entity, dayColumns, onDate));
                     return item;
                 })
                 .collect(Collectors.toList());
@@ -338,7 +338,7 @@ public class TimelineConverter {
         return timelineTestingItems.get(timelineTestingItems.size() - 1);
     }
 
-    private static List<TimelineDayDto> convertTimelineDaysForPddSection(final String pddSectionKey, final TimelineEntity entity, final List<TimelineDayColumn> dayColumns) {
+    private static List<TimelineDayDto> convertTimelineDaysForPddSection(final String pddSectionKey, final TimelineEntity entity, final List<TimelineDayColumn> dayColumns, final LocalDate onDate) {
         List<TimelineItem> pddSectionTimelineItems = filterTimelineItemsByPddSectionKey(pddSectionKey, entity.getPddSectionTimelineItems());
         return dayColumns.stream()
                 .map(dayColumn -> {
@@ -350,6 +350,7 @@ public class TimelineConverter {
                     populatePddSectionDayEvents(dayColumn.getDate(), pddSectionTimelineItems, dayEvents);
                     timelineDay.setDayEvents(dayEvents);
                     timelineDay.setWeekend(WEEKENDS.contains(dayColumn.getDate().getDayOfWeek()));
+                    timelineDay.setToday(onDate.equals(dayColumn.getDate()));
 
                     return timelineDay;
                 })
