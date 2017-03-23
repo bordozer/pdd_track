@@ -153,12 +153,46 @@ public class TimelineConverter {
                     return item;
                 })
                 .collect(Collectors.toList());
+        populateTimelineSummary(entity, result);
         populateTodayHints(entity, result);
-        populateTimelineItemSummary(entity, result);
         return result;
     }
 
     private static void populateTodayHints(final TimelineEntity entity, final List<TimelineItemDto> result) {
+        result.stream()
+                .forEach(item -> {
+                    item.getTimelineDays().stream()
+                            .forEach(day -> {
+                                if (!day.getDayDate().equals(TODAY)) {
+                                    return;
+                                }
+                                TimelineItem pddSectionStudyEvent = getLastPddSectionEvent(item.getPddSection().getKey(), TimeLineItemEventType.STUDY, entity);
+                                if (pddSectionStudyEvent == null) {
+                                    TimelineItem pddSectionLectureEvent = getLastPddSectionEvent(item.getPddSection().getKey(), TimeLineItemEventType.LECTURE, entity);
+                                    if (pddSectionLectureEvent != null && ChronoUnit.DAYS.between(pddSectionLectureEvent.getDate(), TODAY) > SECTION_TOO_LONG_WITHOUT_STUDY_DAYS) {
+                                        day.setDayHints(Lists.newArrayList(new TimeLineDayHintDto(TimeLineDayHintType.NEEDS_STUDY)));
+                                    }
+                                    return;
+                                }
+                                TimelineItem lastTesting = getLastPddSectionEvent(item.getPddSection().getKey(), TimeLineItemEventType.TESTING, entity);
+                                if (lastTesting == null) {
+                                    return;
+                                }
+                                PddSectionTesting pddSectionTestingEvent = (PddSectionTesting) lastTesting.getEvent();
+                                if (!pddSectionTestingEvent.getTesting().isPassed()) {
+                                    day.setDayHints(Lists.newArrayList(new TimeLineDayHintDto(TimeLineDayHintType.RED_TESTS)));
+                                }
+                                if (ChronoUnit.DAYS.between(lastTesting.getDate(), TODAY) > SECTION_TOO_LONG_WITHOUT_REPEAT_DAYS) {
+                                    day.setDayHints(Lists.newArrayList(new TimeLineDayHintDto(TimeLineDayHintType.ADVICE_REFRESH_TESTS)));
+                                    if (item.getTimelineItemSummary().getTimelineItemSummaryStatus().equals(TimelineItemSummaryStatus.READY)) {
+                                        item.getTimelineItemSummary().setTimelineItemSummaryStatus(TimelineItemSummaryStatus.UNDER_THE_RISK);
+                                    }
+                                }
+                            });
+                });
+    }
+
+    private static void populateTimelineSummary(final TimelineEntity entity, final List<TimelineItemDto> result) {
         result.stream()
                 .forEach(tlItem -> {
                     TimelineItem pddSectionLectureEvent = getLastPddSectionEvent(tlItem.getPddSection().getKey(), TimeLineItemEventType.LECTURE, entity);
@@ -193,39 +227,6 @@ public class TimelineConverter {
                     }
                     timelineItemSummary.setTimelineItemSummaryStatus(pddSummaryStatus);
                     tlItem.setTimelineItemSummary(timelineItemSummary);
-                });
-    }
-
-    private static void populateTimelineItemSummary(final TimelineEntity entity, final List<TimelineItemDto> result) {
-        result.stream()
-                .forEach(item -> {
-                    item.getTimelineDays().stream()
-                            .forEach(day -> {
-                                if (day.getDayDate().equals(TODAY)) {
-                                    TimelineItem pddSectionStudyEvent = getLastPddSectionEvent(item.getPddSection().getKey(), TimeLineItemEventType.STUDY, entity);
-                                    if (pddSectionStudyEvent == null) {
-                                        TimelineItem pddSectionLectureEvent = getLastPddSectionEvent(item.getPddSection().getKey(), TimeLineItemEventType.LECTURE, entity);
-                                        if (pddSectionLectureEvent != null && ChronoUnit.DAYS.between(pddSectionLectureEvent.getDate(), TODAY) > SECTION_TOO_LONG_WITHOUT_STUDY_DAYS) {
-                                            day.setDayHints(Lists.newArrayList(new TimeLineDayHintDto(TimeLineDayHintType.NEEDS_STUDY)));
-                                        }
-                                        return;
-                                    }
-                                    TimelineItem lastTesting = getLastPddSectionEvent(item.getPddSection().getKey(), TimeLineItemEventType.TESTING, entity);
-                                    if (lastTesting == null) {
-                                        return;
-                                    }
-                                    PddSectionTesting pddSectionTestingEvent = (PddSectionTesting) lastTesting.getEvent();
-                                    if (!pddSectionTestingEvent.getTesting().isPassed()) {
-                                        day.setDayHints(Lists.newArrayList(new TimeLineDayHintDto(TimeLineDayHintType.RED_TESTS)));
-                                    }
-                                    if (ChronoUnit.DAYS.between(lastTesting.getDate(), TODAY) > SECTION_TOO_LONG_WITHOUT_REPEAT_DAYS) {
-                                        day.setDayHints(Lists.newArrayList(new TimeLineDayHintDto(TimeLineDayHintType.ADVICE_REFRESH_TESTS)));
-                                        if (item.getTimelineItemSummary().getTimelineItemSummaryStatus().equals(TimelineItemSummaryStatus.READY)) {
-                                            item.getTimelineItemSummary().setTimelineItemSummaryStatus(TimelineItemSummaryStatus.UNDER_THE_RISK);
-                                        }
-                                    }
-                                }
-                            });
                 });
     }
 
