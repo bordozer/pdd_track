@@ -108,7 +108,7 @@ public class TimelineConverter {
         List<TimelineItemDto> sections = result.getItems().stream().filter(item -> Lists.newArrayList(summaryStatuses).contains(item.getTimelineItemSummary().getTimelineItemSummaryStatus())).collect(Collectors.toList());
         int sectionsCount = sections.size();
         int questionsCount = sections.stream().mapToInt(item -> item.getPddSection().getQuestionsCount()).sum();
-        String sectionsPercentage = formatDouble((double) totalSectionsCount / sectionsCount * 100);
+        String sectionsPercentage = formatDouble((double) sectionsCount / totalSectionsCount * 100);
         String questionsPercentage = formatDouble((double) questionsCount / totalQuestionsCount * 100);
         return new SectionDataHolder(sectionsCount, sectionsPercentage, questionsCount, questionsPercentage);
     }
