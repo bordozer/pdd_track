@@ -222,11 +222,12 @@ public class TimelineConverter {
                                     return;
                                 }
                                 String sectionKey = item.getPddSection().getKey();
+                                int sessionQuestionCount = item.getPddSection().getQuestionsCount();
                                 TimelineItem pddSectionStudyEvent = getLastPddSectionEvent(sectionKey, TimeLineItemEventType.STUDY, entity);
                                 if (pddSectionStudyEvent == null) {
                                     TimelineItem pddSectionLectureEvent = getLastPddSectionEvent(sectionKey, TimeLineItemEventType.LECTURE, entity);
                                     if (pddSectionLectureEvent != null && ageInDays(pddSectionLectureEvent.getDate(), onDate) > SECTION_TOO_LONG_WITHOUT_STUDY_DAYS) {
-                                        day.setDayHints(Lists.newArrayList(new TimeLineDayHintDto(TimeLineDayHintType.NEEDS_STUDY, ageInDays(pddSectionLectureEvent.getDate(), onDate))));
+                                        day.setDayHints(Lists.newArrayList(new TimeLineDayHintDto(TimeLineDayHintType.NEEDS_STUDY, ageInDays(pddSectionLectureEvent.getDate(), onDate), sessionQuestionCount)));
                                     }
                                     return;
                                 }
@@ -235,11 +236,11 @@ public class TimelineConverter {
                                     return;
                                 }
                                 if (isSectionTooLongWithoutRepeating(sectionKey, entity, onDate)) {
-                                    day.setDayHints(Lists.newArrayList(new TimeLineDayHintDto(TimeLineDayHintType.ADVICE_REFRESH_TESTS, ageInDays(lastTesting.getDate(), onDate))));
+                                    day.setDayHints(Lists.newArrayList(new TimeLineDayHintDto(TimeLineDayHintType.ADVICE_REFRESH_TESTS, ageInDays(lastTesting.getDate(), onDate), sessionQuestionCount)));
                                 }
                                 PddSectionTesting pddSectionTestingEvent = (PddSectionTesting) lastTesting.getEvent();
                                 if (!pddSectionTestingEvent.getTesting().isPassed()) {
-                                    day.setDayHints(Lists.newArrayList(new TimeLineDayHintDto(TimeLineDayHintType.RED_TESTS, ageInDays(lastTesting.getDate(), onDate))));
+                                    day.setDayHints(Lists.newArrayList(new TimeLineDayHintDto(TimeLineDayHintType.RED_TESTS, ageInDays(lastTesting.getDate(), onDate), sessionQuestionCount)));
                                 }
                             });
                 });
