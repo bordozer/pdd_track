@@ -148,6 +148,21 @@ public class DataGenerationServiceImpl implements DataGenerationService {
         sectionTimelineItem4.setPddSection(PDD_SECTION_04);
         sectionTimelineItem4.setTimelineItems(Lists.newArrayList(lecture4, study4, testing4_1, testing4_2, testing4_3, testing4_4));
 
+        // 5
+        TimelineItem lecture5 = new TimelineItem(LocalDate.of(2017, 3, 4), new LectureEvent());
+        TimelineItem study5 = new TimelineItem(LocalDate.of(2017, 3, 6), new PddSectionStudy());
+        TimelineItem testing5_1 = new TimelineItem(LocalDate.of(2017, 3, 7), new PddSectionTesting(10, 12, false));
+        TimelineItem testing5_2 = new TimelineItem(LocalDate.of(2017, 3, 8), new PddSectionTesting(10, 12, false));
+        TimelineItem testing5_3 = new TimelineItem(LocalDate.of(2017, 3, 9), new PddSectionTesting(12, 12, true));
+        TimelineItem testing5_4 = new TimelineItem(LocalDate.of(2017, 3, 10), new PddSectionTesting(12, 12, true));
+        TimelineItem testing5_5 = new TimelineItem(LocalDate.of(2017, 3, 13), new PddSectionTesting(12, 12, true));
+        TimelineItem testing5_6 = new TimelineItem(LocalDate.of(2017, 3, 15), new PddSectionTesting(12, 12, true));
+        TimelineItem testing5_7 = new TimelineItem(LocalDate.of(2017, 3, 16), new PddSectionTesting(12, 12, true));
+
+        PddSectionTimelineItem sectionTimelineItem5 = new PddSectionTimelineItem();
+        sectionTimelineItem5.setPddSection(PDD_SECTION_05);
+        sectionTimelineItem5.setTimelineItems(Lists.newArrayList(lecture5, study5, testing5_1, testing5_2, testing5_3, testing5_4, testing5_5, testing5_6, testing5_7));
+
         // 15
         TimelineItem lecture15 = new TimelineItem(LocalDate.of(2017, 3, 12), new LectureEvent());
 
@@ -170,6 +185,7 @@ public class DataGenerationServiceImpl implements DataGenerationService {
                 sectionTimelineItem2,
                 sectionTimelineItem3,
                 sectionTimelineItem4,
+                sectionTimelineItem5,
                 sectionTimelineItem15,
                 sectionTimelineItem33
         );
