@@ -18,7 +18,7 @@
 <% if(dayHints && dayHints.length > 0) { %>
     <% var dayHint = dayHints[0]%>
     <% var hint = getHintIcon(dayHint.dayHintType); %>
-    <span class="<%=hint.icon%> <%=hint.color%>" title="<%=hint.hint%>"></span>
+    <span class="<%=hint.icon%> <%=hint.color%>" title="<%=hint.hint%>"> <sup><small><%=dayHint.ageInDays%></small></sup></span>
 <% } %>
 
 &nbsp;

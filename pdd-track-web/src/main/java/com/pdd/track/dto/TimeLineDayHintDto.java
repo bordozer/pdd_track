@@ -8,4 +8,5 @@ import lombok.Data;
 @AllArgsConstructor
 public class TimeLineDayHintDto {
     private TimeLineDayHintType dayHintType;
+    private long ageInDays;
 }

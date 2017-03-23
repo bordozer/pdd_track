@@ -214,8 +214,8 @@ public class TimelineConverter {
                                 TimelineItem pddSectionStudyEvent = getLastPddSectionEvent(item.getPddSection().getKey(), TimeLineItemEventType.STUDY, entity);
                                 if (pddSectionStudyEvent == null) {
                                     TimelineItem pddSectionLectureEvent = getLastPddSectionEvent(item.getPddSection().getKey(), TimeLineItemEventType.LECTURE, entity);
-                                    if (pddSectionLectureEvent != null && ChronoUnit.DAYS.between(pddSectionLectureEvent.getDate(), TODAY) > SECTION_TOO_LONG_WITHOUT_STUDY_DAYS) {
-                                        day.setDayHints(Lists.newArrayList(new TimeLineDayHintDto(TimeLineDayHintType.NEEDS_STUDY)));
+                                    if (pddSectionLectureEvent != null && ageInDays(pddSectionLectureEvent.getDate()) > SECTION_TOO_LONG_WITHOUT_STUDY_DAYS) {
+                                        day.setDayHints(Lists.newArrayList(new TimeLineDayHintDto(TimeLineDayHintType.NEEDS_STUDY, ageInDays(pddSectionLectureEvent.getDate()))));
                                     }
                                     return;
                                 }
@@ -225,13 +225,10 @@ public class TimelineConverter {
                                 }
                                 PddSectionTesting pddSectionTestingEvent = (PddSectionTesting) lastTesting.getEvent();
                                 if (!pddSectionTestingEvent.getTesting().isPassed()) {
-                                    day.setDayHints(Lists.newArrayList(new TimeLineDayHintDto(TimeLineDayHintType.RED_TESTS)));
+                                    day.setDayHints(Lists.newArrayList(new TimeLineDayHintDto(TimeLineDayHintType.RED_TESTS, ageInDays(lastTesting.getDate()))));
                                 }
-                                if (ChronoUnit.DAYS.between(lastTesting.getDate(), TODAY) > SECTION_TOO_LONG_WITHOUT_REPEAT_DAYS) {
-                                    day.setDayHints(Lists.newArrayList(new TimeLineDayHintDto(TimeLineDayHintType.ADVICE_REFRESH_TESTS)));
-                                    /*if (item.getTimelineItemSummary() != null  && item.getTimelineItemSummary().getTimelineItemSummaryStatus().equals(TimelineItemSummaryStatus.COMPLETELY_READY)) {
-                                        item.getTimelineItemSummary().setTimelineItemSummaryStatus(TimelineItemSummaryStatus.READY_WITH_RISK);
-                                    }*/
+                                if (ageInDays(lastTesting.getDate()) > SECTION_TOO_LONG_WITHOUT_REPEAT_DAYS) {
+                                    day.setDayHints(Lists.newArrayList(new TimeLineDayHintDto(TimeLineDayHintType.ADVICE_REFRESH_TESTS, ageInDays(lastTesting.getDate()))));
                                 }
                             });
                 });
@@ -254,7 +251,7 @@ public class TimelineConverter {
                         PddSectionTesting lastSectionTesting = (PddSectionTesting) lastPddSectionTesting.getEvent();
                         lastTestSuccessful = lastSectionTesting.getTesting().isPassed();
                         timelineItemSummary.setLastTestSuccessful(lastTestSuccessful);
-                        lastSectionTestingWasLongTimeAgo = ChronoUnit.DAYS.between(lastPddSectionTesting.getDate(), TODAY) > SECTION_TOO_LONG_WITHOUT_REPEAT_DAYS;
+                        lastSectionTestingWasLongTimeAgo = ageInDays(lastPddSectionTesting.getDate()) > SECTION_TOO_LONG_WITHOUT_REPEAT_DAYS;
                     }
 
                     VHolder vHolder = calculateTimelinePddSectionSummary(entity, item.getPddSection().getKey());
@@ -415,6 +412,10 @@ public class TimelineConverter {
 
     private static String formatDouble(final double value) {
         return value == 0 ? "" : new DecimalFormat("#0.00").format(value);
+    }
+
+    private static long ageInDays(final LocalDate date) {
+        return ChronoUnit.DAYS.between(date, TODAY);
     }
 
     @Getter
