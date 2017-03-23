@@ -23,7 +23,7 @@
                             <div class="col-xs-12">
                                 <% _.each(items, function(item) { %>
                                     <div class="row">
-                                        <div class="col-xs-12">
+                                        <div class="col-xs-12 <%=pddSectionSummaryStatusClass(item.timelineItemSummary.timelineItemSummaryStatus).color%>">
                                             <div class="col-xs-1 col-fixed-60 text-center"><strong><%=item.pddSection.number%></strong></div>
                                             <div class="col-xs-1 col-fixed-pdd-section" title="<%=item.pddSection.name%>"><%=item.pddSection.name%></div>
                                             <div class="col-xs-1 col-fixed-60 text-center text-muted"><%=item.pddSection.questionsCount%></div>
