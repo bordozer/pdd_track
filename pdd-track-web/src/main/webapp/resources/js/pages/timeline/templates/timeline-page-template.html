@@ -64,6 +64,25 @@
                                 <% }) %>
                             </div>
                         </div>
+
+                        <div class="row">
+                            <div class="col-xs-12">
+                                <div class="row">
+                                    <div class="col-xs-12">
+                                        <% _.each(summaryColumns, function(summaryColumn) { %>
+                                            <div class="col-xs-1 text-center col-fixed-timeline-day bg-info">
+                                                <% if(summaryColumn.value > 0) { %>
+                                                    <small class="<%=percentageClass(summaryColumn.value)%>"><strong><%=summaryColumn.valueFormatted%>%</strong></small>
+                                                <% } else { %>
+                                                    &nbsp;
+                                                <% } %>
+                                            </div>
+                                        <% }) %>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
                     </div>
                 </div>
             </div>
