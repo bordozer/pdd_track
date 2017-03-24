@@ -1,11 +1,12 @@
 package com.pdd.track.service.impl;
 
 import com.google.common.collect.Sets;
-import com.pdd.track.entity.rule.RulesSet;
 import com.pdd.track.model.Car;
 import com.pdd.track.model.Gender;
 import com.pdd.track.model.Instructor;
 import com.pdd.track.model.PddSection;
+import com.pdd.track.model.PddSection.PddSectionQuestions;
+import com.pdd.track.model.PddSection.PddSectionRuleSet;
 import com.pdd.track.model.PddSectionTimeline;
 import com.pdd.track.model.PddSectionTimelineItem;
 import com.pdd.track.model.SchoolTimeline;
@@ -17,9 +18,8 @@ import com.pdd.track.model.events.LectureStudyEvent;
 import com.pdd.track.model.events.PddSectionTesting;
 import com.pdd.track.model.events.SchoolDrivingEvent;
 import com.pdd.track.repository.PddSectionRepository;
-import com.pdd.track.repository.RulesSetRepository;
-import com.pdd.track.repository.SchoolTimelineRepository;
 import com.pdd.track.repository.PddSectionTimelineRepository;
+import com.pdd.track.repository.SchoolTimelineRepository;
 import com.pdd.track.service.DataGenerationService;
 import org.springframework.stereotype.Service;
 
@@ -31,6 +31,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 @Service
 public class DataGenerationServiceImpl implements DataGenerationService {
@@ -77,6 +78,9 @@ public class DataGenerationServiceImpl implements DataGenerationService {
     private static final PddSection PDD_SECTION_32 = new PddSection("32", "Voprosy dorozhnogo dvizheniya, kotorye trebuyut soglasovaniya s GAI");
     private static final PddSection PDD_SECTION_33 = new PddSection("33", "Znaki");
     private static final PddSection PDD_SECTION_34 = new PddSection("34", "Dorozhnaya razmetka");
+
+    private static final String KIEV_RULE_SET_KEY = "KIEV";
+    private static final String KHARKOV_RULE_SET_KEY = "KHARKOV";
 
     private static final Map<String, Integer> QUESTIONS_COUNT_KIEV = new HashMap<>();
 
@@ -162,9 +166,6 @@ public class DataGenerationServiceImpl implements DataGenerationService {
     public static final Set<DayOfWeek> LECTURE_WEEK_DAYS = Sets.newHashSet(DayOfWeek.SATURDAY, DayOfWeek.SUNDAY);
 
     @Inject
-    private RulesSetRepository rulesSetRepository;
-
-    @Inject
     private PddSectionRepository pddSectionRepository;
 
     @Inject
@@ -175,24 +176,14 @@ public class DataGenerationServiceImpl implements DataGenerationService {
 
     @Override
     public void createData() {
-        rulesSetRepository.deleteAll();
         pddSectionRepository.deleteAll();
         schoolTimelineRepository.deleteAll();
         pddSectionTimelineRepository.deleteAll();
 
-        RulesSet kiev = createRuleSets("KIEV", 2017);
-        RulesSet kharkov = createRuleSets("KHARKOV", 2017);
         createPddSections();
         SchoolTimeline schoolTimeline = schoolTimelineRepository.save(constructTimeline());
         PddSectionTimeline studyKiev = pddSectionTimelineRepository.save(constructTimelineStudyKiev(schoolTimeline.get_id()));
         PddSectionTimeline studyKharkov = pddSectionTimelineRepository.save(constructTimelineStudyKharkov(schoolTimeline.get_id()));
-    }
-
-    private RulesSet createRuleSets(final String name, final int year) {
-        RulesSet kiev = new RulesSet();
-        kiev.setName(name);
-        kiev.setYear(year);
-        return rulesSetRepository.save(kiev);
     }
 
     private SchoolTimeline constructTimeline() {
@@ -207,6 +198,7 @@ public class DataGenerationServiceImpl implements DataGenerationService {
         pddSectionTimeline.set_id("1");
         pddSectionTimeline.setSchoolTimelineId(timelineId);
         pddSectionTimeline.setTimelineItems(constructPddSectionTimelineItemsKiev());
+        pddSectionTimeline.setRuleSetKey(KIEV_RULE_SET_KEY);
         return pddSectionTimeline;
     }
 
@@ -215,6 +207,7 @@ public class DataGenerationServiceImpl implements DataGenerationService {
         pddSectionTimeline.set_id("2");
         pddSectionTimeline.setSchoolTimelineId(timelineId);
         pddSectionTimeline.setTimelineItems(constructPddSectionTimelineItemsKharkov());
+        pddSectionTimeline.setRuleSetKey(KHARKOV_RULE_SET_KEY);
         return pddSectionTimeline;
     }
 
@@ -507,39 +500,58 @@ public class DataGenerationServiceImpl implements DataGenerationService {
     }
 
     private void createPddSections() {
-        pddSectionRepository.save(PDD_SECTION_01);
-        pddSectionRepository.save(PDD_SECTION_02);
-        pddSectionRepository.save(PDD_SECTION_03);
-        pddSectionRepository.save(PDD_SECTION_04);
-        pddSectionRepository.save(PDD_SECTION_05);
-        pddSectionRepository.save(PDD_SECTION_06);
-        pddSectionRepository.save(PDD_SECTION_07);
-        pddSectionRepository.save(PDD_SECTION_08);
-        pddSectionRepository.save(PDD_SECTION_09);
-        pddSectionRepository.save(PDD_SECTION_10);
-        pddSectionRepository.save(PDD_SECTION_11);
-        pddSectionRepository.save(PDD_SECTION_12);
-        pddSectionRepository.save(PDD_SECTION_13);
-        pddSectionRepository.save(PDD_SECTION_14);
-        pddSectionRepository.save(PDD_SECTION_15);
-        pddSectionRepository.save(PDD_SECTION_16);
-        pddSectionRepository.save(PDD_SECTION_17);
-        pddSectionRepository.save(PDD_SECTION_18);
-        pddSectionRepository.save(PDD_SECTION_19);
-        pddSectionRepository.save(PDD_SECTION_20);
-        pddSectionRepository.save(PDD_SECTION_21);
-        pddSectionRepository.save(PDD_SECTION_22);
-        pddSectionRepository.save(PDD_SECTION_23);
-        pddSectionRepository.save(PDD_SECTION_24);
-        pddSectionRepository.save(PDD_SECTION_25);
-        pddSectionRepository.save(PDD_SECTION_26);
-        pddSectionRepository.save(PDD_SECTION_27);
-        pddSectionRepository.save(PDD_SECTION_28);
-        pddSectionRepository.save(PDD_SECTION_29);
-        pddSectionRepository.save(PDD_SECTION_30);
-        pddSectionRepository.save(PDD_SECTION_31);
-        pddSectionRepository.save(PDD_SECTION_32);
-        pddSectionRepository.save(PDD_SECTION_33);
-        pddSectionRepository.save(PDD_SECTION_34);
+        createPddSection(PDD_SECTION_01);
+        createPddSection(PDD_SECTION_02);
+        createPddSection(PDD_SECTION_03);
+        createPddSection(PDD_SECTION_04);
+        createPddSection(PDD_SECTION_05);
+        createPddSection(PDD_SECTION_06);
+        createPddSection(PDD_SECTION_07);
+        createPddSection(PDD_SECTION_08);
+        createPddSection(PDD_SECTION_09);
+        createPddSection(PDD_SECTION_10);
+        createPddSection(PDD_SECTION_11);
+        createPddSection(PDD_SECTION_12);
+        createPddSection(PDD_SECTION_13);
+        createPddSection(PDD_SECTION_14);
+        createPddSection(PDD_SECTION_15);
+        createPddSection(PDD_SECTION_16);
+        createPddSection(PDD_SECTION_17);
+        createPddSection(PDD_SECTION_18);
+        createPddSection(PDD_SECTION_19);
+        createPddSection(PDD_SECTION_20);
+        createPddSection(PDD_SECTION_21);
+        createPddSection(PDD_SECTION_22);
+        createPddSection(PDD_SECTION_23);
+        createPddSection(PDD_SECTION_24);
+        createPddSection(PDD_SECTION_25);
+        createPddSection(PDD_SECTION_26);
+        createPddSection(PDD_SECTION_27);
+        createPddSection(PDD_SECTION_28);
+        createPddSection(PDD_SECTION_29);
+        createPddSection(PDD_SECTION_30);
+        createPddSection(PDD_SECTION_31);
+        createPddSection(PDD_SECTION_32);
+        createPddSection(PDD_SECTION_33);
+        createPddSection(PDD_SECTION_34);
+    }
+
+    private PddSection createPddSection(final PddSection pddSection) {
+        PddSectionRuleSet kiev = new PddSectionRuleSet();
+        kiev.setRuleSetKey(KIEV_RULE_SET_KEY);
+        kiev.setSectionQuestions(QUESTIONS_COUNT_KIEV.keySet().stream()
+                .map(key -> new PddSectionQuestions(key, QUESTIONS_COUNT_KIEV.get(key)))
+                .collect(Collectors.toList())
+        );
+
+        PddSectionRuleSet kharkov = new PddSectionRuleSet();
+        kharkov.setRuleSetKey(KHARKOV_RULE_SET_KEY);
+        kharkov.setSectionQuestions(QUESTIONS_COUNT_KHARKOV.keySet().stream()
+                .map(key -> new PddSectionQuestions(key, QUESTIONS_COUNT_KIEV.get(key)))
+                .collect(Collectors.toList())
+        );
+
+        pddSection.setRuleSet(Arrays.asList(kiev, kharkov));
+        return pddSectionRepository.save(pddSection);
     }
 }

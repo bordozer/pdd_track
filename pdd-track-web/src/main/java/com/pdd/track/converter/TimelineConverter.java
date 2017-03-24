@@ -15,6 +15,7 @@ import com.pdd.track.dto.TimelineItemDto;
 import com.pdd.track.dto.TimelineItemSummaryDto;
 import com.pdd.track.dto.TimelineItemSummaryDto.TimelineItemSummaryStatus;
 import com.pdd.track.model.PddSection;
+import com.pdd.track.model.PddSection.PddSectionQuestions;
 import com.pdd.track.model.PddSectionTimeline;
 import com.pdd.track.model.PddSectionTimelineItem;
 import com.pdd.track.model.SchoolTimeline;
@@ -77,7 +78,7 @@ public class TimelineConverter {
                 });
 
         result.setItems(convertTimelineItems(pddSections, schoolTimelineItems, pddSectionTimelineItems, dayColumns, onDate));
-        result.setSummaryColumns(calculateTimelineDaySummary(pddSectionTimelineItems, dayColumns));
+        result.setSummaryColumns(calculateTimelineDaySummary(pddSectionTimelineItems, dayColumns, pddSectionTimeline.getRuleSetKey()));
         result.setTimelineStatistics(TimelineStatisticsConverter.convertStatistics(result));
 
         return result;
@@ -137,7 +138,7 @@ public class TimelineConverter {
         }
     }
 
-    private static List<TimelineDaySummaryDto> calculateTimelineDaySummary(final List<PddSectionTimelineItem> pddSectionTimelineItems, final List<TimelineDayColumn> dayColumns) {
+    private static List<TimelineDaySummaryDto> calculateTimelineDaySummary(final List<PddSectionTimelineItem> pddSectionTimelineItems, final List<TimelineDayColumn> dayColumns, final String ruleSetKey) {
 
         @Getter
         class QuestionsAggregator {
@@ -163,7 +164,16 @@ public class TimelineConverter {
                                             }
                                             PddSectionTesting testingEvent = (PddSectionTesting) tlItem.getEvent();
                                             valuesAggregator.add(((double) testingEvent.getTesting().getPassedQuestions() / testingEvent.getTesting().getTotalQuestions()) * 100);
-                                            questionsAggregator.add(0); // TODO: item.getPddSection().getQuestionsCount()
+
+                                            PddSectionQuestions pddSectionQuestions = item.getPddSection().getRuleSet().stream()
+                                                    .filter(ruleSet -> ruleSet.getRuleSetKey().equals(ruleSetKey))
+                                                    .findFirst()
+                                                    .orElseThrow(IllegalArgumentException::new)
+                                                    .getSectionQuestions().stream()
+                                                    .filter(quest -> quest.getSectionNumber().equals(item.getPddSection().getNumber()))
+                                                    .findFirst()
+                                                    .orElseThrow(IllegalArgumentException::new);
+                                            questionsAggregator.add(pddSectionQuestions.getQuestionsCount());
                                         });
                             });
 

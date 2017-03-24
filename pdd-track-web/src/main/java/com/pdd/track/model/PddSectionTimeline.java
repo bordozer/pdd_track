@@ -10,5 +10,6 @@ import java.util.List;
 public class PddSectionTimeline {
     private String _id;
     private String schoolTimelineId;
+    private String ruleSetKey;
     private List<PddSectionTimelineItem> timelineItems;
 }

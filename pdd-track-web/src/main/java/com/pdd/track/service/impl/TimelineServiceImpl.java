@@ -39,5 +39,4 @@ public class TimelineServiceImpl implements TimelineService {
     public SchoolTimeline create(final SchoolTimeline entity) {
         return schoolTimelineRepository.save(entity);
     }
-
 }
