@@ -18,7 +18,7 @@ import com.pdd.track.dto.TimelineDto.TimelineStatistics;
 import com.pdd.track.dto.TimelineItemDto;
 import com.pdd.track.dto.TimelineItemSummaryDto;
 import com.pdd.track.dto.TimelineItemSummaryDto.TimelineItemSummaryStatus;
-import com.pdd.track.entity.TimelineEntity;
+import com.pdd.track.model.Timeline;
 import com.pdd.track.model.Car;
 import com.pdd.track.model.Instructor;
 import com.pdd.track.model.PddSection;
@@ -28,6 +28,7 @@ import com.pdd.track.model.Testing;
 import com.pdd.track.model.TimeLineDayHintType;
 import com.pdd.track.model.TimeLineItemEventType;
 import com.pdd.track.model.TimelineItem;
+import com.pdd.track.model.TimelineStudy;
 import com.pdd.track.model.events.AbstractDrivingEvent;
 import com.pdd.track.model.events.AdditionalDrivingEvent;
 import com.pdd.track.model.events.PddSectionTesting;
@@ -59,7 +60,7 @@ public class TimelineConverter {
     public static final int COLL_TEST_PERCENTAGE = 96;
     public static final int EXCELLENT_TEST_PERCENTAGE = 100;
 
-    public static TimelineDto toDto(final TimelineEntity entity, final LocalDate onDate) {
+    public static TimelineDto toDto(final Timeline timeline, final TimelineStudy timelineStudy, final LocalDate onDate) {
         TimelineDto result = new TimelineDto();
         result.setStartDate(DataGenerationServiceImpl.STUDY_START_DAY);
         result.setEndDate(DataGenerationServiceImpl.STUDY_END_DAY);
@@ -68,11 +69,12 @@ public class TimelineConverter {
         result.setDayColumns(dayColumns);
         dayColumns.stream()
                 .forEach(dayColumn -> {
-                    populateGlobalDayEvents(dayColumn, entity.getStudyingTimelineItems());
+                    populateGlobalDayEvents(dayColumn, timeline.getStudyingTimelineItems());
                 });
 
-        result.setItems(convertItems(entity, dayColumns, onDate));
-        result.setSummaryColumns(calculateTimelineDaySummary(entity, dayColumns));
+        List<PddSectionTimelineItem> timelineStudyItems = timelineStudy.getPddSectionTimelineItems();
+        result.setItems(convertItems(timelineStudyItems, dayColumns, onDate));
+        result.setSummaryColumns(calculateTimelineDaySummary(dayColumns, timelineStudyItems));
         result.setTimelineStatistics(collectStatistics(result));
 
         return result;
@@ -118,7 +120,7 @@ public class TimelineConverter {
         return new SectionDataHolder(title, sectionsCount, sectionsPercentage, questionsCount, questionsPercentage);
     }
 
-    private static List<TimelineDaySummaryDto> calculateTimelineDaySummary(final TimelineEntity entity, final List<TimelineDayColumn> dayColumns) {
+    private static List<TimelineDaySummaryDto> calculateTimelineDaySummary(final List<TimelineDayColumn> dayColumns, final List<PddSectionTimelineItem> pddSectionTimelineItems) {
 
         @Getter
         class QuestionsAggregator {
@@ -132,7 +134,7 @@ public class TimelineConverter {
                 .map(dayColumn -> {
                     final ValuesAggregator valuesAggregator = new ValuesAggregator();
                     final QuestionsAggregator questionsAggregator = new QuestionsAggregator();
-                    entity.getPddSectionTimelineItems().stream()
+                    pddSectionTimelineItems.stream()
                             .forEach(item -> {
                                 item.getTimelineItems().stream()
                                         .forEach(tlItem -> {
@@ -157,9 +159,9 @@ public class TimelineConverter {
                 .collect(Collectors.toList());
     }
 
-    private static ValuesAggregator calculateTimelinePddSectionSummary(final TimelineEntity entity, final String pddSectionKey) {
+    private static ValuesAggregator calculateTimelinePddSectionSummary(final List<PddSectionTimelineItem> timelineStudyItems, final String pddSectionKey) {
         final ValuesAggregator valuesAggregator = new ValuesAggregator();
-        entity.getPddSectionTimelineItems().stream()
+        timelineStudyItems.stream()
                 .forEach(item -> {
                     if (!item.getPddSection().getKey().equals(pddSectionKey)) {
                         return;
@@ -205,26 +207,26 @@ public class TimelineConverter {
         return result;
     }
 
-    private static List<TimelineItemDto> convertItems(final TimelineEntity entity, final List<TimelineDayColumn> dayColumns, final LocalDate onDate) {
-        List<TimelineItemDto> result = groupPddSections(entity.getPddSectionTimelineItems()).stream()
+    private static List<TimelineItemDto> convertItems(final List<PddSectionTimelineItem> timelineStudyItems, final List<TimelineDayColumn> dayColumns, final LocalDate onDate) {
+        List<TimelineItemDto> result = groupPddSections(timelineStudyItems).stream()
                 .map(sectionDto -> {
                     TimelineItemDto item = new TimelineItemDto();
                     item.setPddSection(sectionDto);
-                    item.setTimelineDays(convertTimelineDaysForPddSection(sectionDto, entity, dayColumns, onDate));
+                    item.setTimelineDays(convertTimelineDaysForPddSection(sectionDto, timelineStudyItems, dayColumns, onDate));
                     return item;
                 })
                 .collect(Collectors.toList());
-        populateHintsOnDate(entity, result, onDate);
+        populateHintsOnDate(timelineStudyItems, result, onDate);
         LocalDate aDate = onDate.plusDays(1);
         while(aDate.isBefore(DataGenerationServiceImpl.STUDY_END_DAY.plusDays(1))) {
-            populateHintsOnDate(entity, result, aDate);
+            populateHintsOnDate(timelineStudyItems, result, aDate);
             aDate = aDate.plusDays(1);
         }
-        populateTimelineSummary(entity, result, onDate);
+        populateTimelineSummary(timelineStudyItems, result, onDate);
         return result;
     }
 
-    private static void populateHintsOnDate(final TimelineEntity entity, final List<TimelineItemDto> result, final LocalDate onDate) {
+    private static void populateHintsOnDate(final List<PddSectionTimelineItem> timelineStudyItems, final List<TimelineItemDto> result, final LocalDate onDate) {
         result.stream()
                 .forEach(item -> {
                     item.getTimelineDays().stream()
@@ -234,19 +236,19 @@ public class TimelineConverter {
                                 }
                                 String sectionKey = item.getPddSection().getKey();
                                 int sessionQuestionCount = item.getPddSection().getQuestionsCount();
-                                TimelineItem pddSectionStudyEvent = getLastPddSectionEvent(sectionKey, TimeLineItemEventType.STUDY, entity);
+                                TimelineItem pddSectionStudyEvent = getLastPddSectionEvent(sectionKey, timelineStudyItems, TimeLineItemEventType.STUDY);
                                 if (pddSectionStudyEvent == null) {
-                                    TimelineItem pddSectionLectureEvent = getLastPddSectionEvent(sectionKey, TimeLineItemEventType.LECTURE, entity);
+                                    TimelineItem pddSectionLectureEvent = getLastPddSectionEvent(sectionKey, timelineStudyItems, TimeLineItemEventType.LECTURE);
                                     if (pddSectionLectureEvent != null && ageInDays(pddSectionLectureEvent.getDate(), onDate) > SECTION_TOO_LONG_WITHOUT_STUDY_DAYS) {
                                         day.setDayHints(Lists.newArrayList(new TimeLineDayHintDto(TimeLineDayHintType.NEEDS_STUDY, ageInDays(pddSectionLectureEvent.getDate(), onDate), sessionQuestionCount)));
                                     }
                                     return;
                                 }
-                                TimelineItem lastTesting = getLastPddSectionEvent(sectionKey, TimeLineItemEventType.TESTING, entity);
+                                TimelineItem lastTesting = getLastPddSectionEvent(sectionKey, timelineStudyItems, TimeLineItemEventType.TESTING);
                                 if (lastTesting == null) {
                                     return;
                                 }
-                                if (isSectionTooLongWithoutRepeating(sectionKey, entity, onDate)) {
+                                if (isSectionTooLongWithoutRepeating(timelineStudyItems, sectionKey, onDate)) {
                                     day.setDayHints(Lists.newArrayList(new TimeLineDayHintDto(TimeLineDayHintType.ADVICE_REFRESH_TESTS, ageInDays(lastTesting.getDate(), onDate), sessionQuestionCount)));
                                 }
                                 PddSectionTesting pddSectionTestingEvent = (PddSectionTesting) lastTesting.getEvent();
@@ -257,8 +259,8 @@ public class TimelineConverter {
                 });
     }
 
-    private static boolean isSectionTooLongWithoutRepeating(final String sessionKey, final TimelineEntity entity, final LocalDate onDate) {
-        TimelineItem lastPddSectionTesting = getLastPddSectionEvent(sessionKey, TimeLineItemEventType.TESTING, entity);
+    private static boolean isSectionTooLongWithoutRepeating(final List<PddSectionTimelineItem> timelineStudyItems, final String sessionKey, final LocalDate onDate) {
+        TimelineItem lastPddSectionTesting = getLastPddSectionEvent(sessionKey, timelineStudyItems, TimeLineItemEventType.TESTING);
         if (lastPddSectionTesting == null) {
             return false;
         }
@@ -272,12 +274,12 @@ public class TimelineConverter {
         return ageInDays(lastPddSectionTesting.getDate(), onDate) > SECTION_TOO_LONG_WITHOUT_REPEAT_DAYS;
     }
 
-    private static void populateTimelineSummary(final TimelineEntity entity, final List<TimelineItemDto> result, final LocalDate onDate) {
+    private static void populateTimelineSummary(final List<PddSectionTimelineItem> timelineStudyItems, final List<TimelineItemDto> result, final LocalDate onDate) {
         result.stream()
                 .forEach(item -> {
                     String sectionKey = item.getPddSection().getKey();
-                    TimelineItem pddSectionLectureEvent = getLastPddSectionEvent(sectionKey, TimeLineItemEventType.LECTURE, entity);
-                    TimelineItem pddSectionStudyEvent = getLastPddSectionEvent(sectionKey, TimeLineItemEventType.STUDY, entity);
+                    TimelineItem pddSectionLectureEvent = getLastPddSectionEvent(sectionKey, timelineStudyItems, TimeLineItemEventType.LECTURE);
+                    TimelineItem pddSectionStudyEvent = getLastPddSectionEvent(sectionKey, timelineStudyItems, TimeLineItemEventType.STUDY);
 
                     TimelineItemSummaryDto timelineItemSummary = new TimelineItemSummaryDto();
                     timelineItemSummary.setLecture(pddSectionLectureEvent != null);
@@ -285,14 +287,14 @@ public class TimelineConverter {
 
 
                     boolean lastTestSuccessful = false;
-                    TimelineItem lastPddSectionTesting = getLastPddSectionEvent(sectionKey, TimeLineItemEventType.TESTING, entity);
+                    TimelineItem lastPddSectionTesting = getLastPddSectionEvent(sectionKey, timelineStudyItems, TimeLineItemEventType.TESTING);
                     if (lastPddSectionTesting != null) {
                         PddSectionTesting lastSectionTesting = (PddSectionTesting) lastPddSectionTesting.getEvent();
                         lastTestSuccessful = lastSectionTesting.getTesting().isPassed();
                         timelineItemSummary.setLastTestSuccessful(lastTestSuccessful);
                     }
 
-                    ValuesAggregator valuesAggregator = calculateTimelinePddSectionSummary(entity, sectionKey);
+                    ValuesAggregator valuesAggregator = calculateTimelinePddSectionSummary(timelineStudyItems, sectionKey);
                     double averageTestingScore = valuesAggregator.getValue() / valuesAggregator.getCount();
                     timelineItemSummary.setTestsCount(valuesAggregator.getCount());
                     timelineItemSummary.setTestsAveragePercentage(averageTestingScore);
@@ -308,7 +310,7 @@ public class TimelineConverter {
                         pddSummaryStatus = TimelineItemSummaryStatus.NOT_READY;
                     }
                     if (valuesAggregator.getCount() >= MIN_TESTS_COUNT && testPercentageIsGood && lastTestSuccessful) {
-                        if (isSectionTooLongWithoutRepeating(sectionKey, entity, onDate)) {
+                        if (isSectionTooLongWithoutRepeating(timelineStudyItems, sectionKey, onDate)) {
                             pddSummaryStatus = TimelineItemSummaryStatus.READY_WITH_RISK;
                         } else {
                             pddSummaryStatus = TimelineItemSummaryStatus.COMPLETELY_READY;
@@ -325,8 +327,8 @@ public class TimelineConverter {
                 });
     }
 
-    private static TimelineItem getLastPddSectionEvent(final String pddSectionKey, final TimeLineItemEventType eventType, final TimelineEntity entity) {
-        List<PddSectionTimelineItem> pddSectionTimelineItems = entity.getPddSectionTimelineItems().stream()
+    private static TimelineItem getLastPddSectionEvent(final String pddSectionKey, final List<PddSectionTimelineItem> timelineStudyItems, final TimeLineItemEventType eventType) {
+        List<PddSectionTimelineItem> pddSectionTimelineItems = timelineStudyItems.stream()
                 .filter(sectionItem -> {
                     if (!sectionItem.getPddSection().getKey().equals(pddSectionKey)) {
                         return false;
@@ -349,8 +351,8 @@ public class TimelineConverter {
         return timelineTestingItems.get(timelineTestingItems.size() - 1);
     }
 
-    private static List<TimelineDayDto> convertTimelineDaysForPddSection(final PddSectionDto pddSection, final TimelineEntity entity, final List<TimelineDayColumn> dayColumns, final LocalDate onDate) {
-        List<TimelineItem> pddSectionTimelineItems = filterTimelineItemsByPddSectionKey(pddSection.getKey(), entity.getPddSectionTimelineItems());
+    private static List<TimelineDayDto> convertTimelineDaysForPddSection(final PddSectionDto pddSection, final List<PddSectionTimelineItem> timelineStudyItems, final List<TimelineDayColumn> dayColumns, final LocalDate onDate) {
+        List<TimelineItem> pddSectionTimelineItems = filterTimelineItemsByPddSectionKey(pddSection.getKey(), timelineStudyItems);
         return dayColumns.stream()
                 .map(dayColumn -> {
                     TimelineDayDto timelineDay = new TimelineDayDto();

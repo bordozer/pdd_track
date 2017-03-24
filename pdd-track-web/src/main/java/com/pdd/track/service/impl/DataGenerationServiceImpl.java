@@ -2,7 +2,7 @@ package com.pdd.track.service.impl;
 
 import com.google.common.collect.Lists;
 import com.google.common.collect.Sets;
-import com.pdd.track.entity.TimelineEntity;
+import com.pdd.track.model.Timeline;
 import com.pdd.track.model.Car;
 import com.pdd.track.model.Gender;
 import com.pdd.track.model.Instructor;
@@ -11,13 +11,15 @@ import com.pdd.track.model.PddSectionTimelineItem;
 import com.pdd.track.model.Student;
 import com.pdd.track.model.StudyingTimelineItem;
 import com.pdd.track.model.TimelineItem;
+import com.pdd.track.model.TimelineStudy;
 import com.pdd.track.model.events.AdditionalDrivingEvent;
 import com.pdd.track.model.events.LectureEvent;
 import com.pdd.track.model.events.PddSectionStudy;
 import com.pdd.track.model.events.PddSectionTesting;
 import com.pdd.track.model.events.SchoolDrivingEvent;
+import com.pdd.track.repository.TimelineRepository;
+import com.pdd.track.repository.TimelineStudyRepository;
 import com.pdd.track.service.DataGenerationService;
-import com.pdd.track.service.TimelineService;
 import org.springframework.stereotype.Service;
 
 import javax.inject.Inject;
@@ -79,20 +81,45 @@ public class DataGenerationServiceImpl implements DataGenerationService {
     public static final Set<DayOfWeek> LECTURE_WEEK_DAYS = Sets.newHashSet(DayOfWeek.SATURDAY, DayOfWeek.SUNDAY);
 
     @Inject
-    private TimelineService timelineService;
+    private TimelineRepository timelineRepository;
+
+    @Inject
+    private TimelineStudyRepository timelineStudyRepository;
 
     @Override
-    public TimelineEntity createData() {
-        timelineService.deleteAll();
-        return timelineService.create(constructUserStudyTimelineEntity());
+    public void createData() {
+        timelineRepository.deleteAll();
+        timelineStudyRepository.deleteAll();
+        Timeline timeline = timelineRepository.save(constructTimeline());
+        TimelineStudy studyKiev = timelineStudyRepository.save(constructTimelineStudyKiev(timeline.get_id()));
+        TimelineStudy studyKharkov = timelineStudyRepository.save(constructTimelineStudyKharkov(timeline.get_id()));
     }
 
-    private TimelineEntity constructUserStudyTimelineEntity() {
-        TimelineEntity entity = new TimelineEntity();
+    private Timeline constructTimeline() {
+        Timeline entity = new Timeline();
         entity.setStudent(STUDENT);
         entity.setStudyingTimelineItems(constructStudyingTimelineItems());
-        entity.setPddSectionTimelineItems(constructPddSectionTimelineItems());
         return entity;
+    }
+
+    private TimelineStudy constructTimelineStudyKiev(final String timelineId) {
+        TimelineStudy timelineStudy = new TimelineStudy();
+        timelineStudy.set_id("1");
+        timelineStudy.setTimelineId(timelineId);
+        timelineStudy.setPddSectionTimelineItems(constructPddSectionTimelineItemsKiev());
+        return timelineStudy;
+    }
+
+    private TimelineStudy constructTimelineStudyKharkov(final String timelineId) {
+        TimelineStudy timelineStudy = new TimelineStudy();
+        timelineStudy.set_id("2");
+        timelineStudy.setTimelineId(timelineId);
+        timelineStudy.setPddSectionTimelineItems(constructPddSectionTimelineItemsKharkov());
+        return timelineStudy;
+    }
+
+    private List<PddSectionTimelineItem> constructPddSectionTimelineItemsKharkov() {
+        return Arrays.asList();
     }
 
     private List<StudyingTimelineItem> constructStudyingTimelineItems() {
@@ -104,7 +131,7 @@ public class DataGenerationServiceImpl implements DataGenerationService {
         );
     }
 
-    private List<PddSectionTimelineItem> constructPddSectionTimelineItems() {
+    private List<PddSectionTimelineItem> constructPddSectionTimelineItemsKiev() {
 
         // 1
         TimelineItem lecture1 = new TimelineItem(LocalDate.of(2017, 3, 4), new LectureEvent());

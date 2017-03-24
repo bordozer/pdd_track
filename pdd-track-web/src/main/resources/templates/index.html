@@ -34,6 +34,7 @@
 <script th:inline="javascript">
     /*<![CDATA[*/
     var studentKey = /*[[${studentKey}]]*/'';
+    var rulesSetKey = /*[[${rulesSetKey}]]*/'';
 
     require(['jquery', 'js/components/base-view/user-base-page-view', 'js/pages/timeline/timeline-page'], function ($, Page, timeline_page) {
         var pageView = new Page({
@@ -41,7 +42,8 @@
             bodyRenderer: timeline_page,
             breadcrumbs: [],
             options: {
-                studentKey: studentKey
+                studentKey: studentKey,
+                rulesSetKey: rulesSetKey
             }
         });
         pageView.render();

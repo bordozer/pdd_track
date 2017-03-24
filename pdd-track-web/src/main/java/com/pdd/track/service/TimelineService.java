@@ -1,15 +1,13 @@
 package com.pdd.track.service;
 
 import com.pdd.track.dto.TimelineDto;
-import com.pdd.track.entity.TimelineEntity;
+import com.pdd.track.model.Timeline;
 
 import java.time.LocalDate;
 
 public interface TimelineService {
 
-    TimelineDto getForStudent(String studentKey, final LocalDate onDate);
+    TimelineDto getTimeline(String studentKey, final String rulesSetKey, final LocalDate onDate);
 
-    TimelineEntity create(TimelineEntity entity);
-
-    void deleteAll();
+    Timeline create(Timeline entity);
 }

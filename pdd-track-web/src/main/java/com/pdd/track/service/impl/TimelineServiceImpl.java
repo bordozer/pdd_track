@@ -2,8 +2,10 @@ package com.pdd.track.service.impl;
 
 import com.pdd.track.converter.TimelineConverter;
 import com.pdd.track.dto.TimelineDto;
-import com.pdd.track.entity.TimelineEntity;
+import com.pdd.track.model.Timeline;
+import com.pdd.track.model.TimelineStudy;
 import com.pdd.track.repository.TimelineRepository;
+import com.pdd.track.repository.TimelineStudyRepository;
 import com.pdd.track.service.TimelineService;
 import org.springframework.stereotype.Service;
 
@@ -16,18 +18,19 @@ public class TimelineServiceImpl implements TimelineService {
     @Inject
     private TimelineRepository timelineRepository;
 
+    @Inject
+    private TimelineStudyRepository timelineStudyRepository;
+
     @Override
-    public TimelineDto getForStudent(final String studentKey, final LocalDate onDate) {
-        return TimelineConverter.toDto(timelineRepository.findOneByStudentKey(studentKey), onDate);
+    public TimelineDto getTimeline(final String studentKey, final String rulesSetKey, final LocalDate onDate) {
+        Timeline timeline = timelineRepository.findOneByStudentKey(studentKey);
+        TimelineStudy timelineStudy = timelineStudyRepository.findOneBy_id(rulesSetKey);
+        return TimelineConverter.toDto(timeline, timelineStudy, onDate);
     }
 
     @Override
-    public TimelineEntity create(final TimelineEntity entity) {
+    public Timeline create(final Timeline entity) {
         return timelineRepository.save(entity);
     }
 
-    @Override
-    public void deleteAll() {
-        timelineRepository.deleteAll();
-    }
 }

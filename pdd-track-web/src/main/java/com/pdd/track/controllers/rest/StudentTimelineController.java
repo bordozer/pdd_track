@@ -1,7 +1,6 @@
 package com.pdd.track.controllers.rest;
 
 import com.pdd.track.dto.TimelineDto;
-import com.pdd.track.entity.TimelineEntity;
 import com.pdd.track.service.DataGenerationService;
 import com.pdd.track.service.TimelineService;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -22,13 +21,15 @@ public class StudentTimelineController {
     @Inject
     private DataGenerationService dataGenerationService;
 
-    @RequestMapping(method = RequestMethod.GET, value = "/{studentKey}/")
-    public TimelineDto getStudentTimeline(@PathVariable("studentKey") final String studentKey) {
-        return timelineService.getForStudent(studentKey, LocalDate.now());
+    //http://localhost:8084/student/timeline/qaz-wsx-edc/rules-set/1/
+    @RequestMapping(method = RequestMethod.GET, value = "/{studentKey}/rules-set/{rulesSetKey}/")
+    public TimelineDto getStudentTimeline(@PathVariable("studentKey") final String studentKey, @PathVariable("rulesSetKey") final String rulesSetKey) {
+        return timelineService.getTimeline(studentKey, rulesSetKey, LocalDate.now());
     }
 
     @RequestMapping(method = RequestMethod.PUT, value = "/data-create/")
-    public TimelineEntity createLogRecord() {
-        return dataGenerationService.createData();
+    public boolean createLogRecord() {
+        dataGenerationService.createData();
+        return true;
     }
 }

@@ -15,6 +15,7 @@ public class MainPageController {
     @RequestMapping(method = RequestMethod.GET, value = "/")
     public String portalPage(final Model model) {
         model.addAttribute("studentKey", DataGenerationServiceImpl.STUDENT.getKey());
+        model.addAttribute("rulesSetKey", "1");
         return VIEW;
     }
 }
