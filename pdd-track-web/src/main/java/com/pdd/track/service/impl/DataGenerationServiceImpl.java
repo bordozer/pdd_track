@@ -17,6 +17,7 @@ import com.pdd.track.model.events.LectureEvent;
 import com.pdd.track.model.events.PddSectionStudy;
 import com.pdd.track.model.events.PddSectionTesting;
 import com.pdd.track.model.events.SchoolDrivingEvent;
+import com.pdd.track.repository.PddSectionRepository;
 import com.pdd.track.repository.TimelineRepository;
 import com.pdd.track.repository.TimelineStudyRepository;
 import com.pdd.track.service.DataGenerationService;
@@ -81,6 +82,9 @@ public class DataGenerationServiceImpl implements DataGenerationService {
     public static final Set<DayOfWeek> LECTURE_WEEK_DAYS = Sets.newHashSet(DayOfWeek.SATURDAY, DayOfWeek.SUNDAY);
 
     @Inject
+    private PddSectionRepository pddSectionRepository;
+
+    @Inject
     private TimelineRepository timelineRepository;
 
     @Inject
@@ -88,8 +92,10 @@ public class DataGenerationServiceImpl implements DataGenerationService {
 
     @Override
     public void createData() {
+        pddSectionRepository.deleteAll();
         timelineRepository.deleteAll();
         timelineStudyRepository.deleteAll();
+        createPddSections();
         Timeline timeline = timelineRepository.save(constructTimeline());
         TimelineStudy studyKiev = timelineStudyRepository.save(constructTimelineStudyKiev(timeline.get_id()));
         TimelineStudy studyKharkov = timelineStudyRepository.save(constructTimelineStudyKharkov(timeline.get_id()));
@@ -404,5 +410,42 @@ public class DataGenerationServiceImpl implements DataGenerationService {
 
                 ))
         );
+    }
+
+    private void createPddSections() {
+        pddSectionRepository.save(PDD_SECTION_01);
+        pddSectionRepository.save(PDD_SECTION_02);
+        pddSectionRepository.save(PDD_SECTION_03);
+        pddSectionRepository.save(PDD_SECTION_04);
+        pddSectionRepository.save(PDD_SECTION_05);
+        pddSectionRepository.save(PDD_SECTION_06);
+        pddSectionRepository.save(PDD_SECTION_07);
+        pddSectionRepository.save(PDD_SECTION_08);
+        pddSectionRepository.save(PDD_SECTION_09);
+        pddSectionRepository.save(PDD_SECTION_10);
+        pddSectionRepository.save(PDD_SECTION_11);
+        pddSectionRepository.save(PDD_SECTION_12);
+        pddSectionRepository.save(PDD_SECTION_13);
+        pddSectionRepository.save(PDD_SECTION_14);
+        pddSectionRepository.save(PDD_SECTION_15);
+        pddSectionRepository.save(PDD_SECTION_16);
+        pddSectionRepository.save(PDD_SECTION_17);
+        pddSectionRepository.save(PDD_SECTION_18);
+        pddSectionRepository.save(PDD_SECTION_19);
+        pddSectionRepository.save(PDD_SECTION_20);
+        pddSectionRepository.save(PDD_SECTION_21);
+        pddSectionRepository.save(PDD_SECTION_22);
+        pddSectionRepository.save(PDD_SECTION_23);
+        pddSectionRepository.save(PDD_SECTION_24);
+        pddSectionRepository.save(PDD_SECTION_25);
+        pddSectionRepository.save(PDD_SECTION_26);
+        pddSectionRepository.save(PDD_SECTION_27);
+        pddSectionRepository.save(PDD_SECTION_28);
+        pddSectionRepository.save(PDD_SECTION_29);
+        pddSectionRepository.save(PDD_SECTION_30);
+        pddSectionRepository.save(PDD_SECTION_31);
+        pddSectionRepository.save(PDD_SECTION_32);
+        pddSectionRepository.save(PDD_SECTION_33);
+        pddSectionRepository.save(PDD_SECTION_34);
     }
 }

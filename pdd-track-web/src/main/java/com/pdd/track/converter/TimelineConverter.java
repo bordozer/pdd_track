@@ -64,7 +64,7 @@ public class TimelineConverter {
     public static final int COLL_TEST_PERCENTAGE = 96;
     public static final int EXCELLENT_TEST_PERCENTAGE = 100;
 
-    public static TimelineDto toDto(final Timeline timeline, final TimelineStudy timelineStudy, final LocalDate onDate) {
+    public static TimelineDto toDto(final List<PddSection> pddSections, final Timeline timeline, final TimelineStudy timelineStudy, final LocalDate onDate) {
         TimelineDto result = new TimelineDto();
         result.setStartDate(DataGenerationServiceImpl.STUDY_START_DAY);
         result.setEndDate(DataGenerationServiceImpl.STUDY_END_DAY);
@@ -77,16 +77,17 @@ public class TimelineConverter {
                 });
 
         List<PddSectionTimelineItem> timelineStudyItems = timelineStudy.getPddSectionTimelineItems();
-        result.setItems(convertTimelineItems(timeline.getStudyingTimelineItems(), timelineStudyItems, dayColumns, onDate));
+        result.setItems(convertTimelineItems(pddSections, timeline.getStudyingTimelineItems(), timelineStudyItems, dayColumns, onDate));
         result.setSummaryColumns(calculateTimelineDaySummary(dayColumns, timelineStudyItems));
         result.setTimelineStatistics(collectStatistics(result));
 
         return result;
     }
 
-    private static List<TimelineItemDto> convertTimelineItems(final List<StudyingTimelineItem> studyingTimelineItems, final List<PddSectionTimelineItem> timelineStudyItems, final List<TimelineDayColumn> dayColumns, final LocalDate onDate) {
-        List<TimelineItemDto> result = groupPddSections(timelineStudyItems).stream()
-                .map(sectionDto -> {
+    private static List<TimelineItemDto> convertTimelineItems(final List<PddSection> pddSections, final List<StudyingTimelineItem> studyingTimelineItems, final List<PddSectionTimelineItem> timelineStudyItems, final List<TimelineDayColumn> dayColumns, final LocalDate onDate) {
+        List<TimelineItemDto> result = pddSections.stream()
+                .map(section -> {
+                    PddSectionDto sectionDto = convertOddSection(section);
                     TimelineItemDto item1 = new TimelineItemDto();
                     item1.setPddSection(sectionDto);
                     item1.setTimelineDays(convertTimelineDaysForPddSection(sectionDto, timelineStudyItems, dayColumns, onDate));
@@ -485,16 +486,17 @@ public class TimelineConverter {
 
     private static List<PddSectionDto> groupPddSections(final List<PddSectionTimelineItem> pddSectionTimelineItems) {
         return pddSectionTimelineItems.stream()
-                .map(section -> {
-                    PddSection pddSection = section.getPddSection();
-                    PddSectionDto dto = new PddSectionDto();
-                    dto.setKey(pddSection.getKey());
-                    dto.setNumber(pddSection.getNumber());
-                    dto.setName(pddSection.getName());
-                    dto.setQuestionsCount(pddSection.getQuestionsCount());
-                    return dto;
-                })
+                .map(item -> TimelineConverter.convertOddSection(item.getPddSection()))
                 .collect(Collectors.toList());
+    }
+
+    private static PddSectionDto convertOddSection(final PddSection pddSection) {
+        PddSectionDto dto = new PddSectionDto();
+        dto.setKey(pddSection.getKey());
+        dto.setNumber(pddSection.getNumber());
+        dto.setName(pddSection.getName());
+        dto.setQuestionsCount(pddSection.getQuestionsCount());
+        return dto;
     }
 
     private static String formatDouble(final double value) {
