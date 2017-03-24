@@ -16,7 +16,8 @@ public class TimelineItemSummaryDto {
         NONE,
         COMPLETELY_READY,
         READY_WITH_RISK,
-        NOT_READY,
+        NEED_MORE_TESTING,
+        TESTS_ARE_RED,
         TO_STUDY,
         NO_LECTURE_YET
     }

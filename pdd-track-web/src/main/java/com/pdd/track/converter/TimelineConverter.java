@@ -246,16 +246,15 @@ public class TimelineConverter {
                                         dayHints.add(new TimeLineDayHintDto(TimeLineDayHintType.NEEDS_STUDY, CommonUtils.ageInDays(pddSectionLectureEvent.getDate(), onDate), sessionQuestionCount));
                                     }
                                 } else {
-                                    LocalDate lastRestudyDate = lastLectureStudyEvent.getDate();
-                                    if (CommonUtils.ageInDays(lastRestudyDate, onDate) > SECTION_TOO_LONG_WITHOUT_RESTUDY_DAYS) {
-                                        dayHints.add(new TimeLineDayHintDto(TimeLineDayHintType.NEEDS_RESTUDY, CommonUtils.ageInDays(lastRestudyDate, onDate), sessionQuestionCount));
+                                    if (isSectionTooLongWithoutRestudy(schoolTimelineItems, onDate, sectionKey)) {
+                                        dayHints.add(new TimeLineDayHintDto(TimeLineDayHintType.NEEDS_RESTUDY, CommonUtils.ageInDays(lastLectureStudyEvent.getDate(), onDate), sessionQuestionCount));
                                     }
                                 }
                                 TimelineItem lastTesting = getLastPddSectionTestingEvent(sectionKey, pddSectionTimelineItems, TimeLineItemEventType.TESTING);
                                 if (lastTesting == null) {
                                     return;
                                 }
-                                if (isSectionTooLongWithoutRepeating(sectionKey, pddSectionTimelineItems, onDate)) {
+                                if (isSectionTooLongWithoutTestsRepeating(sectionKey, pddSectionTimelineItems, onDate)) {
                                     dayHints.add(new TimeLineDayHintDto(TimeLineDayHintType.ADVICE_REFRESH_TESTS, CommonUtils.ageInDays(lastTesting.getDate(), onDate), sessionQuestionCount));
                                 }
                                 PddSectionTesting pddSectionTestingEvent = (PddSectionTesting) lastTesting.getEvent();
@@ -264,21 +263,6 @@ public class TimelineConverter {
                                 }
                             });
                 });
-    }
-
-    private static boolean isSectionTooLongWithoutRepeating(final String sessionKey, final List<PddSectionTimelineItem> pddSectionTimelineItems, final LocalDate onDate) {
-        TimelineItem lastPddSectionTesting = getLastPddSectionTestingEvent(sessionKey, pddSectionTimelineItems, TimeLineItemEventType.TESTING);
-        if (lastPddSectionTesting == null) {
-            return false;
-        }
-        PddSectionTesting lastSectionTesting = (PddSectionTesting) lastPddSectionTesting.getEvent();
-        if (CommonUtils.getPercentage(lastSectionTesting.getTesting()) >= EXCELLENT_TEST_PERCENTAGE) {
-            return CommonUtils.ageInDays(lastPddSectionTesting.getDate(), onDate) > EXCELLENT_SECTION_TOO_LONG_WITHOUT_TESTING_DAYS;
-        }
-        if (CommonUtils.getPercentage(lastSectionTesting.getTesting()) >= COLL_TEST_PERCENTAGE) {
-            return CommonUtils.ageInDays(lastPddSectionTesting.getDate(), onDate) > COOL_SECTION_TOO_LONG_WITHOUT_TESTING_DAYS;
-        }
-        return CommonUtils.ageInDays(lastPddSectionTesting.getDate(), onDate) > SECTION_TOO_LONG_WITHOUT_TESTING_DAYS;
     }
 
     private static void populateTimelineSummary(final List<TimelineItem> schoolTimelineItems, final List<PddSectionTimelineItem> pddSectionTimelineItems,
@@ -310,22 +294,21 @@ public class TimelineConverter {
                     boolean testPercentageIsGood = averageTestingScore > GOOD_TEST_PERCENTAGE;
 
                     TimelineItemSummaryStatus pddSummaryStatus = TimelineItemSummaryStatus.NONE;
-                    boolean itWasLectureButItIsNotStudied = lastPddSectionLectureEvent != null && lastPddSectionLectureStudyEvent == null;
-                    if (itWasLectureButItIsNotStudied) {
+                    if (lastPddSectionLectureEvent != null && valuesAggregator.getCount() < MIN_TESTS_COUNT) {
+                        pddSummaryStatus = TimelineItemSummaryStatus.NEED_MORE_TESTING;
+                    }
+                    if (lastPddSectionLectureEvent != null && lastPddSectionLectureStudyEvent == null) {
                         pddSummaryStatus = TimelineItemSummaryStatus.TO_STUDY;
                     }
-                    if (lastPddSectionLectureEvent != null && valuesAggregator.getCount() < MIN_TESTS_COUNT) {
-                        pddSummaryStatus = TimelineItemSummaryStatus.NOT_READY;
-                    }
                     if (valuesAggregator.getCount() >= MIN_TESTS_COUNT && testPercentageIsGood && lastTestSuccessful) {
-                        if (isSectionTooLongWithoutRepeating(sectionKey, pddSectionTimelineItems, onDate)) {
+                        if (isSectionTooLongWithoutTestsRepeating(sectionKey, pddSectionTimelineItems, onDate)) {
                             pddSummaryStatus = TimelineItemSummaryStatus.READY_WITH_RISK;
                         } else {
                             pddSummaryStatus = TimelineItemSummaryStatus.COMPLETELY_READY;
                         }
                     }
                     if (valuesAggregator.getCount() >= MIN_TESTS_COUNT && !testPercentageIsGood && lastTestSuccessful) {
-                        pddSummaryStatus = TimelineItemSummaryStatus.NOT_READY;
+                        pddSummaryStatus = TimelineItemSummaryStatus.TESTS_ARE_RED;
                     }
                     if (lastPddSectionLectureEvent == null) {
                         pddSummaryStatus = TimelineItemSummaryStatus.NO_LECTURE_YET;
@@ -333,6 +316,29 @@ public class TimelineConverter {
                     timelineItemSummary.setTimelineItemSummaryStatus(pddSummaryStatus);
                     item.setTimelineItemSummary(timelineItemSummary);
                 });
+    }
+
+    private static boolean isSectionTooLongWithoutTestsRepeating(final String sessionKey, final List<PddSectionTimelineItem> pddSectionTimelineItems, final LocalDate onDate) {
+        TimelineItem lastPddSectionTesting = getLastPddSectionTestingEvent(sessionKey, pddSectionTimelineItems, TimeLineItemEventType.TESTING);
+        if (lastPddSectionTesting == null) {
+            return false;
+        }
+        PddSectionTesting lastSectionTesting = (PddSectionTesting) lastPddSectionTesting.getEvent();
+        if (CommonUtils.getPercentage(lastSectionTesting.getTesting()) >= EXCELLENT_TEST_PERCENTAGE) {
+            return CommonUtils.ageInDays(lastPddSectionTesting.getDate(), onDate) >= EXCELLENT_SECTION_TOO_LONG_WITHOUT_TESTING_DAYS;
+        }
+        if (CommonUtils.getPercentage(lastSectionTesting.getTesting()) >= COLL_TEST_PERCENTAGE) {
+            return CommonUtils.ageInDays(lastPddSectionTesting.getDate(), onDate) >= COOL_SECTION_TOO_LONG_WITHOUT_TESTING_DAYS;
+        }
+        return CommonUtils.ageInDays(lastPddSectionTesting.getDate(), onDate) >= SECTION_TOO_LONG_WITHOUT_TESTING_DAYS;
+    }
+
+    private static boolean isSectionTooLongWithoutRestudy(final List<TimelineItem> schoolTimelineItems, final LocalDate onDate, final String sectionKey) {
+        TimelineItem lastLectureStudyEvent = getLastLectureEvent(sectionKey, schoolTimelineItems, TimeLineItemEventType.LECTURE_STUDY);
+        if (lastLectureStudyEvent == null) {
+            return false;
+        }
+        return CommonUtils.ageInDays(lastLectureStudyEvent.getDate(), onDate) > SECTION_TOO_LONG_WITHOUT_RESTUDY_DAYS;
     }
 
     private static TimelineItem getLastLectureEvent(final String pddSectionKey, final List<TimelineItem> schoolTimelineItems, final TimeLineItemEventType eventType) {

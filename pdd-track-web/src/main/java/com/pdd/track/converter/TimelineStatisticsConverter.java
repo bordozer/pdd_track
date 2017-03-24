@@ -40,7 +40,7 @@ public class TimelineStatisticsConverter {
         String studyQuestionsPercentage = CommonUtils.formatDouble((double) studyQuestionsCount / totalQuestionsCount * 100);
         statistics.add(new SectionDataHolder("Study", studySectionsCount, studySectionsPercentage, studyQuestionsCount, studyQuestionsPercentage));
 
-        statistics.add(getSectionDataHolder(result, "Not studied or red tests", totalSectionsCount, totalQuestionsCount, TimelineItemSummaryStatus.NOT_READY, TimelineItemSummaryStatus.TO_STUDY));
+        statistics.add(getSectionDataHolder(result, "Not studied or red tests", totalSectionsCount, totalQuestionsCount, TimelineItemSummaryStatus.NEED_MORE_TESTING, TimelineItemSummaryStatus.NEED_MORE_TESTING, TimelineItemSummaryStatus.TO_STUDY));
         statistics.add(getSectionDataHolder(result, "Ready with risks", totalSectionsCount, totalQuestionsCount, TimelineItemSummaryStatus.READY_WITH_RISK));
         statistics.add(getSectionDataHolder(result, "Completely ready", totalSectionsCount, totalQuestionsCount, TimelineItemSummaryStatus.COMPLETELY_READY));
         statistics.add(getSectionDataHolder(result, "Ready or ready with risks", totalSectionsCount, totalQuestionsCount, TimelineItemSummaryStatus.COMPLETELY_READY, TimelineItemSummaryStatus.READY_WITH_RISK));
