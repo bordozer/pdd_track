@@ -51,9 +51,12 @@ import java.util.stream.Collectors;
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 public class TimelineConverter {
 
-    private static final int SECTION_TOO_LONG_WITHOUT_REPEAT_DAYS = 5;
-    private static final int COOL_SECTION_TOO_LONG_WITHOUT_REPEAT_DAYS = 7;
-    private static final int EXCELLENT_SECTION_TOO_LONG_WITHOUT_REPEAT_DAYS = 10;
+    private static final int SECTION_TOO_LONG_WITHOUT_TESTING_DAYS = 5;
+    private static final int COOL_SECTION_TOO_LONG_WITHOUT_TESTING_DAYS = 7;
+    private static final int EXCELLENT_SECTION_TOO_LONG_WITHOUT_TESTING_DAYS = 10;
+
+    private static final int SECTION_TOO_LONG_WITHOUT_RESTUDY_DAYS = 10;
+
     private static final int SECTION_TOO_LONG_WITHOUT_STUDY_DAYS = 5;
     private static final int MIN_TESTS_COUNT = 3;
     private static final EnumSet<DayOfWeek> WEEKENDS = EnumSet.of(DayOfWeek.SATURDAY, DayOfWeek.SUNDAY);
@@ -265,27 +268,34 @@ public class TimelineConverter {
                                 if (!day.getDayDate().equals(onDate)) {
                                     return;
                                 }
+                                List<TimeLineDayHintDto> dayHints = new ArrayList<TimeLineDayHintDto>();
                                 String sectionKey = item.getPddSection().getKey();
                                 int sessionQuestionCount = item.getPddSection().getQuestionsCount();
                                 TimelineItem pddSectionStudyEvent = getLastPddSectionEvent(sectionKey, timelineStudyItems, TimeLineItemEventType.STUDY);
                                 if (pddSectionStudyEvent == null) {
                                     TimelineItem pddSectionLectureEvent = getLastPddSectionEvent(sectionKey, timelineStudyItems, TimeLineItemEventType.LECTURE);
                                     if (pddSectionLectureEvent != null && ageInDays(pddSectionLectureEvent.getDate(), onDate) > SECTION_TOO_LONG_WITHOUT_STUDY_DAYS) {
-                                        day.setDayHints(Lists.newArrayList(new TimeLineDayHintDto(TimeLineDayHintType.NEEDS_STUDY, ageInDays(pddSectionLectureEvent.getDate(), onDate), sessionQuestionCount)));
+                                        dayHints.add(new TimeLineDayHintDto(TimeLineDayHintType.NEEDS_STUDY, ageInDays(pddSectionLectureEvent.getDate(), onDate), sessionQuestionCount));
                                     }
                                     return;
+                                } else {
+                                    LocalDate lastRestudyDate = pddSectionStudyEvent.getDate();
+                                    if(ageInDays(lastRestudyDate, onDate) > SECTION_TOO_LONG_WITHOUT_RESTUDY_DAYS) {
+                                        dayHints.add(new TimeLineDayHintDto(TimeLineDayHintType.NEEDS_RESTUDY, ageInDays(lastRestudyDate, onDate), sessionQuestionCount));
+                                    }
                                 }
                                 TimelineItem lastTesting = getLastPddSectionEvent(sectionKey, timelineStudyItems, TimeLineItemEventType.TESTING);
                                 if (lastTesting == null) {
                                     return;
                                 }
                                 if (isSectionTooLongWithoutRepeating(timelineStudyItems, sectionKey, onDate)) {
-                                    day.setDayHints(Lists.newArrayList(new TimeLineDayHintDto(TimeLineDayHintType.ADVICE_REFRESH_TESTS, ageInDays(lastTesting.getDate(), onDate), sessionQuestionCount)));
+                                    dayHints.add(new TimeLineDayHintDto(TimeLineDayHintType.ADVICE_REFRESH_TESTS, ageInDays(lastTesting.getDate(), onDate), sessionQuestionCount));
                                 }
                                 PddSectionTesting pddSectionTestingEvent = (PddSectionTesting) lastTesting.getEvent();
                                 if (!pddSectionTestingEvent.getTesting().isPassed()) {
-                                    day.setDayHints(Lists.newArrayList(new TimeLineDayHintDto(TimeLineDayHintType.RED_TESTS, ageInDays(lastTesting.getDate(), onDate), sessionQuestionCount)));
+                                    dayHints.add(new TimeLineDayHintDto(TimeLineDayHintType.RED_TESTS, ageInDays(lastTesting.getDate(), onDate), sessionQuestionCount));
                                 }
+                                day.setDayHints(dayHints);
                             });
                 });
     }
@@ -297,12 +307,12 @@ public class TimelineConverter {
         }
         PddSectionTesting lastSectionTesting = (PddSectionTesting) lastPddSectionTesting.getEvent();
         if (getPercentage(lastSectionTesting.getTesting()) >= EXCELLENT_TEST_PERCENTAGE) {
-            return ageInDays(lastPddSectionTesting.getDate(), onDate) > EXCELLENT_SECTION_TOO_LONG_WITHOUT_REPEAT_DAYS;
+            return ageInDays(lastPddSectionTesting.getDate(), onDate) > EXCELLENT_SECTION_TOO_LONG_WITHOUT_TESTING_DAYS;
         }
         if (getPercentage(lastSectionTesting.getTesting()) >= COLL_TEST_PERCENTAGE) {
-            return ageInDays(lastPddSectionTesting.getDate(), onDate) > COOL_SECTION_TOO_LONG_WITHOUT_REPEAT_DAYS;
+            return ageInDays(lastPddSectionTesting.getDate(), onDate) > COOL_SECTION_TOO_LONG_WITHOUT_TESTING_DAYS;
         }
-        return ageInDays(lastPddSectionTesting.getDate(), onDate) > SECTION_TOO_LONG_WITHOUT_REPEAT_DAYS;
+        return ageInDays(lastPddSectionTesting.getDate(), onDate) > SECTION_TOO_LONG_WITHOUT_TESTING_DAYS;
     }
 
     private static void populateTimelineSummary(final List<PddSectionTimelineItem> timelineStudyItems, final List<TimelineItemDto> result, final LocalDate onDate) {
