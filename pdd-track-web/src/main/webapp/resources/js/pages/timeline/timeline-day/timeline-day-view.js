@@ -47,7 +47,7 @@ define(function (require) {
                 return {icon: 'fa fa-book', color: 'text-warning', hint: 'Study was too long ago - repeat, please'};
             }
             if (timeLineDayHintType == 'ADVICE_REFRESH_TESTS') {
-                return {icon: 'fa fa-clock-o', color: 'text-muted', hint: 'Testing was too long ago - repeat, please'};
+                return {icon: 'fa fa-check-circle', color: 'text-muted', hint: 'Testing was too long ago - repeat, please'};
             }
             if (timeLineDayHintType == 'RED_TESTS') {
                 return {icon: 'fa fa-exclamation-triangle', color: 'text-danger', hint: 'Your tests results are red!'};
