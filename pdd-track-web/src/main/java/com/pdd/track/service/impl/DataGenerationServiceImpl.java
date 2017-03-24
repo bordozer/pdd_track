@@ -547,7 +547,7 @@ public class DataGenerationServiceImpl implements DataGenerationService {
         PddSectionRuleSet kharkov = new PddSectionRuleSet();
         kharkov.setRuleSetKey(KHARKOV_RULE_SET_KEY);
         kharkov.setSectionQuestions(QUESTIONS_COUNT_KHARKOV.keySet().stream()
-                .map(key -> new PddSectionQuestions(key, QUESTIONS_COUNT_KIEV.get(key)))
+                .map(key -> new PddSectionQuestions(key, QUESTIONS_COUNT_KHARKOV.get(key)))
                 .collect(Collectors.toList())
         );
 
