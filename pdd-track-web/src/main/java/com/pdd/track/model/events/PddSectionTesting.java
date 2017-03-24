@@ -7,7 +7,7 @@ import lombok.NoArgsConstructor;
 
 @Data
 @NoArgsConstructor
-public class PddSectionTesting extends PddSectionTimelineEvent {
+public class PddSectionTesting extends TimelineEvent {
 
     private Testing testing;
 

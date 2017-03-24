@@ -274,7 +274,7 @@ public class TimelineConverter {
                                 day.setDayHints(dayHints);
                                 String sectionKey = item.getPddSection().getKey();
                                 int sessionQuestionCount = item.getPddSection().getQuestionsCount();
-                                TimelineItem pddSectionStudyEvent = getLastPddSectionTestingEvent(sectionKey, timelineStudyItems, TimeLineItemEventType.STUDY);
+                                TimelineItem pddSectionStudyEvent = getLastStudyEvent(sectionKey, studyItems, TimeLineItemEventType.STUDY);
                                 if (pddSectionStudyEvent == null) {
                                     TimelineItem pddSectionLectureEvent = getLastStudyEvent(sectionKey, studyItems, TimeLineItemEventType.LECTURE);
                                     if (pddSectionLectureEvent != null && ageInDays(pddSectionLectureEvent.getDate(), onDate) > SECTION_TOO_LONG_WITHOUT_STUDY_DAYS) {
@@ -322,7 +322,7 @@ public class TimelineConverter {
                 .forEach(item -> {
                     String sectionKey = item.getPddSection().getKey();
                     TimelineItem pddSectionLectureEvent = getLastStudyEvent(sectionKey, studyItems, TimeLineItemEventType.LECTURE);
-                    TimelineItem pddSectionStudyEvent = getLastPddSectionTestingEvent(sectionKey, timelineStudyItems, TimeLineItemEventType.STUDY);
+                    TimelineItem pddSectionStudyEvent = getLastStudyEvent(sectionKey, studyItems, TimeLineItemEventType.STUDY);
 
                     TimelineItemSummaryDto timelineItemSummary = new TimelineItemSummaryDto();
                     timelineItemSummary.setLecture(pddSectionLectureEvent != null);
@@ -459,10 +459,8 @@ public class TimelineConverter {
                                 dayEvents.setAdditionalDriving(new DrivingDto(carDto, instructor, schoolDrivingEvent.getDuration()));
                             }
                             break;
-                        case LECTURE:
-                            break;
                         default:
-                            throw new IllegalStateException(String.format("Not implemented yet: %s", event));
+                            break;
                     }
                 });
     }
