@@ -40,15 +40,14 @@ define(function (require) {
 
         _getHintIcon: function(dayHint) {
             var timeLineDayHintType = dayHint.dayHintType;
-            var text = dayHint.ageInDays + 'd';
             if (timeLineDayHintType == 'NEEDS_STUDY') {
-                return {icon: 'fa fa-book', color: 'text-danger', hint: 'Not studied section', text: text};
+                return {icon: 'fa fa-book', color: 'text-danger', hint: 'Not studied section'};
             }
             if (timeLineDayHintType == 'ADVICE_REFRESH_TESTS') {
-                return {icon: 'fa fa-clock-o', color: 'text-muted', hint: 'Advice: refresh tests', text: text};
+                return {icon: 'fa fa-clock-o', color: 'text-muted', hint: 'Advice: refresh tests'};
             }
             if (timeLineDayHintType == 'RED_TESTS') {
-                return {icon: 'fa fa-exclamation-triangle', color: 'text-danger', hint: 'Your tests results are red!', text: text};
+                return {icon: 'fa fa-exclamation-triangle', color: 'text-danger', hint: 'Your tests results are red!'};
             }
         }
     });
