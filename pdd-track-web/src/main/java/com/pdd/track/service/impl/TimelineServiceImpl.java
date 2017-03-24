@@ -6,8 +6,8 @@ import com.pdd.track.model.PddSection;
 import com.pdd.track.model.SchoolTimeline;
 import com.pdd.track.model.PddSectionTimeline;
 import com.pdd.track.repository.PddSectionRepository;
-import com.pdd.track.repository.TimelineRepository;
-import com.pdd.track.repository.TimelineStudyRepository;
+import com.pdd.track.repository.SchoolTimelineRepository;
+import com.pdd.track.repository.PddSectionTimelineRepository;
 import com.pdd.track.service.TimelineService;
 import org.springframework.stereotype.Service;
 
@@ -19,10 +19,10 @@ import java.util.List;
 public class TimelineServiceImpl implements TimelineService {
 
     @Inject
-    private TimelineRepository timelineRepository;
+    private SchoolTimelineRepository schoolTimelineRepository;
 
     @Inject
-    private TimelineStudyRepository timelineStudyRepository;
+    private PddSectionTimelineRepository pddSectionTimelineRepository;
 
     @Inject
     private PddSectionRepository pddSectionRepository;
@@ -30,14 +30,14 @@ public class TimelineServiceImpl implements TimelineService {
     @Override
     public TimelineDto getTimeline(final String studentKey, final String rulesSetKey, final LocalDate onDate) {
         List<PddSection> pddSections = pddSectionRepository.findAll();
-        SchoolTimeline schoolTimeline = timelineRepository.findOneByStudentKey(studentKey);
-        PddSectionTimeline pddSectionTimeline = timelineStudyRepository.findOneBy_id(rulesSetKey);
+        SchoolTimeline schoolTimeline = schoolTimelineRepository.findOneByStudentKey(studentKey);
+        PddSectionTimeline pddSectionTimeline = pddSectionTimelineRepository.findOneBy_id(rulesSetKey);
         return TimelineConverter.toDto(pddSections, schoolTimeline, pddSectionTimeline, onDate);
     }
 
     @Override
     public SchoolTimeline create(final SchoolTimeline entity) {
-        return timelineRepository.save(entity);
+        return schoolTimelineRepository.save(entity);
     }
 
 }

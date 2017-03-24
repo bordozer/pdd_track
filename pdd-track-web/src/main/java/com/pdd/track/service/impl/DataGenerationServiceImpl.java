@@ -1,6 +1,7 @@
 package com.pdd.track.service.impl;
 
 import com.google.common.collect.Sets;
+import com.pdd.track.entity.rule.RulesSet;
 import com.pdd.track.model.Car;
 import com.pdd.track.model.Gender;
 import com.pdd.track.model.Instructor;
@@ -16,8 +17,9 @@ import com.pdd.track.model.events.LectureStudyEvent;
 import com.pdd.track.model.events.PddSectionTesting;
 import com.pdd.track.model.events.SchoolDrivingEvent;
 import com.pdd.track.repository.PddSectionRepository;
-import com.pdd.track.repository.TimelineRepository;
-import com.pdd.track.repository.TimelineStudyRepository;
+import com.pdd.track.repository.RulesSetRepository;
+import com.pdd.track.repository.SchoolTimelineRepository;
+import com.pdd.track.repository.PddSectionTimelineRepository;
 import com.pdd.track.service.DataGenerationService;
 import org.springframework.stereotype.Service;
 
@@ -160,23 +162,37 @@ public class DataGenerationServiceImpl implements DataGenerationService {
     public static final Set<DayOfWeek> LECTURE_WEEK_DAYS = Sets.newHashSet(DayOfWeek.SATURDAY, DayOfWeek.SUNDAY);
 
     @Inject
+    private RulesSetRepository rulesSetRepository;
+
+    @Inject
     private PddSectionRepository pddSectionRepository;
 
     @Inject
-    private TimelineRepository timelineRepository;
+    private SchoolTimelineRepository schoolTimelineRepository;
 
     @Inject
-    private TimelineStudyRepository timelineStudyRepository;
+    private PddSectionTimelineRepository pddSectionTimelineRepository;
 
     @Override
     public void createData() {
+        rulesSetRepository.deleteAll();
         pddSectionRepository.deleteAll();
-        timelineRepository.deleteAll();
-        timelineStudyRepository.deleteAll();
+        schoolTimelineRepository.deleteAll();
+        pddSectionTimelineRepository.deleteAll();
+
+        RulesSet kiev = createRuleSets("KIEV", 2017);
+        RulesSet kharkov = createRuleSets("KHARKOV", 2017);
         createPddSections();
-        SchoolTimeline schoolTimeline = timelineRepository.save(constructTimeline());
-        PddSectionTimeline studyKiev = timelineStudyRepository.save(constructTimelineStudyKiev(schoolTimeline.get_id()));
-        PddSectionTimeline studyKharkov = timelineStudyRepository.save(constructTimelineStudyKharkov(schoolTimeline.get_id()));
+        SchoolTimeline schoolTimeline = schoolTimelineRepository.save(constructTimeline());
+        PddSectionTimeline studyKiev = pddSectionTimelineRepository.save(constructTimelineStudyKiev(schoolTimeline.get_id()));
+        PddSectionTimeline studyKharkov = pddSectionTimelineRepository.save(constructTimelineStudyKharkov(schoolTimeline.get_id()));
+    }
+
+    private RulesSet createRuleSets(final String name, final int year) {
+        RulesSet kiev = new RulesSet();
+        kiev.setName(name);
+        kiev.setYear(year);
+        return rulesSetRepository.save(kiev);
     }
 
     private SchoolTimeline constructTimeline() {
@@ -191,7 +207,6 @@ public class DataGenerationServiceImpl implements DataGenerationService {
         pddSectionTimeline.set_id("1");
         pddSectionTimeline.setSchoolTimelineId(timelineId);
         pddSectionTimeline.setTimelineItems(constructPddSectionTimelineItemsKiev());
-        pddSectionTimeline.setQuestionsCountMap(QUESTIONS_COUNT_KIEV);
         return pddSectionTimeline;
     }
 
@@ -200,7 +215,6 @@ public class DataGenerationServiceImpl implements DataGenerationService {
         pddSectionTimeline.set_id("2");
         pddSectionTimeline.setSchoolTimelineId(timelineId);
         pddSectionTimeline.setTimelineItems(constructPddSectionTimelineItemsKharkov());
-        pddSectionTimeline.setQuestionsCountMap(QUESTIONS_COUNT_KHARKOV);
         return pddSectionTimeline;
     }
 

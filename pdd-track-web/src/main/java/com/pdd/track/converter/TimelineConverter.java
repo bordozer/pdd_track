@@ -56,7 +56,8 @@ public class TimelineConverter {
     public static final int COLL_TEST_PERCENTAGE = 96;
     public static final int EXCELLENT_TEST_PERCENTAGE = 100;
 
-    public static TimelineDto toDto(final List<PddSection> pddSections, final SchoolTimeline schoolTimeline, final PddSectionTimeline pddSectionTimeline, final LocalDate onDate) {
+    public static TimelineDto toDto(final List<PddSection> pddSections, final SchoolTimeline schoolTimeline,
+                                    final PddSectionTimeline pddSectionTimeline, final LocalDate onDate) {
         TimelineDto result = new TimelineDto();
         result.setStartDate(DataGenerationServiceImpl.STUDY_START_DAY);
         result.setEndDate(DataGenerationServiceImpl.STUDY_END_DAY);
@@ -162,7 +163,7 @@ public class TimelineConverter {
                                             }
                                             PddSectionTesting testingEvent = (PddSectionTesting) tlItem.getEvent();
                                             valuesAggregator.add(((double) testingEvent.getTesting().getPassedQuestions() / testingEvent.getTesting().getTotalQuestions()) * 100);
-                                            questionsAggregator.add(item.getPddSection().getQuestionsCount());
+                                            questionsAggregator.add(0); // TODO: item.getPddSection().getQuestionsCount()
                                         });
                             });
 

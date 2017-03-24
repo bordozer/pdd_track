@@ -9,7 +9,7 @@ import org.springframework.data.mongodb.core.mapping.Document;
 public class PddSectionEntity {
     @Id
     private String _id;
-    private RulesSetEntity rulesSet;
+    private RulesSet rulesSet;
     private String name;
     private int questionsCount;
 }

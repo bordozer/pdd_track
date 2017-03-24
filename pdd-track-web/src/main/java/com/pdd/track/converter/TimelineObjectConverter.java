@@ -34,7 +34,6 @@ public class TimelineObjectConverter {
         dto.setKey(pddSection.getKey());
         dto.setNumber(pddSection.getNumber());
         dto.setName(pddSection.getName());
-        dto.setQuestionsCount(pddSection.getQuestionsCount());
         return dto;
     }
 }
