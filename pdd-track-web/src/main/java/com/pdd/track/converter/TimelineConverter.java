@@ -339,10 +339,10 @@ public class TimelineConverter {
 
     private static TimelineItem getLastLectureEvent(final String pddSectionKey, final List<TimelineItem> schoolTimelineItems, final TimeLineItemEventType eventType) {
         TimelineItem schoolTimelineItem = schoolTimelineItems.stream()
-                .sorted((o1, o2) -> o1.getDate().compareTo(o2.getDate()))
+                .sorted((o1, o2) -> o2.getDate().compareTo(o1.getDate()))
                 .filter(item -> item.getEvent().getEventType().equals(eventType))
                 .filter(item -> {
-                    LectureEvent event = (LectureEvent) item.getEvent();
+                    AbstractLectureEvent event = (AbstractLectureEvent) item.getEvent();
                     return event.getPddSectionKey().equals(pddSectionKey);
                 })
                 .findFirst()
