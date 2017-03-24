@@ -270,7 +270,8 @@ public class TimelineConverter {
                                 if (!day.getDayDate().equals(onDate)) {
                                     return;
                                 }
-                                List<TimeLineDayHintDto> dayHints = new ArrayList<TimeLineDayHintDto>();
+                                List<TimeLineDayHintDto> dayHints = new ArrayList<>();
+                                day.setDayHints(dayHints);
                                 String sectionKey = item.getPddSection().getKey();
                                 int sessionQuestionCount = item.getPddSection().getQuestionsCount();
                                 TimelineItem pddSectionStudyEvent = getLastPddSectionTestingEvent(sectionKey, timelineStudyItems, TimeLineItemEventType.STUDY);
@@ -279,7 +280,7 @@ public class TimelineConverter {
                                     if (pddSectionLectureEvent != null && ageInDays(pddSectionLectureEvent.getDate(), onDate) > SECTION_TOO_LONG_WITHOUT_STUDY_DAYS) {
                                         dayHints.add(new TimeLineDayHintDto(TimeLineDayHintType.NEEDS_STUDY, ageInDays(pddSectionLectureEvent.getDate(), onDate), sessionQuestionCount));
                                     }
-                                    return;
+//                                    return;
                                 } else {
                                     LocalDate lastRestudyDate = pddSectionStudyEvent.getDate();
                                     if(ageInDays(lastRestudyDate, onDate) > SECTION_TOO_LONG_WITHOUT_RESTUDY_DAYS) {
@@ -297,7 +298,6 @@ public class TimelineConverter {
                                 if (!pddSectionTestingEvent.getTesting().isPassed()) {
                                     dayHints.add(new TimeLineDayHintDto(TimeLineDayHintType.RED_TESTS, ageInDays(lastTesting.getDate(), onDate), sessionQuestionCount));
                                 }
-                                day.setDayHints(dayHints);
                             });
                 });
     }
