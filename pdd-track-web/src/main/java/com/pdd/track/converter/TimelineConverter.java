@@ -63,7 +63,7 @@ public class TimelineConverter {
         result.setEndDate(DataGenerationServiceImpl.STUDY_END_DAY);
 
         List<TimelineItem> collect = schoolTimeline.getTimelineItems().stream()
-                .filter(item -> item.getDate().equals(LocalDate.of(2017, 3, 6)))
+                .filter(item -> item.getDate().equals(LocalDate.of(2017, 3, 23)))
                 .collect(Collectors.toList());
 
         List<TimelineItem> schoolTimelineItems = schoolTimeline.getTimelineItems();
@@ -240,15 +240,15 @@ public class TimelineConverter {
                                 day.setDayHints(dayHints);
                                 String sectionKey = item.getPddSection().getKey();
                                 int sessionQuestionCount = item.getPddSection().getQuestionsCount();
-                                TimelineItem pddSectionStudyEvent = getLastLectureEvent(sectionKey, schoolTimelineItems);
-                                if (pddSectionStudyEvent == null) {
-                                    TimelineItem pddSectionLectureEvent = getLastLectureEvent(sectionKey, schoolTimelineItems);
+                                TimelineItem lastLectureStudyEvent = getLastLectureEvent(sectionKey, schoolTimelineItems, TimeLineItemEventType.LECTURE_STUDY);
+                                if (lastLectureStudyEvent == null) {
+                                    TimelineItem pddSectionLectureEvent = getLastLectureEvent(sectionKey, schoolTimelineItems, TimeLineItemEventType.LECTURE);
                                     if (pddSectionLectureEvent != null && CommonUtils.ageInDays(pddSectionLectureEvent.getDate(), onDate) > SECTION_TOO_LONG_WITHOUT_STUDY_DAYS) {
                                         dayHints.add(new TimeLineDayHintDto(TimeLineDayHintType.NEEDS_STUDY, CommonUtils.ageInDays(pddSectionLectureEvent.getDate(), onDate), sessionQuestionCount));
                                     }
 //                                    return;
                                 } else {
-                                    LocalDate lastRestudyDate = pddSectionStudyEvent.getDate();
+                                    LocalDate lastRestudyDate = lastLectureStudyEvent.getDate();
                                     if (CommonUtils.ageInDays(lastRestudyDate, onDate) > SECTION_TOO_LONG_WITHOUT_RESTUDY_DAYS) {
                                         dayHints.add(new TimeLineDayHintDto(TimeLineDayHintType.NEEDS_RESTUDY, CommonUtils.ageInDays(lastRestudyDate, onDate), sessionQuestionCount));
                                     }
@@ -288,12 +288,12 @@ public class TimelineConverter {
         visitor.stream()
                 .forEach(item -> {
                     String sectionKey = item.getPddSection().getKey();
-                    TimelineItem pddSectionLectureEvent = getLastLectureEvent(sectionKey, schoolTimelineItems);
-                    TimelineItem pddSectionStudyEvent = getLastLectureEvent(sectionKey, schoolTimelineItems);
+                    TimelineItem lastPddSectionLectureEvent = getLastLectureEvent(sectionKey, schoolTimelineItems, TimeLineItemEventType.LECTURE);
+                    TimelineItem lastPddSectionLectureStudyEvent = getLastLectureEvent(sectionKey, schoolTimelineItems, TimeLineItemEventType.LECTURE_STUDY);
 
                     TimelineItemSummaryDto timelineItemSummary = new TimelineItemSummaryDto();
-                    timelineItemSummary.setLecture(pddSectionLectureEvent != null);
-                    timelineItemSummary.setStudy(pddSectionStudyEvent != null);
+                    timelineItemSummary.setLecture(lastPddSectionLectureEvent != null);
+                    timelineItemSummary.setStudy(lastPddSectionLectureStudyEvent != null);
 
 
                     boolean lastTestSuccessful = false;
@@ -312,7 +312,7 @@ public class TimelineConverter {
                     boolean testPercentageIsGood = averageTestingScore > GOOD_TEST_PERCENTAGE;
 
                     TimelineItemSummaryStatus pddSummaryStatus = TimelineItemSummaryStatus.NONE;
-                    boolean itWasLectureButItIsNotStudied = pddSectionLectureEvent != null && pddSectionStudyEvent == null;
+                    boolean itWasLectureButItIsNotStudied = lastPddSectionLectureEvent != null && lastPddSectionLectureStudyEvent == null;
                     if (itWasLectureButItIsNotStudied) {
                         pddSummaryStatus = TimelineItemSummaryStatus.TO_STUDY;
                     }
@@ -329,7 +329,7 @@ public class TimelineConverter {
                     if (valuesAggregator.getCount() >= MIN_TESTS_COUNT && !testPercentageIsGood && lastTestSuccessful) {
                         pddSummaryStatus = TimelineItemSummaryStatus.NOT_READY;
                     }
-                    if (pddSectionLectureEvent == null) {
+                    if (lastPddSectionLectureEvent == null) {
                         pddSummaryStatus = TimelineItemSummaryStatus.NO_LECTURE_YET;
                     }
                     timelineItemSummary.setTimelineItemSummaryStatus(pddSummaryStatus);
@@ -337,10 +337,10 @@ public class TimelineConverter {
                 });
     }
 
-    private static TimelineItem getLastLectureEvent(final String pddSectionKey, final List<TimelineItem> schoolTimelineItems) {
+    private static TimelineItem getLastLectureEvent(final String pddSectionKey, final List<TimelineItem> schoolTimelineItems, final TimeLineItemEventType eventType) {
         TimelineItem schoolTimelineItem = schoolTimelineItems.stream()
-                .sorted((o1, o2) -> o2.getDate().compareTo(o1.getDate()))
-                .filter(item -> item.getEvent().getEventType().equals(TimeLineItemEventType.LECTURE))
+                .sorted((o1, o2) -> o1.getDate().compareTo(o2.getDate()))
+                .filter(item -> item.getEvent().getEventType().equals(eventType))
                 .filter(item -> {
                     LectureEvent event = (LectureEvent) item.getEvent();
                     return event.getPddSectionKey().equals(pddSectionKey);
