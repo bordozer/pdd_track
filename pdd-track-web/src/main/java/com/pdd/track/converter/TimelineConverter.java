@@ -24,7 +24,6 @@ import com.pdd.track.model.TimelineItem;
 import com.pdd.track.model.events.AbstractDrivingEvent;
 import com.pdd.track.model.events.AbstractLectureEvent;
 import com.pdd.track.model.events.AdditionalDrivingEvent;
-import com.pdd.track.model.events.LectureEvent;
 import com.pdd.track.model.events.PddSectionTesting;
 import com.pdd.track.model.events.TimelineEvent;
 import com.pdd.track.service.impl.DataGenerationServiceImpl;
@@ -246,7 +245,6 @@ public class TimelineConverter {
                                     if (pddSectionLectureEvent != null && CommonUtils.ageInDays(pddSectionLectureEvent.getDate(), onDate) > SECTION_TOO_LONG_WITHOUT_STUDY_DAYS) {
                                         dayHints.add(new TimeLineDayHintDto(TimeLineDayHintType.NEEDS_STUDY, CommonUtils.ageInDays(pddSectionLectureEvent.getDate(), onDate), sessionQuestionCount));
                                     }
-//                                    return;
                                 } else {
                                     LocalDate lastRestudyDate = lastLectureStudyEvent.getDate();
                                     if (CommonUtils.ageInDays(lastRestudyDate, onDate) > SECTION_TOO_LONG_WITHOUT_RESTUDY_DAYS) {
