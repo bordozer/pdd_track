@@ -1,6 +1,6 @@
 package com.pdd.track.model;
 
-import com.pdd.track.utils.RandomUtils;
+import com.pdd.track.utils.CommonUtils;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.springframework.data.mongodb.core.mapping.Document;
@@ -15,7 +15,7 @@ public class PddSection {
     private int questionsCount;
 
     public PddSection(final String number, final String name, final int questionsCount) {
-        this.key = RandomUtils.UUID();
+        this.key = CommonUtils.UUID();
         this.number = number;
         this.name = name;
         this.questionsCount = questionsCount;
