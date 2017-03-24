@@ -44,6 +44,7 @@ import java.time.DayOfWeek;
 import java.time.LocalDate;
 import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.EnumSet;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -414,11 +415,14 @@ public class TimelineConverter {
     }
 
     private static List<TimelineItem> filterTimelineItemsByPddSectionKey(final String pddSectionKey, final List<PddSectionTimelineItem> pddSectionTimelineItems) {
-        return pddSectionTimelineItems.stream()
-                .filter(section -> section.getPddSection().getKey().equals(pddSectionKey))
+        PddSectionTimelineItem pddSectionTimelineItem = pddSectionTimelineItems.stream()
+                .filter(item -> item.getPddSection().getKey().equals(pddSectionKey))
                 .findFirst()
-                .orElseThrow(IllegalArgumentException::new)
-                .getTimelineItems();
+                .orElse(null);
+        if (pddSectionTimelineItem == null) {
+            return Collections.emptyList();
+        }
+        return pddSectionTimelineItem.getTimelineItems();
     }
 
     private static void populateGlobalDayEvents(final TimelineDayColumn dayColumn, final List<StudyingTimelineItem> studyingTimelineItems) {
