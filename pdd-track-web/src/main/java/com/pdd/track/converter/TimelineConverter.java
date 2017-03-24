@@ -259,7 +259,7 @@ public class TimelineConverter {
                                 }
                                 PddSectionTesting pddSectionTestingEvent = (PddSectionTesting) lastTesting.getEvent();
                                 if (!pddSectionTestingEvent.getTesting().isPassed()) {
-                                    dayHints.add(new TimeLineDayHintDto(TimeLineDayHintType.RED_TESTS, CommonUtils.ageInDays(lastTesting.getDate(), onDate), sessionQuestionCount));
+                                        dayHints.add(new TimeLineDayHintDto(TimeLineDayHintType.RED_TESTS, CommonUtils.ageInDays(lastTesting.getDate(), onDate), sessionQuestionCount));
                                 }
                             });
                 });

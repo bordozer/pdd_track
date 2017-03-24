@@ -1,6 +1,5 @@
 package com.pdd.track.service.impl;
 
-import com.google.common.collect.Lists;
 import com.google.common.collect.Sets;
 import com.pdd.track.model.SchoolTimeline;
 import com.pdd.track.model.Car;
@@ -25,9 +24,10 @@ import org.springframework.stereotype.Service;
 import javax.inject.Inject;
 import java.time.DayOfWeek;
 import java.time.LocalDate;
-import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 @Service
@@ -41,40 +41,115 @@ public class DataGenerationServiceImpl implements DataGenerationService {
     private static final Instructor ADDITIONAL_INSTRUCTOR = new Instructor("Yuriy");
     private static final Car ADDITIONAL_CAR = new Car("Honda Accord");
 
-    private static final PddSection PDD_SECTION_01 = new PddSection("1", "Общие положения", 116);
-    private static final PddSection PDD_SECTION_02 = new PddSection("2", "Obyazannosti i prava voditeley TS", 85);
-    private static final PddSection PDD_SECTION_03 = new PddSection("3", "Dvizhenie TS so special'nymi signalami", 150);
-    private static final PddSection PDD_SECTION_04 = new PddSection("4", "Obyazannosti i prava peshekhodov", 28);
-    private static final PddSection PDD_SECTION_05 = new PddSection("5", "Obyazannosti i prava passazhirov", 12);
-    private static final PddSection PDD_SECTION_06 = new PddSection("6", "Trebovaniya k velosipedistam", 15);
-    private static final PddSection PDD_SECTION_07 = new PddSection("7", "Trebovaniya k licam, upravlyayushchim guzhevym transportom i pogonshchikam zhivotnyh", 6);
-    private static final PddSection PDD_SECTION_08 = new PddSection("8", "Regulirovanie dorozhnogo dvizheniya", 239);
-    private static final PddSection PDD_SECTION_09 = new PddSection("9", "Preduprezhdayushchie signaly", 44);
-    private static final PddSection PDD_SECTION_10 = new PddSection("10", "Nachalo dvizheniya i izmenenie ego napravleniya", 67);
-    private static final PddSection PDD_SECTION_11 = new PddSection("11", "Raspolozhenie transportnyh sredstv na doroge", 53);
-    private static final PddSection PDD_SECTION_12 = new PddSection("12", "Skorost' dvizheniya", 64);
-    private static final PddSection PDD_SECTION_13 = new PddSection("13", "Distanciya, interval, vstrechnyj raz'ezd", 14);
-    private static final PddSection PDD_SECTION_14 = new PddSection("14", "Obgon", 78);
-    private static final PddSection PDD_SECTION_15 = new PddSection("15", "Ostanovka i stoyanka", 103);
-    private static final PddSection PDD_SECTION_16 = new PddSection("16", "Proezd perekrestkov", 259);
-    private static final PddSection PDD_SECTION_17 = new PddSection("17", "Preimushchestva marshrutnyh transportnyh sredstv", 9);
-    private static final PddSection PDD_SECTION_18 = new PddSection("18", "Proezd peshekhodnyh perekhodov i ostanovok transportnyh sredstv", 29);
-    private static final PddSection PDD_SECTION_19 = new PddSection("19", "Ispol'zovanie vneshnih svetovyh priborov", 15);
-    private static final PddSection PDD_SECTION_20 = new PddSection("20", "Dvizhenie cherez zheleznodorozhnye pereezdy", 32);
-    private static final PddSection PDD_SECTION_21 = new PddSection("21", "Perevozka passazhirov", 11);
-    private static final PddSection PDD_SECTION_22 = new PddSection("22", "Perevozka gruza", 14);
-    private static final PddSection PDD_SECTION_23 = new PddSection("23", "Buksirovka i ehkspluataciya transportnyh sostavov", 34);
-    private static final PddSection PDD_SECTION_24 = new PddSection("24", "Uchebnaya ezda", 9);
-    private static final PddSection PDD_SECTION_25 = new PddSection("25", "Dvizhenie transportnyh sredstv v kolonnah", 8);
-    private static final PddSection PDD_SECTION_26 = new PddSection("26", "Dvizhenie v zhiloj i peshekhodnoj zone", 18);
-    private static final PddSection PDD_SECTION_27 = new PddSection("27", "Dvizhenie po avtomagistralyam i dorogam dlya avtomobilej", 12);
-    private static final PddSection PDD_SECTION_28 = new PddSection("28", "Dvizhenie po gornym dorogam i na krutyh spuskah", 12);
-    private static final PddSection PDD_SECTION_29 = new PddSection("29", "Mezhdunarodnoe dvizhenie", 3);
-    private static final PddSection PDD_SECTION_30 = new PddSection("30", "Nomernye, opoznavatel'nye znaki, nadpisi i oboznacheniya", 24);
-    private static final PddSection PDD_SECTION_31 = new PddSection("31", "Tekhnicheskoe sostoyanie transportnyh sredstv i ih osnashchenie", 71);
-    private static final PddSection PDD_SECTION_32 = new PddSection("32", "Voprosy dorozhnogo dvizheniya, kotorye trebuyut soglasovaniya s GAI", 6);
-    private static final PddSection PDD_SECTION_33 = new PddSection("33", "Znaki", 368);
-    private static final PddSection PDD_SECTION_34 = new PddSection("34", "Dorozhnaya razmetka", 46);
+    private static final PddSection PDD_SECTION_01 = new PddSection("1", "Общие положения");
+    private static final PddSection PDD_SECTION_02 = new PddSection("2", "Obyazannosti i prava voditeley TS");
+    private static final PddSection PDD_SECTION_03 = new PddSection("3", "Dvizhenie TS so special'nymi signalami");
+    private static final PddSection PDD_SECTION_04 = new PddSection("4", "Obyazannosti i prava peshekhodov");
+    private static final PddSection PDD_SECTION_05 = new PddSection("5", "Obyazannosti i prava passazhirov");
+    private static final PddSection PDD_SECTION_06 = new PddSection("6", "Trebovaniya k velosipedistam");
+    private static final PddSection PDD_SECTION_07 = new PddSection("7", "Trebovaniya k licam, upravlyayushchim guzhevym transportom i pogonshchikam zhivotnyh");
+    private static final PddSection PDD_SECTION_08 = new PddSection("8", "Regulirovanie dorozhnogo dvizheniya");
+    private static final PddSection PDD_SECTION_09 = new PddSection("9", "Preduprezhdayushchie signaly");
+    private static final PddSection PDD_SECTION_10 = new PddSection("10", "Nachalo dvizheniya i izmenenie ego napravleniya");
+    private static final PddSection PDD_SECTION_11 = new PddSection("11", "Raspolozhenie transportnyh sredstv na doroge");
+    private static final PddSection PDD_SECTION_12 = new PddSection("12", "Skorost' dvizheniya");
+    private static final PddSection PDD_SECTION_13 = new PddSection("13", "Distanciya, interval, vstrechnyj raz'ezd");
+    private static final PddSection PDD_SECTION_14 = new PddSection("14", "Obgon");
+    private static final PddSection PDD_SECTION_15 = new PddSection("15", "Ostanovka i stoyanka");
+    private static final PddSection PDD_SECTION_16 = new PddSection("16", "Proezd perekrestkov");
+    private static final PddSection PDD_SECTION_17 = new PddSection("17", "Preimushchestva marshrutnyh transportnyh sredstv");
+    private static final PddSection PDD_SECTION_18 = new PddSection("18", "Proezd peshekhodnyh perekhodov i ostanovok transportnyh sredstv");
+    private static final PddSection PDD_SECTION_19 = new PddSection("19", "Ispol'zovanie vneshnih svetovyh priborov");
+    private static final PddSection PDD_SECTION_20 = new PddSection("20", "Dvizhenie cherez zheleznodorozhnye pereezdy");
+    private static final PddSection PDD_SECTION_21 = new PddSection("21", "Perevozka passazhirov");
+    private static final PddSection PDD_SECTION_22 = new PddSection("22", "Perevozka gruza");
+    private static final PddSection PDD_SECTION_23 = new PddSection("23", "Buksirovka i ehkspluataciya transportnyh sostavov");
+    private static final PddSection PDD_SECTION_24 = new PddSection("24", "Uchebnaya ezda");
+    private static final PddSection PDD_SECTION_25 = new PddSection("25", "Dvizhenie transportnyh sredstv v kolonnah");
+    private static final PddSection PDD_SECTION_26 = new PddSection("26", "Dvizhenie v zhiloj i peshekhodnoj zone");
+    private static final PddSection PDD_SECTION_27 = new PddSection("27", "Dvizhenie po avtomagistralyam i dorogam dlya avtomobilej");
+    private static final PddSection PDD_SECTION_28 = new PddSection("28", "Dvizhenie po gornym dorogam i na krutyh spuskah");
+    private static final PddSection PDD_SECTION_29 = new PddSection("29", "Mezhdunarodnoe dvizhenie");
+    private static final PddSection PDD_SECTION_30 = new PddSection("30", "Nomernye, opoznavatel'nye znaki, nadpisi i oboznacheniya");
+    private static final PddSection PDD_SECTION_31 = new PddSection("31", "Tekhnicheskoe sostoyanie transportnyh sredstv i ih osnashchenie");
+    private static final PddSection PDD_SECTION_32 = new PddSection("32", "Voprosy dorozhnogo dvizheniya, kotorye trebuyut soglasovaniya s GAI");
+    private static final PddSection PDD_SECTION_33 = new PddSection("33", "Znaki");
+    private static final PddSection PDD_SECTION_34 = new PddSection("34", "Dorozhnaya razmetka");
+
+    private static final Map<String, Integer> QUESTIONS_COUNT_KIEV = new HashMap<>();
+    static {
+        QUESTIONS_COUNT_KIEV.put("1", 116);
+        QUESTIONS_COUNT_KIEV.put("2", 85);
+        QUESTIONS_COUNT_KIEV.put("3", 150);
+        QUESTIONS_COUNT_KIEV.put("4", 28);
+        QUESTIONS_COUNT_KIEV.put("5", 12);
+        QUESTIONS_COUNT_KIEV.put("6", 15);
+        QUESTIONS_COUNT_KIEV.put("7", 6);
+        QUESTIONS_COUNT_KIEV.put("8", 239);
+        QUESTIONS_COUNT_KIEV.put("9", 44);
+        QUESTIONS_COUNT_KIEV.put("10", 67);
+        QUESTIONS_COUNT_KIEV.put("11", 53);
+        QUESTIONS_COUNT_KIEV.put("12", 64);
+        QUESTIONS_COUNT_KIEV.put("13", 14);
+        QUESTIONS_COUNT_KIEV.put("14", 78);
+        QUESTIONS_COUNT_KIEV.put("15", 103);
+        QUESTIONS_COUNT_KIEV.put("16", 259);
+        QUESTIONS_COUNT_KIEV.put("17", 9);
+        QUESTIONS_COUNT_KIEV.put("18", 29);
+        QUESTIONS_COUNT_KIEV.put("19", 15);
+        QUESTIONS_COUNT_KIEV.put("20", 32);
+        QUESTIONS_COUNT_KIEV.put("21", 11);
+        QUESTIONS_COUNT_KIEV.put("22", 14);
+        QUESTIONS_COUNT_KIEV.put("23", 34);
+        QUESTIONS_COUNT_KIEV.put("24", 9);
+        QUESTIONS_COUNT_KIEV.put("25", 8);
+        QUESTIONS_COUNT_KIEV.put("26", 18);
+        QUESTIONS_COUNT_KIEV.put("27", 12);
+        QUESTIONS_COUNT_KIEV.put("28", 12);
+        QUESTIONS_COUNT_KIEV.put("29", 3);
+        QUESTIONS_COUNT_KIEV.put("30", 24);
+        QUESTIONS_COUNT_KIEV.put("31", 71);
+        QUESTIONS_COUNT_KIEV.put("32", 6);
+        QUESTIONS_COUNT_KIEV.put("33", 368);
+        QUESTIONS_COUNT_KIEV.put("34", 46);
+    }
+
+    private static final Map<String, Integer> QUESTIONS_COUNT_KHARKOV = new HashMap<>();
+    static {
+        QUESTIONS_COUNT_KHARKOV.put("1", );
+        QUESTIONS_COUNT_KHARKOV.put("2", );
+        QUESTIONS_COUNT_KHARKOV.put("3", );
+        QUESTIONS_COUNT_KHARKOV.put("4", );
+        QUESTIONS_COUNT_KHARKOV.put("5", );
+        QUESTIONS_COUNT_KHARKOV.put("6", );
+        QUESTIONS_COUNT_KHARKOV.put("7", );
+        QUESTIONS_COUNT_KHARKOV.put("8", );
+        QUESTIONS_COUNT_KHARKOV.put("9", );
+        QUESTIONS_COUNT_KHARKOV.put("10", );
+        QUESTIONS_COUNT_KHARKOV.put("11", );
+        QUESTIONS_COUNT_KHARKOV.put("12", );
+        QUESTIONS_COUNT_KHARKOV.put("13", );
+        QUESTIONS_COUNT_KHARKOV.put("14", );
+        QUESTIONS_COUNT_KHARKOV.put("15", );
+        QUESTIONS_COUNT_KHARKOV.put("16", );
+        QUESTIONS_COUNT_KHARKOV.put("17", );
+        QUESTIONS_COUNT_KHARKOV.put("18", );
+        QUESTIONS_COUNT_KHARKOV.put("19", );
+        QUESTIONS_COUNT_KHARKOV.put("20", );
+        QUESTIONS_COUNT_KHARKOV.put("21", );
+        QUESTIONS_COUNT_KHARKOV.put("22", );
+        QUESTIONS_COUNT_KHARKOV.put("23", );
+        QUESTIONS_COUNT_KHARKOV.put("24", );
+        QUESTIONS_COUNT_KHARKOV.put("25", );
+        QUESTIONS_COUNT_KHARKOV.put("26", );
+        QUESTIONS_COUNT_KHARKOV.put("27", );
+        QUESTIONS_COUNT_KHARKOV.put("28", );
+        QUESTIONS_COUNT_KHARKOV.put("29", );
+        QUESTIONS_COUNT_KHARKOV.put("30", );
+        QUESTIONS_COUNT_KHARKOV.put("31", );
+        QUESTIONS_COUNT_KHARKOV.put("32", );
+        QUESTIONS_COUNT_KHARKOV.put("33", );
+    }
 
     public static final LocalDate STUDY_START_DAY = LocalDate.of(2017, 2, 25);
     public static final LocalDate STUDY_END_DAY = LocalDate.of(2017, 4, 23);
@@ -113,6 +188,7 @@ public class DataGenerationServiceImpl implements DataGenerationService {
         pddSectionTimeline.set_id("1");
         pddSectionTimeline.setSchoolTimelineId(timelineId);
         pddSectionTimeline.setTimelineItems(constructPddSectionTimelineItemsKiev());
+        pddSectionTimeline.setQuestionsCountMap(QUESTIONS_COUNT_KIEV);
         return pddSectionTimeline;
     }
 
@@ -121,6 +197,7 @@ public class DataGenerationServiceImpl implements DataGenerationService {
         pddSectionTimeline.set_id("2");
         pddSectionTimeline.setSchoolTimelineId(timelineId);
         pddSectionTimeline.setTimelineItems(constructPddSectionTimelineItemsKharkov());
+        pddSectionTimeline.setQuestionsCountMap(QUESTIONS_COUNT_KHARKOV);
         return pddSectionTimeline;
     }
 
