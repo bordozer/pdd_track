@@ -10,5 +10,5 @@ import java.util.List;
 public class SchoolTimeline {
     private String _id;
     private Student student;
-    private List<StudyingTimelineItem> studyingTimelineItems;
+    private List<TimelineItem> timelineItems;
 }

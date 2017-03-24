@@ -22,13 +22,12 @@ import com.pdd.track.model.Car;
 import com.pdd.track.model.Instructor;
 import com.pdd.track.model.PddSection;
 import com.pdd.track.model.PddSectionTimelineItem;
-import com.pdd.track.model.StudyingTimelineItem;
+import com.pdd.track.model.SchoolTimeline;
+import com.pdd.track.model.StudentTimeline;
 import com.pdd.track.model.Testing;
 import com.pdd.track.model.TimeLineDayHintType;
 import com.pdd.track.model.TimeLineItemEventType;
-import com.pdd.track.model.SchoolTimeline;
 import com.pdd.track.model.TimelineItem;
-import com.pdd.track.model.StudentTimeline;
 import com.pdd.track.model.events.AbstractDrivingEvent;
 import com.pdd.track.model.events.AdditionalDrivingEvent;
 import com.pdd.track.model.events.LectureEvent;
@@ -70,7 +69,7 @@ public class TimelineConverter {
         result.setStartDate(DataGenerationServiceImpl.STUDY_START_DAY);
         result.setEndDate(DataGenerationServiceImpl.STUDY_END_DAY);
 
-        List<StudyingTimelineItem> schoolTimelineItems = schoolSchoolTimeline.getStudyingTimelineItems();
+        List<TimelineItem> schoolTimelineItems = schoolSchoolTimeline.getTimelineItems();
         List<PddSectionTimelineItem> studentTimelineItems = studentTimeline.getPddSectionTimelineItems();
 
         List<TimelineDayColumn> dayColumns = getDayColumns(onDate);
@@ -87,7 +86,7 @@ public class TimelineConverter {
         return result;
     }
 
-    private static List<TimelineItemDto> convertTimelineItems(final List<PddSection> pddSections, final List<StudyingTimelineItem> schoolTimelineItems, final List<PddSectionTimelineItem> studentTimelineItems, final List<TimelineDayColumn> dayColumns, final LocalDate onDate) {
+    private static List<TimelineItemDto> convertTimelineItems(final List<PddSection> pddSections, final List<TimelineItem> schoolTimelineItems, final List<PddSectionTimelineItem> studentTimelineItems, final List<TimelineDayColumn> dayColumns, final LocalDate onDate) {
         List<TimelineItemDto> result = pddSections.stream()
                 .map(section -> {
                     PddSectionDto sectionDto = convertOddSection(section);
@@ -104,22 +103,21 @@ public class TimelineConverter {
         return result;
     }
 
-    private static void populateLectureEvents(final List<StudyingTimelineItem> schoolTimelineItems, final List<TimelineItemDto> studentTimelineItems) {
+    private static void populateLectureEvents(final List<TimelineItem> schoolTimelineItems, final List<TimelineItemDto> studentTimelineItems) {
         studentTimelineItems.stream()
                 .forEach(tlsItem -> {
                     tlsItem.getTimelineDays().stream()
                             .forEach(tlDay -> {
                                 String pddSectionKey = tlsItem.getPddSection().getKey();
-                                StudyingTimelineItem lecture =  schoolTimelineItems.stream()
+                                TimelineItem lecture = schoolTimelineItems.stream()
                                         .filter(stlItem -> {
-                                            TimelineItem timelineItem = stlItem.getTimelineItem();
-                                            if (!timelineItem.getEvent().getEventType().equals(TimeLineItemEventType.LECTURE)) {
+                                            if (!stlItem.getEvent().getEventType().equals(TimeLineItemEventType.LECTURE)) {
                                                 return false;
                                             }
-                                            if (!timelineItem.getDate().equals(tlDay.getDayDate())) {
+                                            if (!stlItem.getDate().equals(tlDay.getDayDate())) {
                                                 return false;
                                             }
-                                            LectureEvent timelineLectureEvent = (LectureEvent) timelineItem.getEvent();
+                                            LectureEvent timelineLectureEvent = (LectureEvent) stlItem.getEvent();
                                             return timelineLectureEvent.getPddSectionKey().equals(pddSectionKey);
                                         })
                                         .findFirst()
@@ -129,10 +127,10 @@ public class TimelineConverter {
                 });
     }
 
-    private static void populateFutureHints(final List<StudyingTimelineItem> studyingTimelineItems, final List<PddSectionTimelineItem> timelineStudyItems, final LocalDate onDate, final List<TimelineItemDto> result) {
+    private static void populateFutureHints(final List<TimelineItem> schoolTimelineItems, final List<PddSectionTimelineItem> timelineStudyItems, final LocalDate onDate, final List<TimelineItemDto> result) {
         LocalDate aDate = onDate.plusDays(1);
         while (aDate.isBefore(DataGenerationServiceImpl.STUDY_END_DAY.plusDays(1))) {
-            populateHintsOnDate(studyingTimelineItems, timelineStudyItems, result, aDate);
+            populateHintsOnDate(schoolTimelineItems, timelineStudyItems, result, aDate);
             aDate = aDate.plusDays(1);
         }
     }
@@ -264,7 +262,7 @@ public class TimelineConverter {
         return result;
     }
 
-    private static void populateHintsOnDate(final List<StudyingTimelineItem> schoolTimelineItems, final List<PddSectionTimelineItem> studentTimelineItems, final List<TimelineItemDto> result, final LocalDate onDate) {
+    private static void populateHintsOnDate(final List<TimelineItem> schoolTimelineItems, final List<PddSectionTimelineItem> studentTimelineItems, final List<TimelineItemDto> result, final LocalDate onDate) {
         result.stream()
                 .forEach(item -> {
                     item.getTimelineDays().stream()
@@ -285,7 +283,7 @@ public class TimelineConverter {
 //                                    return;
                                 } else {
                                     LocalDate lastRestudyDate = pddSectionStudyEvent.getDate();
-                                    if(ageInDays(lastRestudyDate, onDate) > SECTION_TOO_LONG_WITHOUT_RESTUDY_DAYS) {
+                                    if (ageInDays(lastRestudyDate, onDate) > SECTION_TOO_LONG_WITHOUT_RESTUDY_DAYS) {
                                         dayHints.add(new TimeLineDayHintDto(TimeLineDayHintType.NEEDS_RESTUDY, ageInDays(lastRestudyDate, onDate), sessionQuestionCount));
                                     }
                                 }
@@ -319,7 +317,7 @@ public class TimelineConverter {
         return ageInDays(lastPddSectionTesting.getDate(), onDate) > SECTION_TOO_LONG_WITHOUT_TESTING_DAYS;
     }
 
-    private static void populateTimelineSummary(final List<StudyingTimelineItem> studyItems, final List<PddSectionTimelineItem> timelineStudyItems, final List<TimelineItemDto> result, final LocalDate onDate) {
+    private static void populateTimelineSummary(final List<TimelineItem> studyItems, final List<PddSectionTimelineItem> timelineStudyItems, final List<TimelineItemDto> result, final LocalDate onDate) {
         result.stream()
                 .forEach(item -> {
                     String sectionKey = item.getPddSection().getKey();
@@ -372,20 +370,20 @@ public class TimelineConverter {
                 });
     }
 
-    private static TimelineItem getLastStudyEvent(final String pddSectionKey, final List<StudyingTimelineItem> studyingTimelineItems, final TimeLineItemEventType eventType) {
-        StudyingTimelineItem studyingTimelineItem = studyingTimelineItems.stream()
-                .sorted((o1, o2) -> o1.getTimelineItem().getDate().compareTo(o2.getTimelineItem().getDate()))
-                .filter(item -> item.getTimelineItem().getEvent().getEventType().equals(TimeLineItemEventType.LECTURE))
+    private static TimelineItem getLastStudyEvent(final String pddSectionKey, final List<TimelineItem> schoolTimelineItems, final TimeLineItemEventType eventType) {
+        TimelineItem schoolTimelineItem = schoolTimelineItems.stream()
+                .sorted((o1, o2) -> o1.getDate().compareTo(o2.getDate()))
+                .filter(item -> item.getEvent().getEventType().equals(TimeLineItemEventType.LECTURE))
                 .filter(item -> {
-                    LectureEvent event = (LectureEvent)item.getTimelineItem().getEvent();
+                    LectureEvent event = (LectureEvent) item.getEvent();
                     return event.getPddSectionKey().equals(pddSectionKey);
                 })
                 .findFirst()
                 .orElse(null);
-        if (studyingTimelineItem == null) {
+        if (schoolTimelineItem == null) {
             return null;
         }
-        return studyingTimelineItem.getTimelineItem();
+        return schoolTimelineItem;
     }
 
     private static TimelineItem getLastPddSectionTestingEvent(final String pddSectionKey, final List<PddSectionTimelineItem> timelineStudyItems, final TimeLineItemEventType eventType) {
@@ -443,11 +441,11 @@ public class TimelineConverter {
         return pddSectionTimelineItem.getTimelineItems();
     }
 
-    private static void populateGlobalDayEvents(final TimelineDayColumn dayColumn, final List<StudyingTimelineItem> studyingTimelineItems) {
-        studyingTimelineItems.stream()
-                .filter(timelineItem -> timelineItem.getTimelineItem().getDate().equals(dayColumn.getDate()))
+    private static void populateGlobalDayEvents(final TimelineDayColumn dayColumn, final List<TimelineItem> schoolTimelineItems) {
+        schoolTimelineItems.stream()
+                .filter(timelineItem -> timelineItem.getDate().equals(dayColumn.getDate()))
                 .forEach(timelineItem -> {
-                    TimelineEvent event = timelineItem.getTimelineItem().getEvent();
+                    TimelineEvent event = timelineItem.getEvent();
                     switch (event.getEventType()) {
                         case DRIVING:
                             AbstractDrivingEvent schoolDrivingEvent = (AbstractDrivingEvent) event;
