@@ -314,7 +314,7 @@ public class TimelineConverter {
                     if (itWasLectureButItIsNotStudied) {
                         pddSummaryStatus = TimelineItemSummaryStatus.TO_STUDY;
                     }
-                    if (!itWasLectureButItIsNotStudied && valuesAggregator.getCount() > 0 && valuesAggregator.getCount() < MIN_TESTS_COUNT) {
+                    if (lastPddSectionLectureEvent != null && valuesAggregator.getCount() < MIN_TESTS_COUNT) {
                         pddSummaryStatus = TimelineItemSummaryStatus.NOT_READY;
                     }
                     if (valuesAggregator.getCount() >= MIN_TESTS_COUNT && testPercentageIsGood && lastTestSuccessful) {
