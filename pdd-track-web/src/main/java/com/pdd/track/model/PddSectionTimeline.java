@@ -7,8 +7,8 @@ import java.util.List;
 
 @Data
 @Document(collection = "PDD.TRACK.TIMELINE_STUDY")
-public class StudentTimeline {
+public class PddSectionTimeline {
     private String _id;
     private String timelineId;
-    private List<PddSectionTimelineItem> pddSectionTimelineItems;
+    private List<PddSectionTimelineItem> timelineItems;
 }

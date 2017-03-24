@@ -4,7 +4,7 @@ import com.pdd.track.converter.TimelineConverter;
 import com.pdd.track.dto.TimelineDto;
 import com.pdd.track.model.PddSection;
 import com.pdd.track.model.SchoolTimeline;
-import com.pdd.track.model.StudentTimeline;
+import com.pdd.track.model.PddSectionTimeline;
 import com.pdd.track.repository.PddSectionRepository;
 import com.pdd.track.repository.TimelineRepository;
 import com.pdd.track.repository.TimelineStudyRepository;
@@ -31,8 +31,8 @@ public class TimelineServiceImpl implements TimelineService {
     public TimelineDto getTimeline(final String studentKey, final String rulesSetKey, final LocalDate onDate) {
         List<PddSection> pddSections = pddSectionRepository.findAll();
         SchoolTimeline schoolTimeline = timelineRepository.findOneByStudentKey(studentKey);
-        StudentTimeline studentTimeline = timelineStudyRepository.findOneBy_id(rulesSetKey);
-        return TimelineConverter.toDto(pddSections, schoolTimeline, studentTimeline, onDate);
+        PddSectionTimeline pddSectionTimeline = timelineStudyRepository.findOneBy_id(rulesSetKey);
+        return TimelineConverter.toDto(pddSections, schoolTimeline, pddSectionTimeline, onDate);
     }
 
     @Override

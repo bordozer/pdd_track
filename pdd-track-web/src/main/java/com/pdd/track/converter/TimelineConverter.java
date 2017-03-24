@@ -23,7 +23,7 @@ import com.pdd.track.model.Instructor;
 import com.pdd.track.model.PddSection;
 import com.pdd.track.model.PddSectionTimelineItem;
 import com.pdd.track.model.SchoolTimeline;
-import com.pdd.track.model.StudentTimeline;
+import com.pdd.track.model.PddSectionTimeline;
 import com.pdd.track.model.Testing;
 import com.pdd.track.model.TimeLineDayHintType;
 import com.pdd.track.model.TimeLineItemEventType;
@@ -64,13 +64,13 @@ public class TimelineConverter {
     public static final int COLL_TEST_PERCENTAGE = 96;
     public static final int EXCELLENT_TEST_PERCENTAGE = 100;
 
-    public static TimelineDto toDto(final List<PddSection> pddSections, final SchoolTimeline schoolSchoolTimeline, final StudentTimeline studentTimeline, final LocalDate onDate) {
+    public static TimelineDto toDto(final List<PddSection> pddSections, final SchoolTimeline schoolTimeline, final PddSectionTimeline pddSectionTimeline, final LocalDate onDate) {
         TimelineDto result = new TimelineDto();
         result.setStartDate(DataGenerationServiceImpl.STUDY_START_DAY);
         result.setEndDate(DataGenerationServiceImpl.STUDY_END_DAY);
 
-        List<TimelineItem> schoolTimelineItems = schoolSchoolTimeline.getTimelineItems();
-        List<PddSectionTimelineItem> studentTimelineItems = studentTimeline.getPddSectionTimelineItems();
+        List<TimelineItem> schoolTimelineItems = schoolTimeline.getTimelineItems();
+        List<PddSectionTimelineItem> studentTimelineItems = pddSectionTimeline.getTimelineItems();
 
         List<TimelineDayColumn> dayColumns = getDayColumns(onDate);
         result.setDayColumns(dayColumns);
