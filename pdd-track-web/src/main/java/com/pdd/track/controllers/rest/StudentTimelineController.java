@@ -1,6 +1,5 @@
 package com.pdd.track.controllers.rest;
 
-import com.pdd.track.converter.TimelineConverter;
 import com.pdd.track.dto.TimelineDto;
 import com.pdd.track.entity.TimelineEntity;
 import com.pdd.track.service.DataGenerationService;
@@ -25,7 +24,7 @@ public class StudentTimelineController {
 
     @RequestMapping(method = RequestMethod.GET, value = "/{studentKey}/")
     public TimelineDto getStudentTimeline(@PathVariable("studentKey") final String studentKey) {
-        return TimelineConverter.toDto(timelineService.getForStudent(studentKey), LocalDate.now());
+        return timelineService.getForStudent(studentKey, LocalDate.now());
     }
 
     @RequestMapping(method = RequestMethod.PUT, value = "/data-create/")
