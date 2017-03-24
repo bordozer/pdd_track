@@ -4,7 +4,6 @@ import com.pdd.track.dto.DrivingDto;
 import com.pdd.track.dto.DrivingDto.CarDto;
 import com.pdd.track.dto.DrivingDto.InstructorDto;
 import com.pdd.track.dto.PddSectionDto;
-import com.pdd.track.dto.TestingDto;
 import com.pdd.track.dto.TimeLineDayHintDto;
 import com.pdd.track.dto.TimelineDayColumn;
 import com.pdd.track.dto.TimelineDayColumnEventsDto;
@@ -15,13 +14,10 @@ import com.pdd.track.dto.TimelineDto;
 import com.pdd.track.dto.TimelineItemDto;
 import com.pdd.track.dto.TimelineItemSummaryDto;
 import com.pdd.track.dto.TimelineItemSummaryDto.TimelineItemSummaryStatus;
-import com.pdd.track.model.Car;
-import com.pdd.track.model.Instructor;
 import com.pdd.track.model.PddSection;
 import com.pdd.track.model.PddSectionTimeline;
 import com.pdd.track.model.PddSectionTimelineItem;
 import com.pdd.track.model.SchoolTimeline;
-import com.pdd.track.model.Testing;
 import com.pdd.track.model.TimeLineDayHintType;
 import com.pdd.track.model.TimeLineItemEventType;
 import com.pdd.track.model.TimelineItem;
@@ -85,7 +81,7 @@ public class TimelineConverter {
     private static List<TimelineItemDto> convertTimelineItems(final List<PddSection> pddSections, final List<TimelineItem> schoolTimelineItems, final List<PddSectionTimelineItem> pddSectionTimelineItems, final List<TimelineDayColumn> dayColumns, final LocalDate onDate) {
         List<TimelineItemDto> result = pddSections.stream()
                 .map(section -> {
-                    PddSectionDto sectionDto = convertOddSection(section);
+                    PddSectionDto sectionDto = TimelineObjectConverter.convertPddSection(section);
                     TimelineItemDto item1 = new TimelineItemDto();
                     item1.setPddSection(sectionDto);
                     item1.setTimelineDays(convertTimelineDaysForPddSection(sectionDto, pddSectionTimelineItems, dayColumns, onDate));
@@ -172,6 +168,9 @@ public class TimelineConverter {
 
     private static ValuesAggregator calculateTimelinePddSectionSummary(final String pddSectionKey, final List<PddSectionTimelineItem> pddSectionTimelineItems) {
         final ValuesAggregator valuesAggregator = new ValuesAggregator();
+        if (pddSectionTimelineItems == null) {
+            return valuesAggregator;
+        }
         pddSectionTimelineItems.stream()
                 .forEach(item -> {
                     if (!item.getPddSection().getKey().equals(pddSectionKey)) {
@@ -346,32 +345,20 @@ public class TimelineConverter {
 
     private static TimelineItem getLastPddSectionTestingEvent(final String pddSectionKey, final List<PddSectionTimelineItem> pddSectionTimelineItems,
                                                               final TimeLineItemEventType eventType) {
-        List<PddSectionTimelineItem> requestedPddSectionTimelineItems = pddSectionTimelineItems.stream()
-                .filter(sectionItem -> {
-                    if (!sectionItem.getPddSection().getKey().equals(pddSectionKey)) {
-                        return false;
-                    }
-                    List<TimelineItem> collect = sectionItem.getTimelineItems().stream()
-                            .filter(tlItem -> eventType.equals(tlItem.getEvent().getEventType()))
-                            .collect(Collectors.toList());
-                    return !collect.isEmpty();
-                })
-                .collect(Collectors.toList());
-        List<TimelineItem> timelineTestingItems = requestedPddSectionTimelineItems.stream()
-                .map(PddSectionTimelineItem::getTimelineItems)
-                .flatMap(List::stream)
+        List<TimelineItem> requestedPddSectionTimelineItems = filterPddSectionTimelineItemsByPddSectionKey(pddSectionKey, pddSectionTimelineItems).stream()
+                .filter(sectionItem -> eventType.equals(sectionItem.getEvent().getEventType()))
                 .filter(tlItem -> tlItem.getEvent().getEventType().equals(eventType))
                 .collect(Collectors.toList());
-        if (timelineTestingItems.isEmpty()) {
+        if (requestedPddSectionTimelineItems.isEmpty()) {
             return null;
         }
 
-        return timelineTestingItems.get(timelineTestingItems.size() - 1);
+        return requestedPddSectionTimelineItems.get(requestedPddSectionTimelineItems.size() - 1);
     }
 
     private static List<TimelineDayDto> convertTimelineDaysForPddSection(final PddSectionDto pddSection, final List<PddSectionTimelineItem> pddSectionTimelineItems,
                                                                          final List<TimelineDayColumn> dayColumns, final LocalDate onDate) {
-        List<TimelineItem> requestedPddSectionTimelineItems = filterTimelineItemsByPddSectionKey(pddSection.getKey(), pddSectionTimelineItems);
+        List<TimelineItem> requestedPddSectionTimelineItems = filterPddSectionTimelineItemsByPddSectionKey(pddSection.getKey(), pddSectionTimelineItems);
         return dayColumns.stream()
                 .map(dayColumn -> {
                     TimelineDayDto timelineDay = new TimelineDayDto();
@@ -390,7 +377,10 @@ public class TimelineConverter {
                 .collect(Collectors.toList());
     }
 
-    private static List<TimelineItem> filterTimelineItemsByPddSectionKey(final String pddSectionKey, final List<PddSectionTimelineItem> pddSectionTimelineItems) {
+    private static List<TimelineItem> filterPddSectionTimelineItemsByPddSectionKey(final String pddSectionKey, final List<PddSectionTimelineItem> pddSectionTimelineItems) {
+        if (pddSectionTimelineItems == null) {
+            return Collections.emptyList();
+        }
         PddSectionTimelineItem pddSectionTimelineItem = pddSectionTimelineItems.stream()
                 .filter(item -> item.getPddSection().getKey().equals(pddSectionKey))
                 .findFirst()
@@ -409,8 +399,8 @@ public class TimelineConverter {
                     switch (event.getEventType()) {
                         case DRIVING:
                             AbstractDrivingEvent schoolDrivingEvent = (AbstractDrivingEvent) event;
-                            CarDto carDto = convertCar(schoolDrivingEvent.getCar());
-                            InstructorDto instructor = convertInstructor(schoolDrivingEvent.getInstructor());
+                            CarDto carDto = TimelineObjectConverter.convertCar(schoolDrivingEvent.getCar());
+                            InstructorDto instructor = TimelineObjectConverter.convertInstructor(schoolDrivingEvent.getInstructor());
                             boolean additionalDriving = event instanceof AdditionalDrivingEvent;
                             TimelineDayColumnEventsDto dayEvents = dayColumn.getColumnEvents();
                             if (additionalDriving) {
@@ -436,35 +426,12 @@ public class TimelineConverter {
                             break;
                         case TESTING:
                             PddSectionTesting pddSectionTestingEvent = (PddSectionTesting) event;
-                            dayEvents.setTesting(convertTestingEvent(pddSectionTestingEvent.getTesting()));
+                            dayEvents.setTesting(TimelineObjectConverter.convertTestingEvent(pddSectionTestingEvent.getTesting()));
                             break;
                         default:
                             throw new IllegalStateException(String.format("Not implemented yet: %s", event));
                     }
                 });
-    }
-
-    private static TestingDto convertTestingEvent(final Testing testing) {
-        double percentage = CommonUtils.getPercentage(testing);
-        String percentageFormatted = CommonUtils.formatDouble(percentage);
-        return new TestingDto(testing.getPassedQuestions(), testing.getTotalQuestions(), testing.isPassed(), percentage, percentageFormatted);
-    }
-
-    private static CarDto convertCar(final Car car) {
-        return new CarDto(car.getModel());
-    }
-
-    private static InstructorDto convertInstructor(final Instructor instructor) {
-        return new InstructorDto(instructor.getName());
-    }
-
-    private static PddSectionDto convertOddSection(final PddSection pddSection) {
-        PddSectionDto dto = new PddSectionDto();
-        dto.setKey(pddSection.getKey());
-        dto.setNumber(pddSection.getNumber());
-        dto.setName(pddSection.getName());
-        dto.setQuestionsCount(pddSection.getQuestionsCount());
-        return dto;
     }
 
     @Getter
