@@ -246,7 +246,7 @@ public class TimelineConverter {
                                         dayHints.add(new TimeLineDayHintDto(TimeLineDayHintType.NEEDS_STUDY, CommonUtils.ageInDays(pddSectionLectureEvent.getDate(), onDate), sessionQuestionCount));
                                     }
                                 } else {
-                                    if (isSectionTooLongWithoutRestudy(schoolTimelineItems, onDate, sectionKey)) {
+                                    if (isSectionTooLongWithoutRestudy(sectionKey, schoolTimelineItems, onDate)) {
                                         dayHints.add(new TimeLineDayHintDto(TimeLineDayHintType.NEEDS_RESTUDY, CommonUtils.ageInDays(lastLectureStudyEvent.getDate(), onDate), sessionQuestionCount));
                                     }
                                 }
@@ -301,7 +301,7 @@ public class TimelineConverter {
                         pddSummaryStatus = TimelineItemSummaryStatus.TO_STUDY;
                     }
                     if (valuesAggregator.getCount() >= MIN_TESTS_COUNT && testPercentageIsGood && lastTestSuccessful) {
-                        if (isSectionTooLongWithoutTestsRepeating(sectionKey, pddSectionTimelineItems, onDate)) {
+                        if (isSectionTooLongWithoutTestsRepeating(sectionKey, pddSectionTimelineItems, onDate) || isSectionTooLongWithoutRestudy(sectionKey, schoolTimelineItems, onDate)) {
                             pddSummaryStatus = TimelineItemSummaryStatus.READY_WITH_RISK;
                         } else {
                             pddSummaryStatus = TimelineItemSummaryStatus.COMPLETELY_READY;
@@ -333,12 +333,9 @@ public class TimelineConverter {
         return CommonUtils.ageInDays(lastPddSectionTesting.getDate(), onDate) >= SECTION_TOO_LONG_WITHOUT_TESTING_DAYS;
     }
 
-    private static boolean isSectionTooLongWithoutRestudy(final List<TimelineItem> schoolTimelineItems, final LocalDate onDate, final String sectionKey) {
+    private static boolean isSectionTooLongWithoutRestudy(final String sectionKey, final List<TimelineItem> schoolTimelineItems, final LocalDate onDate) {
         TimelineItem lastLectureStudyEvent = getLastLectureEvent(sectionKey, schoolTimelineItems, TimeLineItemEventType.LECTURE_STUDY);
-        if (lastLectureStudyEvent == null) {
-            return false;
-        }
-        return CommonUtils.ageInDays(lastLectureStudyEvent.getDate(), onDate) > SECTION_TOO_LONG_WITHOUT_RESTUDY_DAYS;
+        return lastLectureStudyEvent != null && CommonUtils.ageInDays(lastLectureStudyEvent.getDate(), onDate) > SECTION_TOO_LONG_WITHOUT_RESTUDY_DAYS;
     }
 
     private static TimelineItem getLastLectureEvent(final String pddSectionKey, final List<TimelineItem> schoolTimelineItems, final TimeLineItemEventType eventType) {
