@@ -192,56 +192,6 @@ public class DataGenerationServiceImpl implements DataGenerationService {
         sectionTimelineItem3.setPddSection(PDD_SECTION_03);
         sectionTimelineItem3.setTimelineItems(Lists.newArrayList());
 
-        // 5
-        TimelineItem study5 = new TimelineItem(LocalDate.of(2017, 3, 6), new PddSectionStudy());
-        TimelineItem testing5_1 = new TimelineItem(LocalDate.of(2017, 3, 7), new PddSectionTesting(10, 12, false));
-        TimelineItem testing5_2 = new TimelineItem(LocalDate.of(2017, 3, 8), new PddSectionTesting(10, 12, false));
-        TimelineItem testing5_3 = new TimelineItem(LocalDate.of(2017, 3, 9), new PddSectionTesting(12, 12, true));
-        TimelineItem testing5_4 = new TimelineItem(LocalDate.of(2017, 3, 10), new PddSectionTesting(12, 12, true));
-        TimelineItem testing5_5 = new TimelineItem(LocalDate.of(2017, 3, 13), new PddSectionTesting(12, 12, true));
-        TimelineItem testing5_6 = new TimelineItem(LocalDate.of(2017, 3, 15), new PddSectionTesting(12, 12, true));
-        TimelineItem testing5_7 = new TimelineItem(LocalDate.of(2017, 3, 16), new PddSectionTesting(12, 12, true));
-
-        PddSectionTimelineItem sectionTimelineItem5 = new PddSectionTimelineItem();
-        sectionTimelineItem5.setPddSection(PDD_SECTION_05);
-        sectionTimelineItem5.setTimelineItems(Lists.newArrayList(study5, testing5_1, testing5_2, testing5_3, testing5_4, testing5_5, testing5_6, testing5_7));
-
-        // 6
-        TimelineItem study6 = new TimelineItem(LocalDate.of(2017, 3, 6), new PddSectionStudy());
-        TimelineItem testing6_1 = new TimelineItem(LocalDate.of(2017, 3, 7), new PddSectionTesting(13, 15, false));
-        TimelineItem testing6_2 = new TimelineItem(LocalDate.of(2017, 3, 8), new PddSectionTesting(15, 15, true));
-        TimelineItem testing6_3 = new TimelineItem(LocalDate.of(2017, 3, 10), new PddSectionTesting(15, 15, true));
-        TimelineItem testing6_4 = new TimelineItem(LocalDate.of(2017, 3, 15), new PddSectionTesting(15, 15, true));
-
-        PddSectionTimelineItem sectionTimelineItem6 = new PddSectionTimelineItem();
-        sectionTimelineItem6.setPddSection(PDD_SECTION_06);
-        sectionTimelineItem6.setTimelineItems(Lists.newArrayList(study6, testing6_1, testing6_2, testing6_3, testing6_4));
-
-        // 7
-        TimelineItem study7 = new TimelineItem(LocalDate.of(2017, 3, 6), new PddSectionStudy());
-        TimelineItem testing7_1 = new TimelineItem(LocalDate.of(2017, 3, 7), new PddSectionTesting(5, 6, false));
-        TimelineItem testing7_2 = new TimelineItem(LocalDate.of(2017, 3, 8), new PddSectionTesting(5, 6, false));
-        TimelineItem testing7_3 = new TimelineItem(LocalDate.of(2017, 3, 9), new PddSectionTesting(6, 6, true));
-        TimelineItem testing7_4 = new TimelineItem(LocalDate.of(2017, 3, 10), new PddSectionTesting(6, 6, true));
-        TimelineItem testing7_5 = new TimelineItem(LocalDate.of(2017, 3, 13), new PddSectionTesting(6, 6, true));
-        TimelineItem testing7_6 = new TimelineItem(LocalDate.of(2017, 3, 15), new PddSectionTesting(6, 6, true));
-        TimelineItem testing7_7 = new TimelineItem(LocalDate.of(2017, 3, 16), new PddSectionTesting(6, 6, true));
-
-        PddSectionTimelineItem sectionTimelineItem7 = new PddSectionTimelineItem();
-        sectionTimelineItem7.setPddSection(PDD_SECTION_07);
-        sectionTimelineItem7.setTimelineItems(Lists.newArrayList(study7, testing7_1, testing7_2, testing7_3, testing7_4, testing7_5, testing7_6, testing7_7));
-
-        // 9
-        TimelineItem study9 = new TimelineItem(LocalDate.of(2017, 3, 6), new PddSectionStudy());
-        TimelineItem testing9_1 = new TimelineItem(LocalDate.of(2017, 3, 7), new PddSectionTesting(18, 20, true));
-        TimelineItem testing9_2 = new TimelineItem(LocalDate.of(2017, 3, 13), new PddSectionTesting(39, 44, false));
-        TimelineItem testing9_3 = new TimelineItem(LocalDate.of(2017, 3, 14), new PddSectionTesting(43, 44, true));
-        TimelineItem testing9_4 = new TimelineItem(LocalDate.of(2017, 3, 15), new PddSectionTesting(44, 44, true));
-
-        PddSectionTimelineItem sectionTimelineItem9 = new PddSectionTimelineItem();
-        sectionTimelineItem9.setPddSection(PDD_SECTION_09);
-        sectionTimelineItem9.setTimelineItems(Lists.newArrayList(study9, testing9_1, testing9_2, testing9_3, testing9_4));
-
         return Lists.newArrayList(
                 sectionTimelineItem1,
                 sectionTimelineItem2,
@@ -252,20 +202,56 @@ public class DataGenerationServiceImpl implements DataGenerationService {
                         new TimelineItem(LocalDate.of(2017, 3, 8), new PddSectionTesting(26, 28, true)),
                         new TimelineItem(LocalDate.of(2017, 3, 13), new PddSectionTesting(27, 28, true)),
                         new TimelineItem(LocalDate.of(2017, 3, 15), new PddSectionTesting(28, 28, true)),
-                        new TimelineItem(LocalDate.of(2017, 3, 23), new PddSectionTesting(27, 28, true))
+                        new TimelineItem(LocalDate.of(2017, 3, 23), new PddSectionTesting(27, 28, true)),
+                        new TimelineItem(LocalDate.of(2017, 3, 23), new PddSectionStudy())
                 )),
-                sectionTimelineItem5,
-                sectionTimelineItem6,
-                sectionTimelineItem7,
+                new PddSectionTimelineItem(PDD_SECTION_05, Lists.newArrayList(
+                        new TimelineItem(LocalDate.of(2017, 3, 6), new PddSectionStudy()),
+                        new TimelineItem(LocalDate.of(2017, 3, 7), new PddSectionTesting(10, 12, false)),
+                        new TimelineItem(LocalDate.of(2017, 3, 8), new PddSectionTesting(10, 12, false)),
+                        new TimelineItem(LocalDate.of(2017, 3, 9), new PddSectionTesting(12, 12, true)),
+                        new TimelineItem(LocalDate.of(2017, 3, 10), new PddSectionTesting(12, 12, true)),
+                        new TimelineItem(LocalDate.of(2017, 3, 13), new PddSectionTesting(12, 12, true)),
+                        new TimelineItem(LocalDate.of(2017, 3, 15), new PddSectionTesting(12, 12, true)),
+                        new TimelineItem(LocalDate.of(2017, 3, 16), new PddSectionTesting(12, 12, true)),
+                        new TimelineItem(LocalDate.of(2017, 3, 23), new PddSectionStudy())
+                )),
+                new PddSectionTimelineItem(PDD_SECTION_06, Lists.newArrayList(
+                        new TimelineItem(LocalDate.of(2017, 3, 6), new PddSectionStudy()),
+                        new TimelineItem(LocalDate.of(2017, 3, 7), new PddSectionTesting(13, 15, false)),
+                        new TimelineItem(LocalDate.of(2017, 3, 8), new PddSectionTesting(15, 15, true)),
+                        new TimelineItem(LocalDate.of(2017, 3, 10), new PddSectionTesting(15, 15, true)),
+                        new TimelineItem(LocalDate.of(2017, 3, 15), new PddSectionTesting(15, 15, true)),
+                        new TimelineItem(LocalDate.of(2017, 3, 23), new PddSectionStudy())
+                )),
+                new PddSectionTimelineItem(PDD_SECTION_07, Lists.newArrayList(
+                        new TimelineItem(LocalDate.of(2017, 3, 6), new PddSectionStudy()),
+                        new TimelineItem(LocalDate.of(2017, 3, 7), new PddSectionTesting(5, 6, false)),
+                        new TimelineItem(LocalDate.of(2017, 3, 8), new PddSectionTesting(5, 6, false)),
+                        new TimelineItem(LocalDate.of(2017, 3, 9), new PddSectionTesting(6, 6, true)),
+                        new TimelineItem(LocalDate.of(2017, 3, 10), new PddSectionTesting(6, 6, true)),
+                        new TimelineItem(LocalDate.of(2017, 3, 13), new PddSectionTesting(6, 6, true)),
+                        new TimelineItem(LocalDate.of(2017, 3, 15), new PddSectionTesting(6, 6, true)),
+                        new TimelineItem(LocalDate.of(2017, 3, 16), new PddSectionTesting(6, 6, true)),
+                        new TimelineItem(LocalDate.of(2017, 3, 23), new PddSectionStudy())
+                )),
                 new PddSectionTimelineItem(PDD_SECTION_08, Arrays.asList(
 
                 )),
-                sectionTimelineItem9,
+                new PddSectionTimelineItem(PDD_SECTION_09, Lists.newArrayList(
+                        new TimelineItem(LocalDate.of(2017, 3, 6), new PddSectionStudy()),
+                        new TimelineItem(LocalDate.of(2017, 3, 7), new PddSectionTesting(18, 20, true)),
+                        new TimelineItem(LocalDate.of(2017, 3, 13), new PddSectionTesting(39, 44, false)),
+                        new TimelineItem(LocalDate.of(2017, 3, 14), new PddSectionTesting(43, 44, true)),
+                        new TimelineItem(LocalDate.of(2017, 3, 15), new PddSectionTesting(44, 44, true)),
+                        new TimelineItem(LocalDate.of(2017, 3, 23), new PddSectionStudy())
+                )),
                 new PddSectionTimelineItem(PDD_SECTION_10, Arrays.asList(
                         new TimelineItem(LocalDate.of(2017, 3, 13), new PddSectionStudy()),
                         new TimelineItem(LocalDate.of(2017, 3, 13), new PddSectionTesting(55, 67, false)),
                         new TimelineItem(LocalDate.of(2017, 3, 14), new PddSectionTesting(62, 67, true)),
-                        new TimelineItem(LocalDate.of(2017, 3, 16), new PddSectionTesting(65, 67, true))
+                        new TimelineItem(LocalDate.of(2017, 3, 16), new PddSectionTesting(65, 67, true)),
+                        new TimelineItem(LocalDate.of(2017, 3, 23), new PddSectionStudy())
                 )),
                 new PddSectionTimelineItem(PDD_SECTION_11, Arrays.asList(
                         new TimelineItem(LocalDate.of(2017, 3, 15), new PddSectionStudy()),
