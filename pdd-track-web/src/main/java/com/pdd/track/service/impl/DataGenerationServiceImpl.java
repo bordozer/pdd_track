@@ -13,7 +13,7 @@ import com.pdd.track.model.TimelineItem;
 import com.pdd.track.model.PddSectionTimeline;
 import com.pdd.track.model.events.AdditionalDrivingEvent;
 import com.pdd.track.model.events.LectureEvent;
-import com.pdd.track.model.events.PddSectionStudy;
+import com.pdd.track.model.events.LectureStudyEvent;
 import com.pdd.track.model.events.PddSectionTesting;
 import com.pdd.track.model.events.SchoolDrivingEvent;
 import com.pdd.track.repository.PddSectionRepository;
@@ -110,7 +110,7 @@ public class DataGenerationServiceImpl implements DataGenerationService {
     private PddSectionTimeline constructTimelineStudyKiev(final String timelineId) {
         PddSectionTimeline pddSectionTimeline = new PddSectionTimeline();
         pddSectionTimeline.set_id("1");
-        pddSectionTimeline.setTimelineId(timelineId);
+        pddSectionTimeline.setSchoolTimelineId(timelineId);
         pddSectionTimeline.setTimelineItems(constructPddSectionTimelineItemsKiev());
         return pddSectionTimeline;
     }
@@ -118,7 +118,7 @@ public class DataGenerationServiceImpl implements DataGenerationService {
     private PddSectionTimeline constructTimelineStudyKharkov(final String timelineId) {
         PddSectionTimeline pddSectionTimeline = new PddSectionTimeline();
         pddSectionTimeline.set_id("2");
-        pddSectionTimeline.setTimelineId(timelineId);
+        pddSectionTimeline.setSchoolTimelineId(timelineId);
         pddSectionTimeline.setTimelineItems(constructPddSectionTimelineItemsKharkov());
         return pddSectionTimeline;
     }
@@ -159,39 +159,39 @@ public class DataGenerationServiceImpl implements DataGenerationService {
                 new TimelineItem(LocalDate.of(2017, 3, 18), new LectureEvent(PDD_SECTION_33.getKey())),
                 new TimelineItem(LocalDate.of(2017, 3, 19), new LectureEvent(PDD_SECTION_33.getKey())),
 
-                new TimelineItem(LocalDate.of(2017, 3, 6), new PddSectionStudy(PDD_SECTION_01.getKey())),
-                new TimelineItem(LocalDate.of(2017, 3, 8), new PddSectionStudy(PDD_SECTION_02.getKey())),
-                new TimelineItem(LocalDate.of(2017, 3, 6), new PddSectionStudy(PDD_SECTION_04.getKey())),
-                new TimelineItem(LocalDate.of(2017, 3, 23), new PddSectionStudy(PDD_SECTION_04.getKey())),
-                new TimelineItem(LocalDate.of(2017, 3, 6), new PddSectionStudy(PDD_SECTION_05.getKey())),
-                new TimelineItem(LocalDate.of(2017, 3, 23), new PddSectionStudy(PDD_SECTION_05.getKey())),
-                new TimelineItem(LocalDate.of(2017, 3, 6), new PddSectionStudy(PDD_SECTION_06.getKey())),
-                new TimelineItem(LocalDate.of(2017, 3, 23), new PddSectionStudy(PDD_SECTION_06.getKey())),
-                new TimelineItem(LocalDate.of(2017, 3, 6), new PddSectionStudy(PDD_SECTION_07.getKey())),
-                new TimelineItem(LocalDate.of(2017, 3, 23), new PddSectionStudy(PDD_SECTION_07.getKey())),
-                new TimelineItem(LocalDate.of(2017, 3, 6), new PddSectionStudy(PDD_SECTION_09.getKey())),
-                new TimelineItem(LocalDate.of(2017, 3, 23), new PddSectionStudy(PDD_SECTION_09.getKey())),
-                new TimelineItem(LocalDate.of(2017, 3, 13), new PddSectionStudy(PDD_SECTION_10.getKey())),
-                new TimelineItem(LocalDate.of(2017, 3, 23), new PddSectionStudy(PDD_SECTION_10.getKey())),
-                new TimelineItem(LocalDate.of(2017, 3, 15), new PddSectionStudy(PDD_SECTION_11.getKey())),
-                new TimelineItem(LocalDate.of(2017, 3, 8), new PddSectionStudy(PDD_SECTION_12.getKey())),
-                new TimelineItem(LocalDate.of(2017, 3, 8), new PddSectionStudy(PDD_SECTION_13.getKey())),
-                new TimelineItem(LocalDate.of(2017, 3, 15), new PddSectionStudy(PDD_SECTION_14.getKey())),
+                new TimelineItem(LocalDate.of(2017, 3, 6), new LectureStudyEvent(PDD_SECTION_01.getKey())),
+                new TimelineItem(LocalDate.of(2017, 3, 8), new LectureStudyEvent(PDD_SECTION_02.getKey())),
+                new TimelineItem(LocalDate.of(2017, 3, 6), new LectureStudyEvent(PDD_SECTION_04.getKey())),
+                new TimelineItem(LocalDate.of(2017, 3, 23), new LectureStudyEvent(PDD_SECTION_04.getKey())),
+                new TimelineItem(LocalDate.of(2017, 3, 6), new LectureStudyEvent(PDD_SECTION_05.getKey())),
+                new TimelineItem(LocalDate.of(2017, 3, 23), new LectureStudyEvent(PDD_SECTION_05.getKey())),
+                new TimelineItem(LocalDate.of(2017, 3, 6), new LectureStudyEvent(PDD_SECTION_06.getKey())),
+                new TimelineItem(LocalDate.of(2017, 3, 23), new LectureStudyEvent(PDD_SECTION_06.getKey())),
+                new TimelineItem(LocalDate.of(2017, 3, 6), new LectureStudyEvent(PDD_SECTION_07.getKey())),
+                new TimelineItem(LocalDate.of(2017, 3, 23), new LectureStudyEvent(PDD_SECTION_07.getKey())),
+                new TimelineItem(LocalDate.of(2017, 3, 6), new LectureStudyEvent(PDD_SECTION_09.getKey())),
+                new TimelineItem(LocalDate.of(2017, 3, 23), new LectureStudyEvent(PDD_SECTION_09.getKey())),
+                new TimelineItem(LocalDate.of(2017, 3, 13), new LectureStudyEvent(PDD_SECTION_10.getKey())),
+                new TimelineItem(LocalDate.of(2017, 3, 23), new LectureStudyEvent(PDD_SECTION_10.getKey())),
+                new TimelineItem(LocalDate.of(2017, 3, 15), new LectureStudyEvent(PDD_SECTION_11.getKey())),
+                new TimelineItem(LocalDate.of(2017, 3, 8), new LectureStudyEvent(PDD_SECTION_12.getKey())),
+                new TimelineItem(LocalDate.of(2017, 3, 8), new LectureStudyEvent(PDD_SECTION_13.getKey())),
+                new TimelineItem(LocalDate.of(2017, 3, 15), new LectureStudyEvent(PDD_SECTION_14.getKey())),
                 new TimelineItem(LocalDate.of(2017, 3, 16), new PddSectionTesting(78, 78, true)),
-                new TimelineItem(LocalDate.of(2017, 3, 12), new PddSectionStudy(PDD_SECTION_17.getKey())),
-                new TimelineItem(LocalDate.of(2017, 3, 13), new PddSectionStudy(PDD_SECTION_18.getKey())),
-                new TimelineItem(LocalDate.of(2017, 3, 7), new PddSectionStudy(PDD_SECTION_19.getKey())),
-                new TimelineItem(LocalDate.of(2017, 3, 8), new PddSectionStudy(PDD_SECTION_20.getKey())),
-                new TimelineItem(LocalDate.of(2017, 3, 13), new PddSectionStudy(PDD_SECTION_21.getKey())),
-                new TimelineItem(LocalDate.of(2017, 3, 6), new PddSectionStudy(PDD_SECTION_22.getKey())),
-                new TimelineItem(LocalDate.of(2017, 3, 7), new PddSectionStudy(PDD_SECTION_23.getKey())),
-                new TimelineItem(LocalDate.of(2017, 3, 8), new PddSectionStudy(PDD_SECTION_25.getKey())),
-                new TimelineItem(LocalDate.of(2017, 3, 8), new PddSectionStudy(PDD_SECTION_26.getKey())),
-                new TimelineItem(LocalDate.of(2017, 3, 19), new PddSectionStudy(PDD_SECTION_27.getKey())),
-                new TimelineItem(LocalDate.of(2017, 3, 19), new PddSectionStudy(PDD_SECTION_28.getKey())),
-                new TimelineItem(LocalDate.of(2017, 3, 9), new PddSectionStudy(PDD_SECTION_30.getKey())),
-                new TimelineItem(LocalDate.of(2017, 3, 20), new PddSectionStudy(PDD_SECTION_31.getKey())),
-                new TimelineItem(LocalDate.of(2017, 3, 19), new PddSectionStudy(PDD_SECTION_33.getKey())),
+                new TimelineItem(LocalDate.of(2017, 3, 12), new LectureStudyEvent(PDD_SECTION_17.getKey())),
+                new TimelineItem(LocalDate.of(2017, 3, 13), new LectureStudyEvent(PDD_SECTION_18.getKey())),
+                new TimelineItem(LocalDate.of(2017, 3, 7), new LectureStudyEvent(PDD_SECTION_19.getKey())),
+                new TimelineItem(LocalDate.of(2017, 3, 8), new LectureStudyEvent(PDD_SECTION_20.getKey())),
+                new TimelineItem(LocalDate.of(2017, 3, 13), new LectureStudyEvent(PDD_SECTION_21.getKey())),
+                new TimelineItem(LocalDate.of(2017, 3, 6), new LectureStudyEvent(PDD_SECTION_22.getKey())),
+                new TimelineItem(LocalDate.of(2017, 3, 7), new LectureStudyEvent(PDD_SECTION_23.getKey())),
+                new TimelineItem(LocalDate.of(2017, 3, 8), new LectureStudyEvent(PDD_SECTION_25.getKey())),
+                new TimelineItem(LocalDate.of(2017, 3, 8), new LectureStudyEvent(PDD_SECTION_26.getKey())),
+                new TimelineItem(LocalDate.of(2017, 3, 19), new LectureStudyEvent(PDD_SECTION_27.getKey())),
+                new TimelineItem(LocalDate.of(2017, 3, 19), new LectureStudyEvent(PDD_SECTION_28.getKey())),
+                new TimelineItem(LocalDate.of(2017, 3, 9), new LectureStudyEvent(PDD_SECTION_30.getKey())),
+                new TimelineItem(LocalDate.of(2017, 3, 20), new LectureStudyEvent(PDD_SECTION_31.getKey())),
+                new TimelineItem(LocalDate.of(2017, 3, 19), new LectureStudyEvent(PDD_SECTION_33.getKey())),
 
                 new TimelineItem(LocalDate.of(2017, 3, 17), new SchoolDrivingEvent(SCHOOL_INSTRUCTOR, SCHOOL_CAR, 50)),
                 new TimelineItem(LocalDate.of(2017, 3, 18), new AdditionalDrivingEvent(ADDITIONAL_INSTRUCTOR, ADDITIONAL_CAR, 90)),

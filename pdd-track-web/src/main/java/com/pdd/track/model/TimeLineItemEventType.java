@@ -3,7 +3,7 @@ package com.pdd.track.model;
 public enum TimeLineItemEventType {
     DRIVING,
     LECTURE,
-    STUDY,
+    LECTURE_STUDY,
     TESTING,
     SCHOOL_THEORY_EXAM,
     SCHOOL_DRIVING_EXAM,

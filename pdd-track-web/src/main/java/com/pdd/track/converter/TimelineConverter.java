@@ -22,6 +22,7 @@ import com.pdd.track.model.TimeLineDayHintType;
 import com.pdd.track.model.TimeLineItemEventType;
 import com.pdd.track.model.TimelineItem;
 import com.pdd.track.model.events.AbstractDrivingEvent;
+import com.pdd.track.model.events.AbstractLectureEvent;
 import com.pdd.track.model.events.AdditionalDrivingEvent;
 import com.pdd.track.model.events.LectureEvent;
 import com.pdd.track.model.events.PddSectionTesting;
@@ -60,6 +61,10 @@ public class TimelineConverter {
         TimelineDto result = new TimelineDto();
         result.setStartDate(DataGenerationServiceImpl.STUDY_START_DAY);
         result.setEndDate(DataGenerationServiceImpl.STUDY_END_DAY);
+
+        List<TimelineItem> collect = schoolTimeline.getTimelineItems().stream()
+                .filter(item -> item.getDate().equals(LocalDate.of(2017, 3, 6)))
+                .collect(Collectors.toList());
 
         List<TimelineItem> schoolTimelineItems = schoolTimeline.getTimelineItems();
         List<PddSectionTimelineItem> pddSectionTimelineItems = pddSectionTimeline.getTimelineItems();
@@ -101,22 +106,27 @@ public class TimelineConverter {
                     tlsItem.getTimelineDays().stream()
                             .forEach(tlDay -> {
                                 String pddSectionKey = tlsItem.getPddSection().getKey();
-                                TimelineItem lecture = schoolTimelineItems.stream()
-                                        .filter(stlItem -> {
-                                            if (!stlItem.getEvent().getEventType().equals(TimeLineItemEventType.LECTURE)) {
-                                                return false;
-                                            }
-                                            if (!stlItem.getDate().equals(tlDay.getDayDate())) {
-                                                return false;
-                                            }
-                                            LectureEvent timelineLectureEvent = (LectureEvent) stlItem.getEvent();
-                                            return timelineLectureEvent.getPddSectionKey().equals(pddSectionKey);
-                                        })
-                                        .findFirst()
-                                        .orElse(null);
-                                tlDay.getDayEvents().setLecture(lecture != null);
+                                tlDay.getDayEvents().setLecture(getLectureEventOnDate(pddSectionKey, schoolTimelineItems, tlDay, TimeLineItemEventType.LECTURE) != null);
+                                tlDay.getDayEvents().setStudy(getLectureEventOnDate(pddSectionKey, schoolTimelineItems, tlDay, TimeLineItemEventType.LECTURE_STUDY) != null);
                             });
                 });
+    }
+
+    private static TimelineItem getLectureEventOnDate(final String pddSectionKey, final List<TimelineItem> schoolTimelineItems, final TimelineDayDto tlDay,
+                                                      final TimeLineItemEventType eventType) {
+        return schoolTimelineItems.stream()
+                .filter(stlItem -> {
+                    if (!stlItem.getEvent().getEventType().equals(eventType)) {
+                        return false;
+                    }
+                    if (!stlItem.getDate().equals(tlDay.getDayDate())) {
+                        return false;
+                    }
+                    AbstractLectureEvent timelineLectureEvent = (AbstractLectureEvent) stlItem.getEvent();
+                    return timelineLectureEvent.getPddSectionKey().equals(pddSectionKey);
+                })
+                .findFirst()
+                .orElse(null);
     }
 
     private static void populateFutureHints(final List<TimelineItem> schoolTimelineItems, final List<PddSectionTimelineItem> pddSectionTimelineItems, final LocalDate onDate, final List<TimelineItemDto> result) {
@@ -329,7 +339,7 @@ public class TimelineConverter {
 
     private static TimelineItem getLastLectureEvent(final String pddSectionKey, final List<TimelineItem> schoolTimelineItems) {
         TimelineItem schoolTimelineItem = schoolTimelineItems.stream()
-                .sorted((o1, o2) -> o1.getDate().compareTo(o2.getDate()))
+                .sorted((o1, o2) -> o2.getDate().compareTo(o1.getDate()))
                 .filter(item -> item.getEvent().getEventType().equals(TimeLineItemEventType.LECTURE))
                 .filter(item -> {
                     LectureEvent event = (LectureEvent) item.getEvent();
@@ -421,9 +431,6 @@ public class TimelineConverter {
                 .forEach(timelineItem -> {
                     TimelineEvent event = timelineItem.getEvent();
                     switch (event.getEventType()) {
-                        case STUDY:
-                            dayEvents.setStudy(true);
-                            break;
                         case TESTING:
                             PddSectionTesting pddSectionTestingEvent = (PddSectionTesting) event;
                             dayEvents.setTesting(TimelineObjectConverter.convertTestingEvent(pddSectionTestingEvent.getTesting()));

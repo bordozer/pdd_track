@@ -1,19 +1,19 @@
 package com.pdd.track.model.events;
 
 import com.pdd.track.model.TimeLineItemEventType;
-import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
 @Data
 @NoArgsConstructor
-@AllArgsConstructor
-public class PddSectionStudy extends TimelineEvent {
+public class LectureStudyEvent extends AbstractLectureEvent {
 
-    private String pddSectionKey;
+    public LectureStudyEvent(final String pddSectionKey) {
+        super(pddSectionKey);
+    }
 
     @Override
     public TimeLineItemEventType getEventType() {
-        return TimeLineItemEventType.STUDY;
+        return TimeLineItemEventType.LECTURE_STUDY;
     }
 }
