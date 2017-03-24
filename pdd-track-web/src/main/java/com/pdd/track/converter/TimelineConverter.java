@@ -18,7 +18,6 @@ import com.pdd.track.dto.TimelineDto.TimelineStatistics;
 import com.pdd.track.dto.TimelineItemDto;
 import com.pdd.track.dto.TimelineItemSummaryDto;
 import com.pdd.track.dto.TimelineItemSummaryDto.TimelineItemSummaryStatus;
-import com.pdd.track.model.Timeline;
 import com.pdd.track.model.Car;
 import com.pdd.track.model.Instructor;
 import com.pdd.track.model.PddSection;
@@ -27,10 +26,12 @@ import com.pdd.track.model.StudyingTimelineItem;
 import com.pdd.track.model.Testing;
 import com.pdd.track.model.TimeLineDayHintType;
 import com.pdd.track.model.TimeLineItemEventType;
+import com.pdd.track.model.Timeline;
 import com.pdd.track.model.TimelineItem;
 import com.pdd.track.model.TimelineStudy;
 import com.pdd.track.model.events.AbstractDrivingEvent;
 import com.pdd.track.model.events.AdditionalDrivingEvent;
+import com.pdd.track.model.events.LectureEvent;
 import com.pdd.track.model.events.PddSectionTesting;
 import com.pdd.track.model.events.TimelineEvent;
 import com.pdd.track.service.impl.DataGenerationServiceImpl;
@@ -73,11 +74,60 @@ public class TimelineConverter {
                 });
 
         List<PddSectionTimelineItem> timelineStudyItems = timelineStudy.getPddSectionTimelineItems();
-        result.setItems(convertItems(timelineStudyItems, dayColumns, onDate));
+        result.setItems(convertTimelineItems(timeline.getStudyingTimelineItems(), timelineStudyItems, dayColumns, onDate));
         result.setSummaryColumns(calculateTimelineDaySummary(dayColumns, timelineStudyItems));
         result.setTimelineStatistics(collectStatistics(result));
 
         return result;
+    }
+
+    private static List<TimelineItemDto> convertTimelineItems(final List<StudyingTimelineItem> studyingTimelineItems, final List<PddSectionTimelineItem> timelineStudyItems, final List<TimelineDayColumn> dayColumns, final LocalDate onDate) {
+        List<TimelineItemDto> result = groupPddSections(timelineStudyItems).stream()
+                .map(sectionDto -> {
+                    TimelineItemDto item1 = new TimelineItemDto();
+                    item1.setPddSection(sectionDto);
+                    item1.setTimelineDays(convertTimelineDaysForPddSection(sectionDto, timelineStudyItems, dayColumns, onDate));
+                    return item1;
+                })
+                .collect(Collectors.toList());
+        populateLectureEvents(studyingTimelineItems, result);
+        populateHintsOnDate(timelineStudyItems, result, onDate);
+        populateFutureHints(onDate, timelineStudyItems, result);
+        populateTimelineSummary(timelineStudyItems, result, onDate);
+        return result;
+    }
+
+    private static void populateLectureEvents(final List<StudyingTimelineItem> studyingTimelineItems, final List<TimelineItemDto> timelineStudyItems) {
+        timelineStudyItems.stream()
+                .forEach(tlsItem -> {
+                    tlsItem.getTimelineDays().stream()
+                            .forEach(tlDay -> {
+                                String pddSectionKey = tlsItem.getPddSection().getKey();
+                                StudyingTimelineItem lecture =  studyingTimelineItems.stream()
+                                        .filter(stlItem -> {
+                                            TimelineItem timelineItem = stlItem.getTimelineItem();
+                                            if (!timelineItem.getEvent().getEventType().equals(TimeLineItemEventType.LECTURE)) {
+                                                return false;
+                                            }
+                                            if (!timelineItem.getDate().equals(tlDay.getDayDate())) {
+                                                return false;
+                                            }
+                                            LectureEvent timelineLectureEvent = (LectureEvent) timelineItem.getEvent();
+                                            return timelineLectureEvent.getPddSectionKey().equals(pddSectionKey);
+                                        })
+                                        .findFirst()
+                                        .orElse(null);
+                                tlDay.getDayEvents().setLecture(lecture != null);
+                            });
+                });
+    }
+
+    private static void populateFutureHints(final LocalDate onDate, final List<PddSectionTimelineItem> timelineStudyItems, final List<TimelineItemDto> result) {
+        LocalDate aDate = onDate.plusDays(1);
+        while (aDate.isBefore(DataGenerationServiceImpl.STUDY_END_DAY.plusDays(1))) {
+            populateHintsOnDate(timelineStudyItems, result, aDate);
+            aDate = aDate.plusDays(1);
+        }
     }
 
     private static TimelineStatistics collectStatistics(final TimelineDto result) {
@@ -204,25 +254,6 @@ public class TimelineConverter {
             currentDay = currentDay.plusDays(1);
             index++;
         }
-        return result;
-    }
-
-    private static List<TimelineItemDto> convertItems(final List<PddSectionTimelineItem> timelineStudyItems, final List<TimelineDayColumn> dayColumns, final LocalDate onDate) {
-        List<TimelineItemDto> result = groupPddSections(timelineStudyItems).stream()
-                .map(sectionDto -> {
-                    TimelineItemDto item = new TimelineItemDto();
-                    item.setPddSection(sectionDto);
-                    item.setTimelineDays(convertTimelineDaysForPddSection(sectionDto, timelineStudyItems, dayColumns, onDate));
-                    return item;
-                })
-                .collect(Collectors.toList());
-        populateHintsOnDate(timelineStudyItems, result, onDate);
-        LocalDate aDate = onDate.plusDays(1);
-        while(aDate.isBefore(DataGenerationServiceImpl.STUDY_END_DAY.plusDays(1))) {
-            populateHintsOnDate(timelineStudyItems, result, aDate);
-            aDate = aDate.plusDays(1);
-        }
-        populateTimelineSummary(timelineStudyItems, result, onDate);
         return result;
     }
 
@@ -397,6 +428,8 @@ public class TimelineConverter {
                                 dayEvents.setAdditionalDriving(new DrivingDto(carDto, instructor, schoolDrivingEvent.getDuration()));
                             }
                             break;
+                        case LECTURE:
+                            break;
                         default:
                             throw new IllegalStateException(String.format("Not implemented yet: %s", event));
                     }
@@ -409,9 +442,6 @@ public class TimelineConverter {
                 .forEach(timelineItem -> {
                     TimelineEvent event = timelineItem.getEvent();
                     switch (event.getEventType()) {
-                        case LECTURE:
-                            dayEvents.setLecture(true);
-                            break;
                         case STUDY:
                             dayEvents.setStudy(true);
                             break;
