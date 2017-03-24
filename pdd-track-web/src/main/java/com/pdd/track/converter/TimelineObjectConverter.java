@@ -7,6 +7,7 @@ import com.pdd.track.dto.TestingDto;
 import com.pdd.track.model.Car;
 import com.pdd.track.model.Instructor;
 import com.pdd.track.model.PddSection;
+import com.pdd.track.model.PddSection.PddSectionQuestions;
 import com.pdd.track.model.Testing;
 import com.pdd.track.utils.CommonUtils;
 import lombok.AccessLevel;
@@ -29,11 +30,24 @@ public class TimelineObjectConverter {
         return new InstructorDto(instructor.getName());
     }
 
-    public static PddSectionDto convertPddSection(final PddSection pddSection) {
+    public static PddSectionDto convertPddSection(final PddSection pddSection, final String ruleSetKey) {
         PddSectionDto dto = new PddSectionDto();
         dto.setKey(pddSection.getKey());
         dto.setNumber(pddSection.getNumber());
         dto.setName(pddSection.getName());
+        dto.setQuestionsCount(getQuestionsCount(pddSection, ruleSetKey));
         return dto;
+    }
+
+    public static int getQuestionsCount(final PddSection pddSection, final String ruleSetKey) {
+        PddSectionQuestions pddSectionQuestions = pddSection.getRuleSet().stream()
+                .filter(ruleSet -> ruleSet.getRuleSetKey().equals(ruleSetKey))
+                .findFirst()
+                .orElseThrow(IllegalArgumentException::new)
+                .getSectionQuestions().stream()
+                .filter(quest -> quest.getSectionNumber().equals(pddSection.getNumber()))
+                .findFirst()
+                .orElseThrow(IllegalArgumentException::new);
+        return pddSectionQuestions.getQuestionsCount();
     }
 }

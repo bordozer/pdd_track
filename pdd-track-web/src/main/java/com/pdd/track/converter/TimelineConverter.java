@@ -15,7 +15,6 @@ import com.pdd.track.dto.TimelineItemDto;
 import com.pdd.track.dto.TimelineItemSummaryDto;
 import com.pdd.track.dto.TimelineItemSummaryDto.TimelineItemSummaryStatus;
 import com.pdd.track.model.PddSection;
-import com.pdd.track.model.PddSection.PddSectionQuestions;
 import com.pdd.track.model.PddSectionTimeline;
 import com.pdd.track.model.PddSectionTimelineItem;
 import com.pdd.track.model.SchoolTimeline;
@@ -77,17 +76,19 @@ public class TimelineConverter {
                     populateGlobalDayEvents(schoolTimelineItems, dayColumn);
                 });
 
-        result.setItems(convertTimelineItems(pddSections, schoolTimelineItems, pddSectionTimelineItems, dayColumns, onDate));
+        result.setItems(convertTimelineItems(pddSections, schoolTimelineItems, pddSectionTimelineItems, dayColumns, onDate, pddSectionTimeline.getRuleSetKey()));
         result.setSummaryColumns(calculateTimelineDaySummary(pddSectionTimelineItems, dayColumns, pddSectionTimeline.getRuleSetKey()));
         result.setTimelineStatistics(TimelineStatisticsConverter.convertStatistics(result));
 
         return result;
     }
 
-    private static List<TimelineItemDto> convertTimelineItems(final List<PddSection> pddSections, final List<TimelineItem> schoolTimelineItems, final List<PddSectionTimelineItem> pddSectionTimelineItems, final List<TimelineDayColumn> dayColumns, final LocalDate onDate) {
+    private static List<TimelineItemDto> convertTimelineItems(final List<PddSection> pddSections, final List<TimelineItem> schoolTimelineItems,
+                                                              final List<PddSectionTimelineItem> pddSectionTimelineItems, final List<TimelineDayColumn> dayColumns, final LocalDate onDate,
+                                                              final String ruleSetKey) {
         List<TimelineItemDto> result = pddSections.stream()
                 .map(section -> {
-                    PddSectionDto sectionDto = TimelineObjectConverter.convertPddSection(section);
+                    PddSectionDto sectionDto = TimelineObjectConverter.convertPddSection(section, ruleSetKey);
                     TimelineItemDto item1 = new TimelineItemDto();
                     item1.setPddSection(sectionDto);
                     item1.setTimelineDays(convertTimelineDaysForPddSection(sectionDto, pddSectionTimelineItems, dayColumns, onDate));
@@ -165,15 +166,9 @@ public class TimelineConverter {
                                             PddSectionTesting testingEvent = (PddSectionTesting) tlItem.getEvent();
                                             valuesAggregator.add(((double) testingEvent.getTesting().getPassedQuestions() / testingEvent.getTesting().getTotalQuestions()) * 100);
 
-                                            PddSectionQuestions pddSectionQuestions = item.getPddSection().getRuleSet().stream()
-                                                    .filter(ruleSet -> ruleSet.getRuleSetKey().equals(ruleSetKey))
-                                                    .findFirst()
-                                                    .orElseThrow(IllegalArgumentException::new)
-                                                    .getSectionQuestions().stream()
-                                                    .filter(quest -> quest.getSectionNumber().equals(item.getPddSection().getNumber()))
-                                                    .findFirst()
-                                                    .orElseThrow(IllegalArgumentException::new);
-                                            questionsAggregator.add(pddSectionQuestions.getQuestionsCount());
+                                            PddSection pddSection = item.getPddSection();
+                                            int questionsCount = TimelineObjectConverter.getQuestionsCount(pddSection, ruleSetKey);
+                                            questionsAggregator.add(questionsCount);
                                         });
                             });
 
