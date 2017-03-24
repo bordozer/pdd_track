@@ -1,15 +1,15 @@
 package com.pdd.track.service.impl;
 
 import com.google.common.collect.Sets;
-import com.pdd.track.model.SchoolTimeline;
 import com.pdd.track.model.Car;
 import com.pdd.track.model.Gender;
 import com.pdd.track.model.Instructor;
 import com.pdd.track.model.PddSection;
+import com.pdd.track.model.PddSectionTimeline;
 import com.pdd.track.model.PddSectionTimelineItem;
+import com.pdd.track.model.SchoolTimeline;
 import com.pdd.track.model.Student;
 import com.pdd.track.model.TimelineItem;
-import com.pdd.track.model.PddSectionTimeline;
 import com.pdd.track.model.events.AdditionalDrivingEvent;
 import com.pdd.track.model.events.LectureEvent;
 import com.pdd.track.model.events.LectureStudyEvent;
@@ -77,6 +77,7 @@ public class DataGenerationServiceImpl implements DataGenerationService {
     private static final PddSection PDD_SECTION_34 = new PddSection("34", "Dorozhnaya razmetka");
 
     private static final Map<String, Integer> QUESTIONS_COUNT_KIEV = new HashMap<>();
+
     static {
         QUESTIONS_COUNT_KIEV.put("1", 116);
         QUESTIONS_COUNT_KIEV.put("2", 85);
@@ -115,40 +116,42 @@ public class DataGenerationServiceImpl implements DataGenerationService {
     }
 
     private static final Map<String, Integer> QUESTIONS_COUNT_KHARKOV = new HashMap<>();
+
     static {
-        QUESTIONS_COUNT_KHARKOV.put("1", );
-        QUESTIONS_COUNT_KHARKOV.put("2", );
-        QUESTIONS_COUNT_KHARKOV.put("3", );
-        QUESTIONS_COUNT_KHARKOV.put("4", );
-        QUESTIONS_COUNT_KHARKOV.put("5", );
-        QUESTIONS_COUNT_KHARKOV.put("6", );
-        QUESTIONS_COUNT_KHARKOV.put("7", );
-        QUESTIONS_COUNT_KHARKOV.put("8", );
-        QUESTIONS_COUNT_KHARKOV.put("9", );
-        QUESTIONS_COUNT_KHARKOV.put("10", );
-        QUESTIONS_COUNT_KHARKOV.put("11", );
-        QUESTIONS_COUNT_KHARKOV.put("12", );
-        QUESTIONS_COUNT_KHARKOV.put("13", );
-        QUESTIONS_COUNT_KHARKOV.put("14", );
-        QUESTIONS_COUNT_KHARKOV.put("15", );
-        QUESTIONS_COUNT_KHARKOV.put("16", );
-        QUESTIONS_COUNT_KHARKOV.put("17", );
-        QUESTIONS_COUNT_KHARKOV.put("18", );
-        QUESTIONS_COUNT_KHARKOV.put("19", );
-        QUESTIONS_COUNT_KHARKOV.put("20", );
-        QUESTIONS_COUNT_KHARKOV.put("21", );
-        QUESTIONS_COUNT_KHARKOV.put("22", );
-        QUESTIONS_COUNT_KHARKOV.put("23", );
-        QUESTIONS_COUNT_KHARKOV.put("24", );
-        QUESTIONS_COUNT_KHARKOV.put("25", );
-        QUESTIONS_COUNT_KHARKOV.put("26", );
-        QUESTIONS_COUNT_KHARKOV.put("27", );
-        QUESTIONS_COUNT_KHARKOV.put("28", );
-        QUESTIONS_COUNT_KHARKOV.put("29", );
-        QUESTIONS_COUNT_KHARKOV.put("30", );
-        QUESTIONS_COUNT_KHARKOV.put("31", );
-        QUESTIONS_COUNT_KHARKOV.put("32", );
-        QUESTIONS_COUNT_KHARKOV.put("33", );
+        QUESTIONS_COUNT_KHARKOV.put("1", 57);
+        QUESTIONS_COUNT_KHARKOV.put("2", 33);
+        QUESTIONS_COUNT_KHARKOV.put("3", 25);
+        QUESTIONS_COUNT_KHARKOV.put("4", 16);
+        QUESTIONS_COUNT_KHARKOV.put("5", 8);
+        QUESTIONS_COUNT_KHARKOV.put("6", 9);
+        QUESTIONS_COUNT_KHARKOV.put("7", 1);
+        QUESTIONS_COUNT_KHARKOV.put("8", 92);
+        QUESTIONS_COUNT_KHARKOV.put("9", 63);
+        QUESTIONS_COUNT_KHARKOV.put("10", 59);
+        QUESTIONS_COUNT_KHARKOV.put("11", 45);
+        QUESTIONS_COUNT_KHARKOV.put("12", 56);
+        QUESTIONS_COUNT_KHARKOV.put("13", 23);
+        QUESTIONS_COUNT_KHARKOV.put("14", 57);
+        QUESTIONS_COUNT_KHARKOV.put("15", 83);
+        QUESTIONS_COUNT_KHARKOV.put("16", 160);
+        QUESTIONS_COUNT_KHARKOV.put("17", 11);
+        QUESTIONS_COUNT_KHARKOV.put("18", 21);
+        QUESTIONS_COUNT_KHARKOV.put("19", 38);
+        QUESTIONS_COUNT_KHARKOV.put("20", 23);
+        QUESTIONS_COUNT_KHARKOV.put("21", 11);
+        QUESTIONS_COUNT_KHARKOV.put("22", 3);
+        QUESTIONS_COUNT_KHARKOV.put("23", 31);
+        QUESTIONS_COUNT_KHARKOV.put("24", 20);
+        QUESTIONS_COUNT_KHARKOV.put("25", 7);
+        QUESTIONS_COUNT_KHARKOV.put("26", 9);
+        QUESTIONS_COUNT_KHARKOV.put("27", 29);
+        QUESTIONS_COUNT_KHARKOV.put("28", 10);
+        QUESTIONS_COUNT_KHARKOV.put("29", 2);
+        QUESTIONS_COUNT_KHARKOV.put("30", 16);
+        QUESTIONS_COUNT_KHARKOV.put("31", 70);
+        QUESTIONS_COUNT_KHARKOV.put("32", 11);
+        QUESTIONS_COUNT_KHARKOV.put("33", 345);
+        QUESTIONS_COUNT_KHARKOV.put("34", 79);
     }
 
     public static final LocalDate STUDY_START_DAY = LocalDate.of(2017, 2, 25);
