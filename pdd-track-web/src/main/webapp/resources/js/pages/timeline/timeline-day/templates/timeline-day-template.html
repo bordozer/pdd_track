@@ -22,5 +22,5 @@
 <% }) %>
 
 <% var questionCount = dayEvents ? dayEvents.questionCount : 0;%>
-<span class="pull-right text-primary"><sup><%=dayEvents.lecture || dayEvents.study || dayEvents.testing || dayHints && dayHints.length > 0 ? questionCount : ''%></sup></span>
+<small class="pull-right text-primary"><sup><%=dayEvents.lecture || dayEvents.study || dayEvents.testing || dayHints && dayHints.length > 0 ? questionCount : ''%></sup></small>
 &nbsp;
