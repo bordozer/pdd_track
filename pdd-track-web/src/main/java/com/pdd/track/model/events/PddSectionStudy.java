@@ -6,7 +6,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 @Data
-//@NoArgsConstructor TODO
+@NoArgsConstructor
 @AllArgsConstructor
 public class PddSectionStudy extends TimelineEvent {
 

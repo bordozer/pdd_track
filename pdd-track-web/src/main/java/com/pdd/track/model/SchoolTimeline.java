@@ -7,7 +7,7 @@ import java.util.List;
 
 @Data
 @Document(collection = "PDD.TRACK.TIMELINE")
-public class Timeline {
+public class SchoolTimeline {
     private String _id;
     private Student student;
     private List<StudyingTimelineItem> studyingTimelineItems;

@@ -2,7 +2,7 @@ package com.pdd.track.service.impl;
 
 import com.google.common.collect.Lists;
 import com.google.common.collect.Sets;
-import com.pdd.track.model.Timeline;
+import com.pdd.track.model.SchoolTimeline;
 import com.pdd.track.model.Car;
 import com.pdd.track.model.Gender;
 import com.pdd.track.model.Instructor;
@@ -11,7 +11,7 @@ import com.pdd.track.model.PddSectionTimelineItem;
 import com.pdd.track.model.Student;
 import com.pdd.track.model.StudyingTimelineItem;
 import com.pdd.track.model.TimelineItem;
-import com.pdd.track.model.TimelineStudy;
+import com.pdd.track.model.StudentTimeline;
 import com.pdd.track.model.events.AdditionalDrivingEvent;
 import com.pdd.track.model.events.LectureEvent;
 import com.pdd.track.model.events.PddSectionStudy;
@@ -96,32 +96,32 @@ public class DataGenerationServiceImpl implements DataGenerationService {
         timelineRepository.deleteAll();
         timelineStudyRepository.deleteAll();
         createPddSections();
-        Timeline timeline = timelineRepository.save(constructTimeline());
-        TimelineStudy studyKiev = timelineStudyRepository.save(constructTimelineStudyKiev(timeline.get_id()));
-        TimelineStudy studyKharkov = timelineStudyRepository.save(constructTimelineStudyKharkov(timeline.get_id()));
+        SchoolTimeline schoolTimeline = timelineRepository.save(constructTimeline());
+        StudentTimeline studyKiev = timelineStudyRepository.save(constructTimelineStudyKiev(schoolTimeline.get_id()));
+        StudentTimeline studyKharkov = timelineStudyRepository.save(constructTimelineStudyKharkov(schoolTimeline.get_id()));
     }
 
-    private Timeline constructTimeline() {
-        Timeline entity = new Timeline();
+    private SchoolTimeline constructTimeline() {
+        SchoolTimeline entity = new SchoolTimeline();
         entity.setStudent(STUDENT);
         entity.setStudyingTimelineItems(constructStudyingTimelineItems());
         return entity;
     }
 
-    private TimelineStudy constructTimelineStudyKiev(final String timelineId) {
-        TimelineStudy timelineStudy = new TimelineStudy();
-        timelineStudy.set_id("1");
-        timelineStudy.setTimelineId(timelineId);
-        timelineStudy.setPddSectionTimelineItems(constructPddSectionTimelineItemsKiev());
-        return timelineStudy;
+    private StudentTimeline constructTimelineStudyKiev(final String timelineId) {
+        StudentTimeline studentTimeline = new StudentTimeline();
+        studentTimeline.set_id("1");
+        studentTimeline.setTimelineId(timelineId);
+        studentTimeline.setPddSectionTimelineItems(constructPddSectionTimelineItemsKiev());
+        return studentTimeline;
     }
 
-    private TimelineStudy constructTimelineStudyKharkov(final String timelineId) {
-        TimelineStudy timelineStudy = new TimelineStudy();
-        timelineStudy.set_id("2");
-        timelineStudy.setTimelineId(timelineId);
-        timelineStudy.setPddSectionTimelineItems(constructPddSectionTimelineItemsKharkov());
-        return timelineStudy;
+    private StudentTimeline constructTimelineStudyKharkov(final String timelineId) {
+        StudentTimeline studentTimeline = new StudentTimeline();
+        studentTimeline.set_id("2");
+        studentTimeline.setTimelineId(timelineId);
+        studentTimeline.setPddSectionTimelineItems(constructPddSectionTimelineItemsKharkov());
+        return studentTimeline;
     }
 
     private List<PddSectionTimelineItem> constructPddSectionTimelineItemsKharkov() {

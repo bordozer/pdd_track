@@ -1,9 +1,9 @@
 package com.pdd.track.repository;
 
-import com.pdd.track.model.Timeline;
+import com.pdd.track.model.SchoolTimeline;
 import org.springframework.data.mongodb.repository.MongoRepository;
 
-public interface TimelineRepository extends MongoRepository<Timeline, String> {
+public interface TimelineRepository extends MongoRepository<SchoolTimeline, String> {
 
-    Timeline findOneByStudentKey(final String userKey);
+    SchoolTimeline findOneByStudentKey(final String userKey);
 }
