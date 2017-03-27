@@ -41,7 +41,7 @@ define(function (require) {
         _getHintIcon: function(dayHint) {
             var timeLineDayHintType = dayHint.dayHintType;
             if (timeLineDayHintType == 'LECTURE_WITHOUT_STURDY') {
-                return {icon: 'fa fa-book', color: 'text-danger', hint: 'Not studied section'};
+                return {icon: 'fa fa-eye-slash', color: 'text-danger', hint: 'Not studied section'};
             }
             if (timeLineDayHintType == 'NEEDS_RESTUDY') {
                 return {icon: 'fa fa-book', color: 'text-warning', hint: 'Study was too long ago'};

@@ -69,7 +69,7 @@ define(function (require) {
                 return {icon: 'fa fa-bug', color: 'text-danger', hint: 'The section\' tests are red'}
             }
             if (status == 'TO_STUDY') {
-                return {icon: 'fa fa-book', color: 'text-danger', hint: 'The section is NOT ready: not studied'}
+                return {icon: 'fa fa-eye-slash', color: 'text-danger', hint: 'The section is NOT studied'}
             }
             if (status == 'NO_LECTURE_YET') {
                 return {icon: 'fa fa-hourglass-o', color: 'text-muted', hint: 'No lecture yet'}
