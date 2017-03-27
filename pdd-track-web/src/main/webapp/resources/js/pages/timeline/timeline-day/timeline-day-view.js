@@ -50,13 +50,13 @@ define(function (require) {
                 return {icon: 'fa fa-dot-circle-o', color: 'text-danger', hint: 'Studied section is too long without any testing'};
             }
             if (timeLineDayHintType == 'ADVICE_REFRESH_TESTS') {
-                return {icon: 'fa fa-dot-circle-o', color: 'text-muted', hint: 'Lats testing was too long ago'};
+                return {icon: 'fa fa-flask', color: 'text-muted', hint: 'Lats testing was too long ago'};
             }
             if (timeLineDayHintType == 'RED_TESTS') {
                 return {icon: 'fa fa-exclamation-triangle', color: 'text-danger', hint: 'Lats testing is red!'};
             }
             if (timeLineDayHintType == 'AVERAGE_TESTS_PERCENTAGE_IS_RED') {
-                return {icon: 'fa fa-fire', color: 'text-warning', hint: 'Average testing percentage is red!'};
+                return {icon: 'fa fa-bug', color: 'text-warning', hint: 'Average testing percentage is red!'};
             }
         }
     });
