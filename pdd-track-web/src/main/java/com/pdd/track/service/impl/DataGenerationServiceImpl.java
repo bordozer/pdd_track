@@ -45,39 +45,39 @@ public class DataGenerationServiceImpl implements DataGenerationService {
     private static final Car ADDITIONAL_CAR = new Car("Honda Accord");
 
     private static final PddSection PDD_SECTION_01 = new PddSection("1", "Общие положения");
-    private static final PddSection PDD_SECTION_02 = new PddSection("2", "Obyazannosti i prava voditeley TS");
-    private static final PddSection PDD_SECTION_03 = new PddSection("3", "Dvizhenie TS so special'nymi signalami");
-    private static final PddSection PDD_SECTION_04 = new PddSection("4", "Obyazannosti i prava peshekhodov");
-    private static final PddSection PDD_SECTION_05 = new PddSection("5", "Obyazannosti i prava passazhirov");
-    private static final PddSection PDD_SECTION_06 = new PddSection("6", "Trebovaniya k velosipedistam");
-    private static final PddSection PDD_SECTION_07 = new PddSection("7", "Trebovaniya k licam, upravlyayushchim guzhevym transportom i pogonshchikam zhivotnyh");
-    private static final PddSection PDD_SECTION_08 = new PddSection("8", "Regulirovanie dorozhnogo dvizheniya");
-    private static final PddSection PDD_SECTION_09 = new PddSection("9", "Preduprezhdayushchie signaly");
-    private static final PddSection PDD_SECTION_10 = new PddSection("10", "Nachalo dvizheniya i izmenenie ego napravleniya");
-    private static final PddSection PDD_SECTION_11 = new PddSection("11", "Raspolozhenie transportnyh sredstv na doroge");
-    private static final PddSection PDD_SECTION_12 = new PddSection("12", "Skorost' dvizheniya");
-    private static final PddSection PDD_SECTION_13 = new PddSection("13", "Distanciya, interval, vstrechnyj raz'ezd");
-    private static final PddSection PDD_SECTION_14 = new PddSection("14", "Obgon");
-    private static final PddSection PDD_SECTION_15 = new PddSection("15", "Ostanovka i stoyanka");
-    private static final PddSection PDD_SECTION_16 = new PddSection("16", "Proezd perekrestkov");
-    private static final PddSection PDD_SECTION_17 = new PddSection("17", "Preimushchestva marshrutnyh transportnyh sredstv");
-    private static final PddSection PDD_SECTION_18 = new PddSection("18", "Proezd peshekhodnyh perekhodov i ostanovok transportnyh sredstv");
-    private static final PddSection PDD_SECTION_19 = new PddSection("19", "Ispol'zovanie vneshnih svetovyh priborov");
-    private static final PddSection PDD_SECTION_20 = new PddSection("20", "Dvizhenie cherez zheleznodorozhnye pereezdy");
-    private static final PddSection PDD_SECTION_21 = new PddSection("21", "Perevozka passazhirov");
-    private static final PddSection PDD_SECTION_22 = new PddSection("22", "Perevozka gruza");
-    private static final PddSection PDD_SECTION_23 = new PddSection("23", "Buksirovka i ehkspluataciya transportnyh sostavov");
-    private static final PddSection PDD_SECTION_24 = new PddSection("24", "Uchebnaya ezda");
-    private static final PddSection PDD_SECTION_25 = new PddSection("25", "Dvizhenie transportnyh sredstv v kolonnah");
-    private static final PddSection PDD_SECTION_26 = new PddSection("26", "Dvizhenie v zhiloj i peshekhodnoj zone");
-    private static final PddSection PDD_SECTION_27 = new PddSection("27", "Dvizhenie po avtomagistralyam i dorogam dlya avtomobilej");
-    private static final PddSection PDD_SECTION_28 = new PddSection("28", "Dvizhenie po gornym dorogam i na krutyh spuskah");
-    private static final PddSection PDD_SECTION_29 = new PddSection("29", "Mezhdunarodnoe dvizhenie");
-    private static final PddSection PDD_SECTION_30 = new PddSection("30", "Nomernye, opoznavatel'nye znaki, nadpisi i oboznacheniya");
-    private static final PddSection PDD_SECTION_31 = new PddSection("31", "Tekhnicheskoe sostoyanie transportnyh sredstv i ih osnashchenie");
-    private static final PddSection PDD_SECTION_32 = new PddSection("32", "Voprosy dorozhnogo dvizheniya, kotorye trebuyut soglasovaniya s GAI");
-    private static final PddSection PDD_SECTION_33 = new PddSection("33", "Znaki");
-    private static final PddSection PDD_SECTION_34 = new PddSection("34", "Dorozhnaya razmetka");
+    private static final PddSection PDD_SECTION_02 = new PddSection("2", "Обязанности и права водителей механических транспортных средств");
+    private static final PddSection PDD_SECTION_03 = new PddSection("3", "Движение транспортных средств со специальными сигналами");
+    private static final PddSection PDD_SECTION_04 = new PddSection("4", "Обязанности и права пешеходов");
+    private static final PddSection PDD_SECTION_05 = new PddSection("5", "Обязанности и права пассажиров");
+    private static final PddSection PDD_SECTION_06 = new PddSection("6", "Требования к велосипедистам");
+    private static final PddSection PDD_SECTION_07 = new PddSection("7", "Требования к лицам, управляющим гужевым транспортом и погонщикам животных");
+    private static final PddSection PDD_SECTION_08 = new PddSection("8", "Регулирование дорожного движения");
+    private static final PddSection PDD_SECTION_09 = new PddSection("9", "Предупреждающие сигналы");
+    private static final PddSection PDD_SECTION_10 = new PddSection("10", "Начало движения и изменение его направления");
+    private static final PddSection PDD_SECTION_11 = new PddSection("11", "Расположение транспортных средств на дороге");
+    private static final PddSection PDD_SECTION_12 = new PddSection("12", "Скорость движения");
+    private static final PddSection PDD_SECTION_13 = new PddSection("13", "Дистанция, интервал, встречный разъезд");
+    private static final PddSection PDD_SECTION_14 = new PddSection("14", "Обгон");
+    private static final PddSection PDD_SECTION_15 = new PddSection("15", "Остановка и стоянка");
+    private static final PddSection PDD_SECTION_16 = new PddSection("16", "Проезд перекрестков");
+    private static final PddSection PDD_SECTION_17 = new PddSection("17", "Преимущества маршрутных транспортных средств");
+    private static final PddSection PDD_SECTION_18 = new PddSection("18", "Проезд пешеходных переходов и остановок транспортных средств");
+    private static final PddSection PDD_SECTION_19 = new PddSection("19", "Использование внешних световых приборов");
+    private static final PddSection PDD_SECTION_20 = new PddSection("20", "Движение через железнодорожные переезды");
+    private static final PddSection PDD_SECTION_21 = new PddSection("21", "Перевозка пассажиров");
+    private static final PddSection PDD_SECTION_22 = new PddSection("22", "Перевозка груза");
+    private static final PddSection PDD_SECTION_23 = new PddSection("23", "Буксировка и эксплуатация транспортных составов");
+    private static final PddSection PDD_SECTION_24 = new PddSection("24", "Учебная езда");
+    private static final PddSection PDD_SECTION_25 = new PddSection("25", "Движение транспортных средств в колоннах");
+    private static final PddSection PDD_SECTION_26 = new PddSection("26", "Движение в жилой и пешеходной зоне");
+    private static final PddSection PDD_SECTION_27 = new PddSection("27", "Движение по автомагистралям и дорогам для автомобилей");
+    private static final PddSection PDD_SECTION_28 = new PddSection("28", "Движение по горным дорогам и на крутых спусках");
+    private static final PddSection PDD_SECTION_29 = new PddSection("29", "Международное движение");
+    private static final PddSection PDD_SECTION_30 = new PddSection("30", "Номерные, опознавательные знаки, надписи и обозначения");
+    private static final PddSection PDD_SECTION_31 = new PddSection("31", "Техническое состояние транспортных средств и их оснащение");
+    private static final PddSection PDD_SECTION_32 = new PddSection("32", "Вопросы дорожного движения, которые требуют согласования с ГАИ");
+    private static final PddSection PDD_SECTION_33 = new PddSection("33", "Дорожные знаки");
+    private static final PddSection PDD_SECTION_34 = new PddSection("34", "Дорожная разметка");
 
     private static final String KIEV_RULE_SET_KEY = "KIEV";
     private static final String KHARKOV_RULE_SET_KEY = "KHARKOV";
@@ -390,7 +390,8 @@ public class DataGenerationServiceImpl implements DataGenerationService {
                         new TimelineItem(LocalDate.of(2017, 3, 9), new PddSectionTesting(56, 64, false)),
                         new TimelineItem(LocalDate.of(2017, 3, 14), new PddSectionTesting(59, 64, true)),
                         new TimelineItem(LocalDate.of(2017, 3, 16), new PddSectionTesting(63, 64, true)),
-                        new TimelineItem(LocalDate.of(2017, 3, 17), new PddSectionTesting(63, 64, true))
+                        new TimelineItem(LocalDate.of(2017, 3, 17), new PddSectionTesting(63, 64, true)),
+                        new TimelineItem(LocalDate.of(2017, 3, 27), new PddSectionTesting(91, 64, true))
                 )),
                 new PddSectionTimelineItem(PDD_SECTION_13, Arrays.asList(
                         new TimelineItem(LocalDate.of(2017, 3, 8), new PddSectionTesting(10, 14, false)),
@@ -517,7 +518,7 @@ public class DataGenerationServiceImpl implements DataGenerationService {
                 )),
                 new PddSectionTimelineItem(PDD_SECTION_33, Arrays.asList(
                         new TimelineItem(LocalDate.of(2017, 3, 20), new PddSectionTesting(314, 368, false)),
-                        new TimelineItem(LocalDate.of(2017, 3, 22), new PddSectionTesting(335, 368, true))
+                        new TimelineItem(LocalDate.of(2017, 3, 24), new PddSectionTesting(335, 368, true))
                 )),
                 new PddSectionTimelineItem(PDD_SECTION_34, Arrays.asList(
 
