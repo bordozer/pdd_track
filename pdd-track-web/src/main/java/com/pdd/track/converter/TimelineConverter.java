@@ -257,7 +257,7 @@ public class TimelineConverter {
                                 if (lastLectureStudyEvent == null) {
                                     if (CommonUtils.ageInDays(pddSectionLectureEvent.getDate(), onDate) > SECTION_TOO_LONG_WITHOUT_STUDY_DAYS) {
                                         // it was lecture but the study is missed too long
-                                        dayHints.add(new TimeLineDayHintDto(TimeLineDayHintType.NEEDS_STUDY, CommonUtils.ageInDays(pddSectionLectureEvent.getDate(), onDate), sessionQuestionCount));
+                                        dayHints.add(new TimeLineDayHintDto(TimeLineDayHintType.LECTURE_WITHOUT_STURDY, CommonUtils.ageInDays(pddSectionLectureEvent.getDate(), onDate), sessionQuestionCount));
                                     }
                                     return;
                                 } else {
@@ -270,7 +270,7 @@ public class TimelineConverter {
                                 if (lastTesting == null) {
                                     if (CommonUtils.ageInDays(lastLectureStudyEvent.getDate(), onDate) > SECTION_TOO_LONG_WITHOUT_TESTING_AFTER_STUDY_DAYS) {
                                         // it was lecture, it was study but there is no testing yet
-                                        dayHints.add(new TimeLineDayHintDto(TimeLineDayHintType.NEEDS_TESTS, CommonUtils.ageInDays(lastLectureStudyEvent.getDate(), onDate), sessionQuestionCount));
+                                        dayHints.add(new TimeLineDayHintDto(TimeLineDayHintType.STUDY_WITHOUT_TESTING, CommonUtils.ageInDays(lastLectureStudyEvent.getDate(), onDate), sessionQuestionCount));
                                     }
                                     return;
                                 }
@@ -282,7 +282,7 @@ public class TimelineConverter {
                                 boolean isRedTests = !lastTesting.getDate().equals(onDate) && !pddSectionTestingEvent.getTesting().isPassed();
                                 if (isRedTests) {
                                     // lecture, study, testing, but last testing was too long time ago
-                                    dayHints.add(new TimeLineDayHintDto(TimeLineDayHintType.RED_TESTS, CommonUtils.ageInDays(lastTesting.getDate(), onDate), sessionQuestionCount));
+                                    dayHints.add(new TimeLineDayHintDto(TimeLineDayHintType.LAST_TESTING_IS_RED, CommonUtils.ageInDays(lastTesting.getDate(), onDate), sessionQuestionCount));
                                 }
 
                                 if (!isRedTests && !lastTesting.getDate().equals(onDate) && item.getTimelineItemSummary().getTestsAveragePercentage() < GOOD_TEST_PERCENTAGE) {

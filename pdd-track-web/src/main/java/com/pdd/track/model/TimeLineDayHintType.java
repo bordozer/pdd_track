@@ -1,10 +1,10 @@
 package com.pdd.track.model;
 
 public enum TimeLineDayHintType {
-    NEEDS_STUDY,
+    LECTURE_WITHOUT_STURDY,
     NEEDS_RESTUDY,
-    NEEDS_TESTS,
+    STUDY_WITHOUT_TESTING,
     ADVICE_REFRESH_TESTS,
-    RED_TESTS,
+    LAST_TESTING_IS_RED,
     AVERAGE_TESTS_PERCENTAGE_IS_RED
 }
