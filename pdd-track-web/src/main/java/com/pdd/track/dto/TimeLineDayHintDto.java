@@ -9,5 +9,4 @@ import lombok.Data;
 public class TimeLineDayHintDto {
     private TimeLineDayHintType dayHintType;
     private long ageInDays;
-    private long questionsCount;
 }
