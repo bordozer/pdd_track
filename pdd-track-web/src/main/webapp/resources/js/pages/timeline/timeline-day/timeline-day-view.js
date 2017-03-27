@@ -46,6 +46,9 @@ define(function (require) {
             if (timeLineDayHintType == 'NEEDS_RESTUDY') {
                 return {icon: 'fa fa-book', color: 'text-warning', hint: 'Study was too long ago - repeat, please'};
             }
+            if (timeLineDayHintType == 'NEEDS_TESTS') {
+                return {icon: 'fa fa-dot-circle-o', color: 'text-danger', hint: 'Studied section is too long without testing'};
+            }
             if (timeLineDayHintType == 'ADVICE_REFRESH_TESTS') {
                 return {icon: 'fa fa-dot-circle-o', color: 'text-muted', hint: 'Testing was too long ago - repeat, please'};
             }
