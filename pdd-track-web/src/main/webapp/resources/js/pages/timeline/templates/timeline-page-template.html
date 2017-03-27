@@ -79,7 +79,7 @@
                                                     &nbsp;
                                                 <% } %>
                                                 <% if(summaryColumn.potentialQuestionsCountToRepeat > 0) { %>
-                                                    <strong class="pull-right text-primary"><sup><%=summaryColumn.potentialQuestionsCountToRepeat%></sup></strong>
+                                                    <strong class="pull-right <%= summaryColumn.prediction ? 'text-primary' : 'text-muted'%> "><sup><%=summaryColumn.potentialQuestionsCountToRepeat%></sup></strong>
                                                 <% } %>
                                             </div>
                                         <% }) %>

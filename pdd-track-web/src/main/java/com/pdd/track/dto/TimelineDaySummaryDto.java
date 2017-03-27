@@ -11,4 +11,5 @@ public class TimelineDaySummaryDto {
     private double value;
     private String valueFormatted;
     private int potentialQuestionsCountToRepeat;
+    private boolean prediction;
 }

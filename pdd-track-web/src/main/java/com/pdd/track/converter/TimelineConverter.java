@@ -180,6 +180,7 @@ public class TimelineConverter {
                 .map(dayColumn -> {
                     final ValuesAggregator averageTestingPercentageAggregator = new ValuesAggregator();
                     final QuestionsAggregator questionsCountAggregator = new QuestionsAggregator();
+                    boolean isPrediction = dayColumn.getDate().isBefore(onDate.plusDays(1));
                     timeline.getItems().stream()
                             .forEach(item -> {
                                 item.getTimelineDays().stream()
@@ -187,7 +188,7 @@ public class TimelineConverter {
                                             if (!tlItem.getDayDate().equals(dayColumn.getDate())) {
                                                 return;
                                             }
-                                            if (dayColumn.getDate().isBefore(onDate.plusDays(1))) {
+                                            if (isPrediction) {
                                                 TestingDto testing = tlItem.getDayEvents().getTesting();
                                                 if (tlItem.getDayEvents() == null || testing == null) {
                                                     return;
@@ -210,7 +211,7 @@ public class TimelineConverter {
                                         });
                             });
                     double averageTestingPercentage = averageTestingPercentageAggregator.getCount() > 0 ? averageTestingPercentageAggregator.getValue() / averageTestingPercentageAggregator.getCount() : 0;
-                    return new TimelineDaySummaryDto(averageTestingPercentage, CommonUtils.formatDouble(averageTestingPercentage), questionsCountAggregator.getValue());
+                    return new TimelineDaySummaryDto(averageTestingPercentage, CommonUtils.formatDouble(averageTestingPercentage), questionsCountAggregator.getValue(), isPrediction);
                 })
                 .collect(Collectors.toList());
     }
