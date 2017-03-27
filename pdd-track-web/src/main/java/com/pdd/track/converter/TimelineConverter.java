@@ -4,6 +4,7 @@ import com.pdd.track.dto.DrivingDto;
 import com.pdd.track.dto.DrivingDto.CarDto;
 import com.pdd.track.dto.DrivingDto.InstructorDto;
 import com.pdd.track.dto.PddSectionDto;
+import com.pdd.track.dto.TestingDto;
 import com.pdd.track.dto.TimeLineDayHintDto;
 import com.pdd.track.dto.TimelineDayColumn;
 import com.pdd.track.dto.TimelineDayColumnEventsDto;
@@ -15,6 +16,8 @@ import com.pdd.track.dto.TimelineItemDto;
 import com.pdd.track.dto.TimelineItemSummaryDto;
 import com.pdd.track.dto.TimelineItemSummaryDto.TimelineItemSummaryStatus;
 import com.pdd.track.model.PddSection;
+import com.pdd.track.model.PddSection.PddSectionQuestions;
+import com.pdd.track.model.PddSection.PddSectionRuleSet;
 import com.pdd.track.model.PddSectionTimeline;
 import com.pdd.track.model.PddSectionTimelineItem;
 import com.pdd.track.model.SchoolTimeline;
@@ -38,6 +41,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.EnumSet;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
@@ -69,6 +73,8 @@ public class TimelineConverter {
 
         List<TimelineItem> schoolTimelineItems = schoolTimeline.getTimelineItems();
         List<PddSectionTimelineItem> pddSectionTimelineItems = pddSectionTimeline.getTimelineItems();
+        String ruleSetKey = pddSectionTimeline.getRuleSetKey();
+        Map<String, Integer> questionsBySections = getQuestionsCount(pddSectionTimelineItems, ruleSetKey);
 
         List<TimelineDayColumn> dayColumns = getDayColumns(onDate);
         result.setDayColumns(dayColumns);
@@ -77,11 +83,29 @@ public class TimelineConverter {
                     populateGlobalDayEvents(schoolTimelineItems, dayColumn);
                 });
 
-        result.setItems(convertTimelineItems(pddSections, schoolTimelineItems, pddSectionTimelineItems, dayColumns, onDate, pddSectionTimeline.getRuleSetKey()));
-        result.setSummaryColumns(calculateTimelineDaySummary(pddSectionTimelineItems, dayColumns, pddSectionTimeline.getRuleSetKey()));
+        result.setItems(convertTimelineItems(pddSections, schoolTimelineItems, pddSectionTimelineItems, dayColumns, onDate, ruleSetKey));
+        result.setSummaryColumns(calculateTimelineDaySummary(result, dayColumns, questionsBySections));
         result.setTimelineStatistics(TimelineStatisticsConverter.convertStatistics(result));
 
         return result;
+    }
+
+    private static Map<String, Integer> getQuestionsCount(final List<PddSectionTimelineItem> pddSectionTimelineItems, final String ruleSetKey) {
+        return pddSectionTimelineItems.stream()
+                .map(PddSectionTimelineItem::getPddSection)
+                .map(section -> {
+                    PddSectionRuleSet pddSectionRuleSet = section.getRuleSet().stream()
+                            .filter(rule -> rule.getRuleSetKey().equals(ruleSetKey))
+                            .findFirst()
+                            .orElseThrow(IllegalStateException::new);
+                    PddSectionQuestions pddSectionQuestions = pddSectionRuleSet.getSectionQuestions().stream()
+                            .filter(ruleSet -> ruleSet.getSectionNumber().equals(section.getNumber()))
+                            .findFirst()
+                            .orElseThrow(IllegalStateException::new);
+
+                    return new PddSectionQuestions(pddSectionQuestions.getSectionNumber(), pddSectionQuestions.getQuestionsCount());
+                })
+                .collect(Collectors.toMap(PddSectionQuestions::getSectionNumber, PddSectionQuestions::getQuestionsCount));
     }
 
     private static List<TimelineItemDto> convertTimelineItems(final List<PddSection> pddSections, final List<TimelineItem> schoolTimelineItems,
@@ -140,7 +164,7 @@ public class TimelineConverter {
         }
     }
 
-    private static List<TimelineDaySummaryDto> calculateTimelineDaySummary(final List<PddSectionTimelineItem> pddSectionTimelineItems, final List<TimelineDayColumn> dayColumns, final String ruleSetKey) {
+    private static List<TimelineDaySummaryDto> calculateTimelineDaySummary(final TimelineDto timeline, final List<TimelineDayColumn> dayColumns, final Map<String, Integer> questionsBySections) {
 
         @Getter
         class QuestionsAggregator {
@@ -152,32 +176,32 @@ public class TimelineConverter {
         }
         return dayColumns.stream()
                 .map(dayColumn -> {
-                    final ValuesAggregator valuesAggregator = new ValuesAggregator();
-                    final QuestionsAggregator questionsAggregator = new QuestionsAggregator();
-                    pddSectionTimelineItems.stream()
+                    final ValuesAggregator averageTestingPercentageAggregator = new ValuesAggregator();
+                    final QuestionsAggregator questionsCountAggregator = new QuestionsAggregator();
+                    timeline.getItems().stream()
                             .forEach(item -> {
-                                item.getTimelineItems().stream()
+                                item.getTimelineDays().stream()
                                         .forEach(tlItem -> {
-                                            if (!tlItem.getDate().equals(dayColumn.getDate())) {
+                                            if (!tlItem.getDayDate().equals(dayColumn.getDate())) {
                                                 return;
                                             }
-                                            if (tlItem.getEvent() == null || !TimeLineItemEventType.TESTING.equals(tlItem.getEvent().getEventType())) {
+                                            TestingDto testing = tlItem.getDayEvents().getTesting();
+                                            if (tlItem.getDayEvents() == null || testing == null) {
                                                 return;
                                             }
-                                            PddSectionTesting testingEvent = (PddSectionTesting) tlItem.getEvent();
-                                            valuesAggregator.add(((double) testingEvent.getTesting().getPassedQuestions() / testingEvent.getTesting().getTotalQuestions()) * 100);
-
-                                            PddSection pddSection = item.getPddSection();
-                                            int questionsCount = TimelineObjectConverter.getQuestionsCount(pddSection, ruleSetKey);
-                                            questionsAggregator.add(questionsCount);
+                                            averageTestingPercentageAggregator.add(((double) testing.getPassedQuestions() / testing.getTotalQuestions()) * 100);
+                                            questionsCountAggregator.add(questionsBySections.get(item.getPddSection().getNumber()));
                                         });
                             });
 
-                    if (valuesAggregator.getValue() == 0) {
+                    double correctAnswersCount = averageTestingPercentageAggregator.getValue();
+                    int totalQuestionsCount = averageTestingPercentageAggregator.getCount();
+                    if (totalQuestionsCount == 0) {
                         return new TimelineDaySummaryDto(0, "", 0);
                     }
-                    double value = valuesAggregator.getValue() / valuesAggregator.getCount();
-                    return new TimelineDaySummaryDto(value, CommonUtils.formatDouble(value), questionsAggregator.getValue());
+                    double averageTestingPercentage = correctAnswersCount / totalQuestionsCount;
+                    int totalQuestionsInTestedSections = questionsCountAggregator.getValue();
+                    return new TimelineDaySummaryDto(averageTestingPercentage, CommonUtils.formatDouble(averageTestingPercentage), totalQuestionsInTestedSections);
                 })
                 .collect(Collectors.toList());
     }
