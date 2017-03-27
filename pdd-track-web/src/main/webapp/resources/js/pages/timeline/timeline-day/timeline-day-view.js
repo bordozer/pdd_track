@@ -50,7 +50,7 @@ define(function (require) {
                 return {icon: 'fa fa-dot-circle-o', color: 'text-danger', hint: 'Studied section is too long without any testing'};
             }
             if (timeLineDayHintType == 'ADVICE_REFRESH_TESTS') {
-                return {icon: 'fa fa-flask', color: 'text-muted', hint: 'Lats testing was too long ago'};
+                return {icon: 'fa fa-battery-quarter', color: 'text-muted', hint: 'Lats testing was too long ago'};
             }
             if (timeLineDayHintType == 'LAST_TESTING_IS_RED') {
                 return {icon: 'fa fa-exclamation-triangle', color: 'text-danger', hint: 'Lats testing is red!'};
