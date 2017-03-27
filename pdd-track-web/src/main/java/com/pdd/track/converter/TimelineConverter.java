@@ -279,7 +279,7 @@ public class TimelineConverter {
                                     dayHints.add(new TimeLineDayHintDto(TimeLineDayHintType.ADVICE_REFRESH_TESTS, CommonUtils.ageInDays(lastTesting.getDate(), onDate), sessionQuestionCount));
                                 }
                                 PddSectionTesting pddSectionTestingEvent = (PddSectionTesting) lastTesting.getEvent();
-                                if (!pddSectionTestingEvent.getTesting().isPassed()) {
+                                if (!lastTesting.getDate().equals(onDate) && !pddSectionTestingEvent.getTesting().isPassed()) {
                                     // lecture, study, testing, but last testing was too long time ago
                                     dayHints.add(new TimeLineDayHintDto(TimeLineDayHintType.RED_TESTS, CommonUtils.ageInDays(lastTesting.getDate(), onDate), sessionQuestionCount));
                                 }

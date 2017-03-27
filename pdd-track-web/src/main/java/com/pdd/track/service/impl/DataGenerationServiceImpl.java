@@ -397,11 +397,14 @@ public class DataGenerationServiceImpl implements DataGenerationService {
                         new TimelineItem(LocalDate.of(2017, 3, 9), new PddSectionTesting(14, 14, true)),
                         new TimelineItem(LocalDate.of(2017, 3, 13), new PddSectionTesting(13, 14, true)),
                         new TimelineItem(LocalDate.of(2017, 3, 15), new PddSectionTesting(14, 14, true)),
-                        new TimelineItem(LocalDate.of(2017, 3, 16), new PddSectionTesting(14, 14, true))
+                        new TimelineItem(LocalDate.of(2017, 3, 16), new PddSectionTesting(14, 14, true)),
+                        new TimelineItem(LocalDate.of(2017, 3, 27), new PddSectionTesting(14, 14, true))
                 )),
                 new PddSectionTimelineItem(PDD_SECTION_14, Arrays.asList(
                         new TimelineItem(LocalDate.of(2017, 3, 15), new PddSectionTesting(70, 78, false)),
-                        new TimelineItem(LocalDate.of(2017, 3, 16), new PddSectionTesting(75, 78, true))
+                        new TimelineItem(LocalDate.of(2017, 3, 16), new PddSectionTesting(75, 78, true)),
+                        new TimelineItem(LocalDate.of(2017, 3, 17), new PddSectionTesting(78, 78, true)),
+                        new TimelineItem(LocalDate.of(2017, 3, 27), new PddSectionTesting(76, 78, true))
 
                 )),
                 new PddSectionTimelineItem(PDD_SECTION_15, Arrays.asList(
@@ -506,14 +509,15 @@ public class DataGenerationServiceImpl implements DataGenerationService {
                         new TimelineItem(LocalDate.of(2017, 3, 26), new PddSectionTesting(24, 24, true))
                 )),
                 new PddSectionTimelineItem(PDD_SECTION_31, Arrays.asList(
-                        new TimelineItem(LocalDate.of(2017, 3, 20), new PddSectionTesting(56, 71, false))
+                        new TimelineItem(LocalDate.of(2017, 3, 20), new PddSectionTesting(56, 71, false)),
+                        new TimelineItem(LocalDate.of(2017, 3, 27), new PddSectionTesting(61, 71, false))
                 )),
                 new PddSectionTimelineItem(PDD_SECTION_32, Arrays.asList(
 
                 )),
                 new PddSectionTimelineItem(PDD_SECTION_33, Arrays.asList(
                         new TimelineItem(LocalDate.of(2017, 3, 20), new PddSectionTesting(314, 368, false)),
-                        new TimelineItem(LocalDate.of(2017, 3, 22), new PddSectionTesting(273, 300, true))
+                        new TimelineItem(LocalDate.of(2017, 3, 22), new PddSectionTesting(335, 368, true))
                 )),
                 new PddSectionTimelineItem(PDD_SECTION_34, Arrays.asList(
 
