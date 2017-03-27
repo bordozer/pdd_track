@@ -74,12 +74,12 @@
                                                 <% if(summaryColumn.value > 0) { %>
                                                     <small class="<%=percentageClass(summaryColumn.value)%>">
                                                         <strong><%=summaryColumn.valueFormatted%>%</strong>
-                                                        <% if(summaryColumn.potentialQuestionsCountToRepeat > 0) { %>
-                                                            <strong class="pull-right text-primary"><sup><%=summaryColumn.potentialQuestionsCountToRepeat%></sup></strong>
-                                                        <% } %>
                                                     </small>
                                                 <% } else { %>
                                                     &nbsp;
+                                                <% } %>
+                                                <% if(summaryColumn.potentialQuestionsCountToRepeat > 0) { %>
+                                                    <strong class="pull-right text-primary"><sup><%=summaryColumn.potentialQuestionsCountToRepeat%></sup></strong>
                                                 <% } %>
                                             </div>
                                         <% }) %>

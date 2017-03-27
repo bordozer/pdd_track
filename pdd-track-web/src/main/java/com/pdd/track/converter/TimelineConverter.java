@@ -38,6 +38,7 @@ import lombok.NoArgsConstructor;
 import java.time.DayOfWeek;
 import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.EnumSet;
 import java.util.List;
@@ -84,7 +85,7 @@ public class TimelineConverter {
                 });
 
         result.setItems(convertTimelineItems(pddSections, schoolTimelineItems, pddSectionTimelineItems, dayColumns, onDate, ruleSetKey));
-        result.setSummaryColumns(calculateTimelineDaySummary(result, dayColumns, questionsBySections));
+        result.setSummaryColumns(calculateTimelineDaySummary(result, dayColumns, questionsBySections, onDate));
         result.setTimelineStatistics(TimelineStatisticsConverter.convertStatistics(result));
 
         return result;
@@ -164,7 +165,8 @@ public class TimelineConverter {
         }
     }
 
-    private static List<TimelineDaySummaryDto> calculateTimelineDaySummary(final TimelineDto timeline, final List<TimelineDayColumn> dayColumns, final Map<String, Integer> questionsBySections) {
+    private static List<TimelineDaySummaryDto> calculateTimelineDaySummary(final TimelineDto timeline, final List<TimelineDayColumn> dayColumns,
+                                                                           final Map<String, Integer> questionsBySections, final LocalDate onDate) {
 
         @Getter
         class QuestionsAggregator {
@@ -185,23 +187,30 @@ public class TimelineConverter {
                                             if (!tlItem.getDayDate().equals(dayColumn.getDate())) {
                                                 return;
                                             }
-                                            TestingDto testing = tlItem.getDayEvents().getTesting();
-                                            if (tlItem.getDayEvents() == null || testing == null) {
-                                                return;
+                                            if (dayColumn.getDate().isBefore(onDate.plusDays(1))) {
+                                                TestingDto testing = tlItem.getDayEvents().getTesting();
+                                                if (tlItem.getDayEvents() == null || testing == null) {
+                                                    return;
+                                                }
+                                                averageTestingPercentageAggregator.add(((double) testing.getPassedQuestions() / testing.getTotalQuestions()) * 100);
+                                                questionsCountAggregator.add(questionsBySections.get(item.getPddSection().getNumber()));
+                                            } else {
+                                                if (tlItem.getDayEvents() == null || tlItem.getDayHints() == null) {
+                                                    return;
+                                                }
+                                                List<TimeLineDayHintType> futureQuestionCountForEventTypes = Arrays.asList(TimeLineDayHintType.LAST_TESTING_IS_RED, TimeLineDayHintType.AVERAGE_TESTS_PERCENTAGE_IS_RED);//TimeLineDayHintType.ADVICE_REFRESH_TESTS
+                                                boolean addToTotalQuestions = tlItem.getDayHints().stream()
+                                                        .filter(it -> futureQuestionCountForEventTypes.contains(it.getDayHintType()))
+                                                        .findFirst()
+                                                        .isPresent();
+                                                if (addToTotalQuestions) {
+                                                    questionsCountAggregator.add(questionsBySections.get(item.getPddSection().getNumber()));
+                                                }
                                             }
-                                            averageTestingPercentageAggregator.add(((double) testing.getPassedQuestions() / testing.getTotalQuestions()) * 100);
-                                            questionsCountAggregator.add(questionsBySections.get(item.getPddSection().getNumber()));
                                         });
                             });
-
-                    double correctAnswersCount = averageTestingPercentageAggregator.getValue();
-                    int totalQuestionsCount = averageTestingPercentageAggregator.getCount();
-                    if (totalQuestionsCount == 0) {
-                        return new TimelineDaySummaryDto(0, "", 0);
-                    }
-                    double averageTestingPercentage = correctAnswersCount / totalQuestionsCount;
-                    int totalQuestionsInTestedSections = questionsCountAggregator.getValue();
-                    return new TimelineDaySummaryDto(averageTestingPercentage, CommonUtils.formatDouble(averageTestingPercentage), totalQuestionsInTestedSections);
+                    double averageTestingPercentage = averageTestingPercentageAggregator.getCount() > 0 ? averageTestingPercentageAggregator.getValue() / averageTestingPercentageAggregator.getCount() : 0;
+                    return new TimelineDaySummaryDto(averageTestingPercentage, CommonUtils.formatDouble(averageTestingPercentage), questionsCountAggregator.getValue());
                 })
                 .collect(Collectors.toList());
     }
