@@ -97,9 +97,9 @@ public class TimelineConverter {
                 })
                 .collect(Collectors.toList());
         populateLectureEvents(schoolTimelineItems, result);
+        populateTimelineSummary(schoolTimelineItems, pddSectionTimelineItems, result, onDate);
         populateHintsOnDate(schoolTimelineItems, pddSectionTimelineItems, result, onDate);
         populateFutureHints(schoolTimelineItems, pddSectionTimelineItems, onDate, result);
-        populateTimelineSummary(schoolTimelineItems, pddSectionTimelineItems, result, onDate);
         return result;
     }
 
@@ -279,9 +279,15 @@ public class TimelineConverter {
                                     dayHints.add(new TimeLineDayHintDto(TimeLineDayHintType.ADVICE_REFRESH_TESTS, CommonUtils.ageInDays(lastTesting.getDate(), onDate), sessionQuestionCount));
                                 }
                                 PddSectionTesting pddSectionTestingEvent = (PddSectionTesting) lastTesting.getEvent();
-                                if (!lastTesting.getDate().equals(onDate) && !pddSectionTestingEvent.getTesting().isPassed()) {
+                                boolean isRedTests = !lastTesting.getDate().equals(onDate) && !pddSectionTestingEvent.getTesting().isPassed();
+                                if (isRedTests) {
                                     // lecture, study, testing, but last testing was too long time ago
                                     dayHints.add(new TimeLineDayHintDto(TimeLineDayHintType.RED_TESTS, CommonUtils.ageInDays(lastTesting.getDate(), onDate), sessionQuestionCount));
+                                }
+
+                                if (!isRedTests && !lastTesting.getDate().equals(onDate) && item.getTimelineItemSummary().getTestsAveragePercentage() < GOOD_TEST_PERCENTAGE) {
+                                    // future testing is needed if average test percentage is red
+                                    dayHints.add(new TimeLineDayHintDto(TimeLineDayHintType.AVERAGE_TESTS_PERCENTAGE_IS_RED, CommonUtils.ageInDays(lastTesting.getDate(), onDate), sessionQuestionCount));
                                 }
                             });
                 });

@@ -44,16 +44,19 @@ define(function (require) {
                 return {icon: 'fa fa-book', color: 'text-danger', hint: 'Not studied section'};
             }
             if (timeLineDayHintType == 'NEEDS_RESTUDY') {
-                return {icon: 'fa fa-book', color: 'text-warning', hint: 'Study was too long ago - repeat, please'};
+                return {icon: 'fa fa-book', color: 'text-warning', hint: 'Study was too long ago'};
             }
             if (timeLineDayHintType == 'NEEDS_TESTS') {
-                return {icon: 'fa fa-dot-circle-o', color: 'text-danger', hint: 'Studied section is too long without testing'};
+                return {icon: 'fa fa-dot-circle-o', color: 'text-danger', hint: 'Studied section is too long without any testing'};
             }
             if (timeLineDayHintType == 'ADVICE_REFRESH_TESTS') {
-                return {icon: 'fa fa-dot-circle-o', color: 'text-muted', hint: 'Testing was too long ago - repeat, please'};
+                return {icon: 'fa fa-dot-circle-o', color: 'text-muted', hint: 'Lats testing was too long ago'};
             }
             if (timeLineDayHintType == 'RED_TESTS') {
-                return {icon: 'fa fa-exclamation-triangle', color: 'text-danger', hint: 'Your tests results are red!'};
+                return {icon: 'fa fa-exclamation-triangle', color: 'text-danger', hint: 'Lats testing is red!'};
+            }
+            if (timeLineDayHintType == 'AVERAGE_TESTS_PERCENTAGE_IS_RED') {
+                return {icon: 'fa fa-fire', color: 'text-warning', hint: 'Average testing percentage is red!'};
             }
         }
     });
