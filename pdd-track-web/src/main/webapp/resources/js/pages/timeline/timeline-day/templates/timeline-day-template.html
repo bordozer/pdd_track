@@ -18,7 +18,7 @@
 
 <% _.each(dayHints, function(dayHint){ %>
     <% var hint = getHintIcon(dayHint); %>
-    <span class="<%=hint.icon%> <%=hint.color%>" title="<%=hint.hint%>"> <sup title="<%=dayHint.ageInDays%> days"><%=dayHint.ageInDays%></sup></span>
+    <span class="<%=hint.icon%> <%=hint.color%>" title="<%=hint.hint%>"> <sup><%=dayHint.ageInDays%></sup></span>
 <% }) %>
 
 <% var questionCount = dayEvents ? dayEvents.questionCount : 0;%>
