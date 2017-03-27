@@ -40,7 +40,7 @@ define(function (require) {
 
         _getHintIcon: function(dayHint) {
             var timeLineDayHintType = dayHint.dayHintType;
-            if (timeLineDayHintType == 'LECTURE_WITHOUT_STURDY') {
+            if (timeLineDayHintType == 'LECTURE_WITHOUT_STUDY') {
                 return {icon: 'fa fa-eye-slash', color: 'text-danger', hint: 'Not studied section'};
             }
             if (timeLineDayHintType == 'NEEDS_RESTUDY') {

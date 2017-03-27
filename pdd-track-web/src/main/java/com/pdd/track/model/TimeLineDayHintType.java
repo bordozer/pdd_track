@@ -1,7 +1,7 @@
 package com.pdd.track.model;
 
 public enum TimeLineDayHintType {
-    LECTURE_WITHOUT_STURDY,
+    LECTURE_WITHOUT_STUDY,
     NEEDS_RESTUDY,
     STUDY_WITHOUT_TESTING,
     ADVICE_REFRESH_TESTS,

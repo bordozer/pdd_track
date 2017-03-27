@@ -58,9 +58,15 @@ public class TimelineConverter {
     private static final int SECTION_TOO_LONG_WITHOUT_STUDY_DAYS = 5;
     private static final int MIN_TESTS_COUNT = 3;
     private static final EnumSet<DayOfWeek> WEEKENDS = EnumSet.of(DayOfWeek.SATURDAY, DayOfWeek.SUNDAY);
-    public static final int GOOD_TEST_PERCENTAGE = 90;
-    public static final int COLL_TEST_PERCENTAGE = 96;
-    public static final int EXCELLENT_TEST_PERCENTAGE = 100;
+    private static final int GOOD_TEST_PERCENTAGE = 90;
+    private static final int COLL_TEST_PERCENTAGE = 96;
+    private static final int EXCELLENT_TEST_PERCENTAGE = 100;
+    private static final List<TimeLineDayHintType> FUTURE_QUESTION_COUNT_FOR_EVENT_TYPES = Arrays.asList(
+            TimeLineDayHintType.LAST_TESTING_IS_RED,
+            TimeLineDayHintType.AVERAGE_TESTS_PERCENTAGE_IS_RED,
+            TimeLineDayHintType.ADVICE_REFRESH_TESTS,
+            TimeLineDayHintType.STUDY_WITHOUT_TESTING
+    );
 
     public static TimelineDto toDto(final List<PddSection> pddSections, final SchoolTimeline schoolTimeline,
                                     final PddSectionTimeline pddSectionTimeline, final LocalDate onDate) {
@@ -199,9 +205,8 @@ public class TimelineConverter {
                                                 if (tlItem.getDayEvents() == null || tlItem.getDayHints() == null) {
                                                     return;
                                                 }
-                                                List<TimeLineDayHintType> futureQuestionCountForEventTypes = Arrays.asList(TimeLineDayHintType.LAST_TESTING_IS_RED, TimeLineDayHintType.AVERAGE_TESTS_PERCENTAGE_IS_RED);//TimeLineDayHintType.ADVICE_REFRESH_TESTS
                                                 boolean addToTotalQuestions = tlItem.getDayHints().stream()
-                                                        .filter(it -> futureQuestionCountForEventTypes.contains(it.getDayHintType()))
+                                                        .filter(it -> FUTURE_QUESTION_COUNT_FOR_EVENT_TYPES.contains(it.getDayHintType()))
                                                         .findFirst()
                                                         .isPresent();
                                                 if (addToTotalQuestions) {
@@ -290,7 +295,7 @@ public class TimelineConverter {
                                 if (lastLectureStudyEvent == null) {
                                     if (CommonUtils.ageInDays(pddSectionLectureEvent.getDate(), onDate) > SECTION_TOO_LONG_WITHOUT_STUDY_DAYS) {
                                         // it was lecture but the study is missed too long
-                                        dayHints.add(new TimeLineDayHintDto(TimeLineDayHintType.LECTURE_WITHOUT_STURDY, CommonUtils.ageInDays(pddSectionLectureEvent.getDate(), onDate)));
+                                        dayHints.add(new TimeLineDayHintDto(TimeLineDayHintType.LECTURE_WITHOUT_STUDY, CommonUtils.ageInDays(pddSectionLectureEvent.getDate(), onDate)));
                                     }
                                     return;
                                 } else {
