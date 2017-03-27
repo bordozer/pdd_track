@@ -60,7 +60,7 @@ define(function (require) {
                 return {icon: 'fa fa-check-square', color: 'text-success pdd-section-ready', hint: 'The section is ready'}
             }
             if (status == 'READY_WITH_RISK') {
-                return {icon: 'fa fa-check-square-o', color: 'text-warning', hint: 'The section is ready but under a risk - repeat testing, please'}
+                return {icon: 'fa fa-check-square-o', color: 'text-success', hint: 'The section is ready but under a risk - repeat testing, please'}
             }
             if (status == 'NEED_MORE_TESTING') {
                 return {icon: 'fa fa-dot-circle-o', color: 'text-danger', hint: 'The section needs more testing'}
