@@ -323,9 +323,12 @@ public class TimelineConverter {
                                     dayHints.add(new TimeLineDayHintDto(TimeLineDayHintType.LAST_TESTING_IS_RED, CommonUtils.ageInDays(lastTesting.getDate(), onDate)));
                                 }
 
-                                if (!isRedTests && !lastTesting.getDate().equals(onDate) && item.getTimelineItemSummary().getTestsAveragePercentage() < GOOD_TEST_PERCENTAGE) {
+                                double testsAveragePercentage = item.getTimelineItemSummary().getTestsAveragePercentage();
+                                int testsCount = item.getTimelineItemSummary().getTestsCount();
+                                if (!isRedTests && !lastTesting.getDate().equals(onDate) && testsAveragePercentage < GOOD_TEST_PERCENTAGE) {
                                     // future testing is needed if average test percentage is red
-                                    dayHints.add(new TimeLineDayHintDto(TimeLineDayHintType.AVERAGE_TESTS_PERCENTAGE_IS_RED, CommonUtils.ageInDays(lastTesting.getDate(), onDate)));
+                                    TimeLineDayHintType status = testsCount >= MIN_TESTS_COUNT ? TimeLineDayHintType.AVERAGE_TESTS_PERCENTAGE_IS_RED : TimeLineDayHintType.NEEDS_MORE_TESTING;
+                                    dayHints.add(new TimeLineDayHintDto(status, CommonUtils.ageInDays(lastTesting.getDate(), onDate)));
                                 }
                             });
                 });
