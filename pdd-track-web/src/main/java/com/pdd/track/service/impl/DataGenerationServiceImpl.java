@@ -277,7 +277,7 @@ public class DataGenerationServiceImpl implements DataGenerationService {
                 new TimelineItem(LocalDate.of(2017, 3, 27), new LectureStudyEvent(PDD_SECTION_13.getKey())),
                 new TimelineItem(LocalDate.of(2017, 3, 15), new LectureStudyEvent(PDD_SECTION_14.getKey())),
                 new TimelineItem(LocalDate.of(2017, 3, 24), new LectureStudyEvent(PDD_SECTION_14.getKey())),
-                new TimelineItem(LocalDate.of(2017, 3, 16), new PddSectionTesting(78, 78, true)),
+                new TimelineItem(LocalDate.of(2017, 3, 28), new LectureStudyEvent(PDD_SECTION_15.getKey())),
                 new TimelineItem(LocalDate.of(2017, 3, 12), new LectureStudyEvent(PDD_SECTION_17.getKey())),
                 new TimelineItem(LocalDate.of(2017, 3, 23), new LectureStudyEvent(PDD_SECTION_17.getKey())),
                 new TimelineItem(LocalDate.of(2017, 3, 13), new LectureStudyEvent(PDD_SECTION_18.getKey())),
@@ -423,6 +423,7 @@ public class DataGenerationServiceImpl implements DataGenerationService {
 
                 )),
                 new PddSectionTimelineItem(PDD_SECTION_15, Arrays.asList(
+                    new TimelineItem(LocalDate.of(2017, 3, 28), new PddSectionTesting(81, 103, true))
                 )),
                 new PddSectionTimelineItem(PDD_SECTION_16, Arrays.asList(
 
