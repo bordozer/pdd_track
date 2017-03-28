@@ -36,7 +36,7 @@ import java.util.stream.Collectors;
 @Service
 public class DataGenerationServiceImpl implements DataGenerationService {
 
-    public static final Student STUDENT = Student.builder().key("qaz-wsx-edc").name("BorDark").gender(Gender.MALE).build(); // TODO: read user from context
+    public static final Student STUDENT = Student.builder().key("qaz-wsx-edc").name("BorDark").gender(Gender.MALE).build();
 
     private static final Instructor SCHOOL_INSTRUCTOR = new Instructor("Sergei");
     private static final Car SCHOOL_CAR = new Car("Toyota RAV4");
