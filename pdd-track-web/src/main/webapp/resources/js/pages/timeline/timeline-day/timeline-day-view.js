@@ -59,7 +59,7 @@ define(function (require) {
                 return {icon: 'fa fa-bug', color: 'text-danger', hint: 'Average testing percentage is red for ' + dayHint.ageInDays + ' day(s)'};
             }
             if (timeLineDayHintType == 'NEEDS_MORE_TESTING') {
-                return {icon: 'fa fa-dot-circle-o', color: 'text-danger', hint: 'Needs more testing'};
+                return {icon: 'fa fa-play-circle-o', color: 'text-danger', hint: 'Needs more testing'};
             }
         }
     });

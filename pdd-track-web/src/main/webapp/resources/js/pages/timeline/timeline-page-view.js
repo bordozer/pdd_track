@@ -63,7 +63,7 @@ define(function (require) {
                 return {icon: 'fa fa-check-square-o', color: 'text-success', hint: 'The section is ready but under a risk - repeat testing, please'}
             }
             if (status == 'NEED_MORE_TESTING') {
-                return {icon: 'fa fa-dot-circle-o', color: 'text-danger', hint: 'The section needs more testing'}
+                return {icon: 'fa fa-play-circle-o', color: 'text-danger', hint: 'The section needs more testing'}
             }
             if (status == 'TESTS_ARE_RED') {
                 return {icon: 'fa fa-bug', color: 'text-danger', hint: 'The section\' tests are red'}
