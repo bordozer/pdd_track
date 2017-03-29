@@ -350,28 +350,22 @@ public class TimelineConverter {
                         }
                         if (isSectionTooLongWithoutTestsRepeating(sectionKey, pddSectionTimelineItems, onDate)) {
                             // lecture, study, testing, but last restudy was too long time ago
-                            dayHints.add(new TimeLineDayHintDto(TimeLineDayHintType.ADVICE_REFRESH_TESTS,
-                                CommonUtils.ageInDays(lastTesting.getDate(), onDate)));
+                            dayHints.add(new TimeLineDayHintDto(TimeLineDayHintType.ADVICE_REFRESH_TESTS, CommonUtils.ageInDays(lastTesting.getDate(), onDate)));
                         }
                         PddSectionTesting pddSectionTestingEvent = (PddSectionTesting) lastTesting.getEvent();
-                        boolean isRedTests = !lastTesting.getDate().equals(onDate)
-                            && !pddSectionTestingEvent.getTesting().isPassed();
+                        boolean isRedTests = !lastTesting.getDate().equals(onDate) && !pddSectionTestingEvent.getTesting().isPassed();
                         if (isRedTests) {
                             // lecture, study, testing, but last testing was too long time ago
-                            dayHints.add(new TimeLineDayHintDto(TimeLineDayHintType.LAST_TESTING_IS_RED,
-                                CommonUtils.ageInDays(lastTesting.getDate(), onDate)));
+                            dayHints.add(new TimeLineDayHintDto(TimeLineDayHintType.LAST_TESTING_IS_RED, CommonUtils.ageInDays(lastTesting.getDate(), onDate)));
                         }
 
                         double testsAveragePercentage = item.getTimelineItemSummary().getTestsAveragePercentage();
                         int testsCount = item.getTimelineItemSummary().getTestsCount();
-                        if (!isRedTests && !lastTesting.getDate().equals(onDate)
-                            && testsAveragePercentage < GOOD_TEST_PERCENTAGE) {
+                        boolean notEnoughTesting = testsCount < MIN_TESTS_COUNT;
+                        if (!isRedTests && !lastTesting.getDate().equals(onDate) && (testsAveragePercentage < GOOD_TEST_PERCENTAGE || notEnoughTesting)) {
                             // future testing is needed if average test percentage is red
-                            TimeLineDayHintType status =
-                                testsCount >= MIN_TESTS_COUNT ? TimeLineDayHintType.AVERAGE_TESTS_PERCENTAGE_IS_RED
-                                                              : TimeLineDayHintType.NEEDS_MORE_TESTING;
-                            dayHints.add(
-                                new TimeLineDayHintDto(status, CommonUtils.ageInDays(lastTesting.getDate(), onDate)));
+                            TimeLineDayHintType status =  notEnoughTesting ? TimeLineDayHintType.NEEDS_MORE_TESTING : TimeLineDayHintType.AVERAGE_TESTS_PERCENTAGE_IS_RED;
+                            dayHints.add(new TimeLineDayHintDto(status, CommonUtils.ageInDays(lastTesting.getDate(), onDate)));
                         }
                     });
             });
