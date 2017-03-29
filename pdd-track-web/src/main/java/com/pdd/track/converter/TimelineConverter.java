@@ -218,8 +218,7 @@ public class TimelineConverter {
                                     }
                                     averageTestingPercentageAggregator.add(
                                         ((double) testing.getPassedQuestions() / testing.getTotalQuestions()) * 100);
-                                    questionsCountAggregator.add(
-                                        questionsBySections.get(item.getPddSection().getNumber()));
+                                    questionsCountAggregator.add(testing.getTotalQuestions());
                                 } else {
                                     if (tlItem.getDayEvents() == null || tlItem.getDayHints() == null) {
                                         return;
@@ -230,8 +229,7 @@ public class TimelineConverter {
                                         .findFirst()
                                         .isPresent();
                                     if (addToTotalQuestions) {
-                                        questionsCountAggregator.add(
-                                            questionsBySections.get(item.getPddSection().getNumber()));
+                                        questionsCountAggregator.add(questionsBySections.get(item.getPddSection().getNumber()));
                                     }
                                 }
                             });
