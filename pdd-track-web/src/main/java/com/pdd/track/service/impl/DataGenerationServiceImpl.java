@@ -224,6 +224,7 @@ public class DataGenerationServiceImpl implements DataGenerationService {
         return Arrays.asList(
                 new TimelineItem(LocalDate.of(2017, 3, 4), new LectureEvent(PDD_SECTION_01.getKey())),
                 new TimelineItem(LocalDate.of(2017, 2, 25), new LectureEvent(PDD_SECTION_02.getKey())),
+                new TimelineItem(LocalDate.of(2017, 3, 26), new LectureEvent(PDD_SECTION_03.getKey())),
                 new TimelineItem(LocalDate.of(2017, 3, 4), new LectureEvent(PDD_SECTION_04.getKey())),
                 new TimelineItem(LocalDate.of(2017, 3, 4), new LectureEvent(PDD_SECTION_05.getKey())),
                 new TimelineItem(LocalDate.of(2017, 2, 25), new LectureEvent(PDD_SECTION_06.getKey())),
@@ -259,6 +260,7 @@ public class DataGenerationServiceImpl implements DataGenerationService {
                 new TimelineItem(LocalDate.of(2017, 3, 29), new LectureStudyEvent(PDD_SECTION_01.getKey())),
                 new TimelineItem(LocalDate.of(2017, 3, 8), new LectureStudyEvent(PDD_SECTION_02.getKey())),
                 new TimelineItem(LocalDate.of(2017, 3, 20), new LectureStudyEvent(PDD_SECTION_02.getKey())),
+                new TimelineItem(LocalDate.of(2017, 3, 29), new LectureStudyEvent(PDD_SECTION_03.getKey())),
                 new TimelineItem(LocalDate.of(2017, 3, 6), new LectureStudyEvent(PDD_SECTION_04.getKey())),
                 new TimelineItem(LocalDate.of(2017, 3, 23), new LectureStudyEvent(PDD_SECTION_04.getKey())),
                 new TimelineItem(LocalDate.of(2017, 3, 6), new LectureStudyEvent(PDD_SECTION_05.getKey())),
