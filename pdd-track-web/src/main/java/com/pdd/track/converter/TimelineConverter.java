@@ -70,31 +70,23 @@ public class TimelineConverter {
         TimeLineDayHintType.NEEDS_MORE_TESTING
     );
 
-    public static TimelineDto toDto(final List<PddSection> pddSections, final SchoolTimeline schoolTimeline,
-        final PddSectionTimeline pddSectionTimeline, final LocalDate onDate) {
+    public static TimelineDto toDto(final List<PddSection> pddSections, final SchoolTimeline schoolTimeline, final PddSectionTimeline pddSectionTimeline, final LocalDate onDate) {
+        String ruleSetKey = pddSectionTimeline.getRuleSetKey();
+        List<PddSectionTimelineItem> pssSectionTimelineItems = pddSectionTimeline.getTimelineItems();
+
+        Map<String, Integer> questionsBySections = getQuestionsCount(pssSectionTimelineItems, ruleSetKey);
+
         TimelineDto result = new TimelineDto();
         result.setStartDate(DataGenerationServiceImpl.STUDY_START_DAY);
         result.setEndDate(DataGenerationServiceImpl.STUDY_END_DAY);
 
-        List<TimelineItem> collect = schoolTimeline.getTimelineItems().stream()
-            .filter(item -> item.getDate().equals(LocalDate.of(2017, 3, 23)))
-            .collect(Collectors.toList());
-
         List<TimelineItem> schoolTimelineItems = schoolTimeline.getTimelineItems();
-        List<PddSectionTimelineItem> pddSectionTimelineItems = pddSectionTimeline.getTimelineItems();
-        String ruleSetKey = pddSectionTimeline.getRuleSetKey();
-        Map<String, Integer> questionsBySections = getQuestionsCount(pddSectionTimelineItems, ruleSetKey);
 
         List<TimelineDayColumn> dayColumns = getDayColumns(onDate);
         result.setDayColumns(dayColumns);
-        dayColumns.stream()
-            .forEach(dayColumn -> {
-                populateGlobalDayEvents(schoolTimelineItems, dayColumn);
-            });
+        dayColumns.stream().forEach(dayColumn -> populateGlobalDayEvents(schoolTimelineItems, dayColumn));
 
-        result.setItems(
-            convertTimelineItems(pddSections, schoolTimelineItems, pddSectionTimelineItems, dayColumns, onDate,
-                ruleSetKey));
+        result.setItems(convertTimelineItems(pddSections, schoolTimelineItems, pssSectionTimelineItems, dayColumns, onDate, ruleSetKey));
         result.setSummaryColumns(calculateTimelineDaySummary(result, dayColumns, questionsBySections, onDate));
         result.setTimelineStatistics(TimelineStatisticsConverter.convertStatistics(result));
 
@@ -150,10 +142,8 @@ public class TimelineConverter {
                 tlsItem.getTimelineDays().stream()
                     .forEach(tlDay -> {
                         String pddSectionKey = tlsItem.getPddSection().getKey();
-                        tlDay.getDayEvents().setLecture(getLectureEventOnDate(pddSectionKey, schoolTimelineItems, tlDay,
-                            TimeLineItemEventType.LECTURE) != null);
-                        tlDay.getDayEvents().setStudy(getLectureEventOnDate(pddSectionKey, schoolTimelineItems, tlDay,
-                            TimeLineItemEventType.LECTURE_STUDY) != null);
+                        tlDay.getDayEvents().setLecture(getLectureEventOnDate(pddSectionKey, schoolTimelineItems, tlDay, TimeLineItemEventType.LECTURE) != null);
+                        tlDay.getDayEvents().setStudy(getLectureEventOnDate(pddSectionKey, schoolTimelineItems, tlDay, TimeLineItemEventType.LECTURE_STUDY) != null);
                     });
             });
     }
@@ -186,19 +176,16 @@ public class TimelineConverter {
         }
     }
 
-    private static List<TimelineDaySummaryDto> calculateTimelineDaySummary(final TimelineDto timeline,
-        final List<TimelineDayColumn> dayColumns,
-        final Map<String, Integer> questionsBySections, final LocalDate onDate) {
-
+    private static List<TimelineDaySummaryDto> calculateTimelineDaySummary(final TimelineDto timeline, final List<TimelineDayColumn> dayColumns,
+                                                                           final Map<String, Integer> questionsBySections, final LocalDate onDate) {
         @Getter
         class QuestionsAggregator {
-
             private int value;
-
             public void add(final int value) {
                 this.value += value;
             }
         }
+
         return dayColumns.stream()
             .map(dayColumn -> {
                 final ValuesAggregator averageTestingPercentageAggregator = new ValuesAggregator();
@@ -216,16 +203,14 @@ public class TimelineConverter {
                                     if (tlItem.getDayEvents() == null || testing == null) {
                                         return;
                                     }
-                                    averageTestingPercentageAggregator.add(
-                                        ((double) testing.getPassedQuestions() / testing.getTotalQuestions()) * 100);
+                                    averageTestingPercentageAggregator.add(((double) testing.getPassedQuestions() / testing.getTotalQuestions()) * 100);
                                     questionsCountAggregator.add(testing.getTotalQuestions());
                                 } else {
                                     if (tlItem.getDayEvents() == null || tlItem.getDayHints() == null) {
                                         return;
                                     }
                                     boolean addToTotalQuestions = tlItem.getDayHints().stream()
-                                        .filter(
-                                            it -> FUTURE_QUESTION_COUNT_FOR_EVENT_TYPES.contains(it.getDayHintType()))
+                                        .filter(it -> FUTURE_QUESTION_COUNT_FOR_EVENT_TYPES.contains(it.getDayHintType()))
                                         .findFirst()
                                         .isPresent();
                                     if (addToTotalQuestions) {
@@ -234,12 +219,8 @@ public class TimelineConverter {
                                 }
                             });
                     });
-                double averageTestingPercentage =
-                    averageTestingPercentageAggregator.getCount() > 0 ? averageTestingPercentageAggregator.getValue()
-                        / averageTestingPercentageAggregator.getCount() : 0;
-                return new TimelineDaySummaryDto(averageTestingPercentage,
-                    CommonUtils.formatDouble(averageTestingPercentage), questionsCountAggregator.getValue(),
-                    isPrediction);
+                double averageTestingPercentage = averageTestingPercentageAggregator.getCount() > 0 ? averageTestingPercentageAggregator.getValue() / averageTestingPercentageAggregator.getCount() : 0;
+                return new TimelineDaySummaryDto(averageTestingPercentage, CommonUtils.formatDouble(averageTestingPercentage), questionsCountAggregator.getValue(), isPrediction);
             })
             .collect(Collectors.toList());
     }
