@@ -528,8 +528,7 @@ public class TimelineConverter {
         return pddSectionTimelineItem.getTimelineItems();
     }
 
-    private static void populateGlobalDayEvents(final List<TimelineItem> schoolTimelineItems,
-        final TimelineDayColumn dayColumn) {
+    private static void populateGlobalDayEvents(final List<TimelineItem> schoolTimelineItems, final TimelineDayColumn dayColumn) {
         schoolTimelineItems.stream()
             .filter(timelineItem -> timelineItem.getDate().equals(dayColumn.getDate()))
             .forEach(timelineItem -> {
@@ -555,8 +554,7 @@ public class TimelineConverter {
             });
     }
 
-    private static void populatePddSectionDayEvents(final List<TimelineItem> pddSectionTimelineItems,
-        final LocalDate onDate, final TimelineDayEventsDto dayEvents) {
+    private static void populatePddSectionDayEvents(final List<TimelineItem> pddSectionTimelineItems, final LocalDate onDate, final TimelineDayEventsDto dayEvents) {
         pddSectionTimelineItems.stream()
             .filter(timelineItem -> timelineItem.getDate().equals(onDate))
             .forEach(timelineItem -> {
