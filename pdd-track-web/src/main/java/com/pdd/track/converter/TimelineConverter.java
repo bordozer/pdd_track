@@ -66,7 +66,8 @@ public class TimelineConverter {
         TimeLineDayHintType.LAST_TESTING_IS_RED,
         TimeLineDayHintType.AVERAGE_TESTS_PERCENTAGE_IS_RED,
         TimeLineDayHintType.ADVICE_REFRESH_TESTS,
-        TimeLineDayHintType.STUDY_WITHOUT_TESTING
+        TimeLineDayHintType.STUDY_WITHOUT_TESTING,
+        TimeLineDayHintType.NEEDS_MORE_TESTING
     );
 
     public static TimelineDto toDto(final List<PddSection> pddSections, final SchoolTimeline schoolTimeline,

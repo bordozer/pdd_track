@@ -253,6 +253,7 @@ public class DataGenerationServiceImpl implements DataGenerationService {
                 new TimelineItem(LocalDate.of(2017, 2, 25), new LectureEvent(PDD_SECTION_31.getKey())),
                 new TimelineItem(LocalDate.of(2017, 3, 18), new LectureEvent(PDD_SECTION_33.getKey())),
                 new TimelineItem(LocalDate.of(2017, 3, 19), new LectureEvent(PDD_SECTION_33.getKey())),
+                new TimelineItem(LocalDate.of(2017, 3, 26), new LectureEvent(PDD_SECTION_34.getKey())),
 
                 new TimelineItem(LocalDate.of(2017, 3, 6), new LectureStudyEvent(PDD_SECTION_01.getKey())),
                 new TimelineItem(LocalDate.of(2017, 3, 29), new LectureStudyEvent(PDD_SECTION_01.getKey())),
@@ -308,6 +309,8 @@ public class DataGenerationServiceImpl implements DataGenerationService {
                 new TimelineItem(LocalDate.of(2017, 3, 28), new LectureStudyEvent(PDD_SECTION_30.getKey())),
                 new TimelineItem(LocalDate.of(2017, 3, 20), new LectureStudyEvent(PDD_SECTION_31.getKey())),
                 new TimelineItem(LocalDate.of(2017, 3, 19), new LectureStudyEvent(PDD_SECTION_33.getKey())),
+                new TimelineItem(LocalDate.of(2017, 3, 29), new LectureStudyEvent(PDD_SECTION_33.getKey())),
+                new TimelineItem(LocalDate.of(2017, 3, 29), new LectureStudyEvent(PDD_SECTION_34.getKey())),
 
                 new TimelineItem(LocalDate.of(2017, 3, 17), new SchoolDrivingEvent(SCHOOL_INSTRUCTOR, SCHOOL_CAR, 50)),
                 new TimelineItem(LocalDate.of(2017, 3, 18), new AdditionalDrivingEvent(ADDITIONAL_INSTRUCTOR, ADDITIONAL_CAR, 90)),
@@ -344,7 +347,8 @@ public class DataGenerationServiceImpl implements DataGenerationService {
                         new TimelineItem(LocalDate.of(2017, 3, 8), new PddSectionTesting(26, 28, true)),
                         new TimelineItem(LocalDate.of(2017, 3, 13), new PddSectionTesting(27, 28, true)),
                         new TimelineItem(LocalDate.of(2017, 3, 15), new PddSectionTesting(28, 28, true)),
-                        new TimelineItem(LocalDate.of(2017, 3, 23), new PddSectionTesting(27, 28, true))
+                        new TimelineItem(LocalDate.of(2017, 3, 23), new PddSectionTesting(27, 28, true)),
+                        new TimelineItem(LocalDate.of(2017, 3, 29), new PddSectionTesting(27, 28, true))
 
                 )),
                 new PddSectionTimelineItem(PDD_SECTION_05, Arrays.asList(
@@ -466,7 +470,8 @@ public class DataGenerationServiceImpl implements DataGenerationService {
                         new TimelineItem(LocalDate.of(2017, 3, 15), new PddSectionTesting(11, 11, true)),
                         new TimelineItem(LocalDate.of(2017, 3, 16), new PddSectionTesting(10, 11, true)),
                         new TimelineItem(LocalDate.of(2017, 3, 17), new PddSectionTesting(11, 11, true)),
-                        new TimelineItem(LocalDate.of(2017, 3, 20), new PddSectionTesting(11, 11, true))
+                        new TimelineItem(LocalDate.of(2017, 3, 20), new PddSectionTesting(11, 11, true)),
+                        new TimelineItem(LocalDate.of(2017, 3, 29), new PddSectionTesting(10, 11, true))
                 )),
                 new PddSectionTimelineItem(PDD_SECTION_22, Arrays.asList(
                         new TimelineItem(LocalDate.of(2017, 3, 8), new PddSectionTesting(12, 14, false)),
@@ -474,7 +479,8 @@ public class DataGenerationServiceImpl implements DataGenerationService {
                         new TimelineItem(LocalDate.of(2017, 3, 13), new PddSectionTesting(12, 14, false)),
                         new TimelineItem(LocalDate.of(2017, 3, 14), new PddSectionTesting(14, 14, true)),
                         new TimelineItem(LocalDate.of(2017, 3, 16), new PddSectionTesting(14, 14, true)),
-                        new TimelineItem(LocalDate.of(2017, 3, 20), new PddSectionTesting(14, 14, true))
+                        new TimelineItem(LocalDate.of(2017, 3, 20), new PddSectionTesting(14, 14, true)),
+                        new TimelineItem(LocalDate.of(2017, 3, 29), new PddSectionTesting(14, 14, true))
                 )),
                 new PddSectionTimelineItem(PDD_SECTION_23, Arrays.asList(
                         new TimelineItem(LocalDate.of(2017, 3, 7), new PddSectionTesting(39, 47, false)),
@@ -544,7 +550,7 @@ public class DataGenerationServiceImpl implements DataGenerationService {
                         new TimelineItem(LocalDate.of(2017, 3, 27), new PddSectionTesting(335, 368, true))
                 )),
                 new PddSectionTimelineItem(PDD_SECTION_34, Arrays.asList(
-
+                    new TimelineItem(LocalDate.of(2017, 3, 29), new PddSectionTesting(40, 46, false))
                 ))
         );
     }
