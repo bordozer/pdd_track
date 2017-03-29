@@ -77,10 +77,8 @@ public class TimelineConverter {
         result.setStartDate(DataGenerationServiceImpl.STUDY_START_DAY);
         result.setEndDate(DataGenerationServiceImpl.STUDY_END_DAY);
 
-        List<TimelineItem> schoolTimelineItems = schoolTimeline.getTimelineItems();
-
         List<TimelineDayColumn> dayColumns = getDayColumns(onDate);
-        dayColumns.stream().forEach(dayColumn -> populateGlobalDayEvents(schoolTimelineItems, dayColumn));
+        dayColumns.stream().forEach(dayColumn -> populateGlobalDayEvents(schoolTimeline.getTimelineItems(), dayColumn));
         result.setDayColumns(dayColumns);
 
         ConversionContext context = ConversionContext.builder()
@@ -90,7 +88,7 @@ public class TimelineConverter {
                 .onDate(onDate)
                 .build();
 
-        result.setItems(convertTimelineItems(pddSections, schoolTimelineItems, pddSectionTimeline.getTimelineItems(), context));
+        result.setItems(convertTimelineItems(pddSections, schoolTimeline.getTimelineItems(), pddSectionTimeline.getTimelineItems(), context));
         result.setSummaryColumns(calculateTimelineDaySummary(result, context));
         result.setTimelineStatistics(TimelineStatisticsConverter.convertStatistics(result));
 
