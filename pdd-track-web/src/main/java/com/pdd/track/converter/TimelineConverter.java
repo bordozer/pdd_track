@@ -338,11 +338,9 @@ public class TimelineConverter {
                         TimelineItem lastTesting = getLastPddSectionTestingEvent(sectionKey, pddSectionTimelineItems,
                             TimeLineItemEventType.TESTING);
                         if (lastTesting == null) {
-                            if (CommonUtils.ageInDays(lastLectureStudyEvent.getDate(), onDate)
-                                > SECTION_TOO_LONG_WITHOUT_TESTING_AFTER_STUDY_DAYS) {
+                            if (CommonUtils.ageInDays(lastLectureStudyEvent.getDate(), onDate) > SECTION_TOO_LONG_WITHOUT_TESTING_AFTER_STUDY_DAYS) {
                                 // it was lecture, it was study but there is no testing yet
-                                dayHints.add(new TimeLineDayHintDto(TimeLineDayHintType.STUDY_WITHOUT_TESTING,
-                                    CommonUtils.ageInDays(lastLectureStudyEvent.getDate(), onDate)));
+                                dayHints.add(new TimeLineDayHintDto(TimeLineDayHintType.STUDY_WITHOUT_TESTING, CommonUtils.ageInDays(lastLectureStudyEvent.getDate(), onDate)));
                             }
                             return;
                         }
@@ -428,24 +426,19 @@ public class TimelineConverter {
             });
     }
 
-    private static boolean isSectionTooLongWithoutTestsRepeating(final String sessionKey,
-        final List<PddSectionTimelineItem> pddSectionTimelineItems, final LocalDate onDate) {
-        TimelineItem lastPddSectionTesting = getLastPddSectionTestingEvent(sessionKey, pddSectionTimelineItems,
-            TimeLineItemEventType.TESTING);
+    private static boolean isSectionTooLongWithoutTestsRepeating(final String sessionKey, final List<PddSectionTimelineItem> pddSectionTimelineItems, final LocalDate onDate) {
+        TimelineItem lastPddSectionTesting = getLastPddSectionTestingEvent(sessionKey, pddSectionTimelineItems, TimeLineItemEventType.TESTING);
         if (lastPddSectionTesting == null) {
             return false;
         }
         PddSectionTesting lastSectionTesting = (PddSectionTesting) lastPddSectionTesting.getEvent();
         if (CommonUtils.getPercentage(lastSectionTesting.getTesting()) >= EXCELLENT_TEST_PERCENTAGE) {
-            return CommonUtils.ageInDays(lastPddSectionTesting.getDate(), onDate)
-                >= EXCELLENT_SECTION_TOO_LONG_WITHOUT_TESTING_DAYS;
+            return CommonUtils.ageInDays(lastPddSectionTesting.getDate(), onDate) >= EXCELLENT_SECTION_TOO_LONG_WITHOUT_TESTING_DAYS;
         }
         if (CommonUtils.getPercentage(lastSectionTesting.getTesting()) >= COLL_TEST_PERCENTAGE) {
-            return CommonUtils.ageInDays(lastPddSectionTesting.getDate(), onDate)
-                >= COOL_SECTION_TOO_LONG_WITHOUT_TESTING_DAYS;
+            return CommonUtils.ageInDays(lastPddSectionTesting.getDate(), onDate) >= COOL_SECTION_TOO_LONG_WITHOUT_TESTING_DAYS;
         }
-        return CommonUtils.ageInDays(lastPddSectionTesting.getDate(), onDate)
-            >= SECTION_TOO_LONG_WITHOUT_RETESTING_DAYS;
+        return CommonUtils.ageInDays(lastPddSectionTesting.getDate(), onDate) >= SECTION_TOO_LONG_WITHOUT_RETESTING_DAYS;
     }
 
     private static boolean isSectionTooLongWithoutRestudy(final String sectionKey,
