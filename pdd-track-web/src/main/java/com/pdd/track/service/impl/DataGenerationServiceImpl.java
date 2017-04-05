@@ -323,17 +323,18 @@ public class DataGenerationServiceImpl implements DataGenerationService {
                 new TimelineItem(LocalDate.of(2017, 3, 30), new LectureStudyEvent(PDD_SECTION_34.getKey())),
 
                 new TimelineItem(LocalDate.of(2017, 3, 17), new SchoolDrivingEvent(SCHOOL_INSTRUCTOR, SCHOOL_CAR, 50)),
+                new TimelineItem(LocalDate.of(2017, 3, 21), new SchoolDrivingEvent(SCHOOL_INSTRUCTOR, SCHOOL_CAR, 110)),
+                new TimelineItem(LocalDate.of(2017, 3, 30), new SchoolDrivingEvent(SCHOOL_INSTRUCTOR, SCHOOL_CAR, 110)),
                 new TimelineItem(LocalDate.of(2017, 3, 18), new AdditionalDrivingEvent(ADDITIONAL_INSTRUCTOR, ADDITIONAL_CAR, 90)),
                 new TimelineItem(LocalDate.of(2017, 3, 19), new AdditionalDrivingEvent(ADDITIONAL_INSTRUCTOR, ADDITIONAL_CAR, 90)),
-                new TimelineItem(LocalDate.of(2017, 3, 21), new SchoolDrivingEvent(SCHOOL_INSTRUCTOR, SCHOOL_CAR, 110)),
                 new TimelineItem(LocalDate.of(2017, 3, 24), new AdditionalDrivingEvent(ADDITIONAL_INSTRUCTOR, ADDITIONAL_CAR, 90)),
                 new TimelineItem(LocalDate.of(2017, 3, 25), new AdditionalDrivingEvent(ADDITIONAL_INSTRUCTOR, ADDITIONAL_CAR, 90)),
                 new TimelineItem(LocalDate.of(2017, 3, 28), new AdditionalDrivingEvent(ADDITIONAL_INSTRUCTOR, ADDITIONAL_CAR, 90)),
                 new TimelineItem(LocalDate.of(2017, 3, 29), new AdditionalDrivingEvent(ADDITIONAL_INSTRUCTOR, ADDITIONAL_CAR, 90)),
-                new TimelineItem(LocalDate.of(2017, 3, 30), new SchoolDrivingEvent(SCHOOL_INSTRUCTOR, SCHOOL_CAR, 110)),
                 new TimelineItem(LocalDate.of(2017, 3, 31), new AdditionalDrivingEvent(ADDITIONAL_INSTRUCTOR, ADDITIONAL_CAR, 90)),
                 new TimelineItem(LocalDate.of(2017, 4, 1), new AdditionalDrivingEvent(ADDITIONAL_INSTRUCTOR, ADDITIONAL_CAR, 90)),
-                new TimelineItem(LocalDate.of(2017, 4, 4), new AdditionalDrivingEvent(ADDITIONAL_INSTRUCTOR, ADDITIONAL_CAR, 90))
+                new TimelineItem(LocalDate.of(2017, 4, 4), new AdditionalDrivingEvent(ADDITIONAL_INSTRUCTOR, ADDITIONAL_CAR, 90)),
+                new TimelineItem(LocalDate.of(2017, 4, 5), new AdditionalDrivingEvent(ADDITIONAL_INSTRUCTOR, ADDITIONAL_CAR, 90))
         );
     }
 
@@ -363,7 +364,8 @@ public class DataGenerationServiceImpl implements DataGenerationService {
                         new TimelineItem(LocalDate.of(2017, 3, 13), new PddSectionTesting(27, 28, true)),
                         new TimelineItem(LocalDate.of(2017, 3, 15), new PddSectionTesting(28, 28, true)),
                         new TimelineItem(LocalDate.of(2017, 3, 23), new PddSectionTesting(27, 28, true)),
-                        new TimelineItem(LocalDate.of(2017, 3, 29), new PddSectionTesting(27, 28, true))
+                        new TimelineItem(LocalDate.of(2017, 3, 29), new PddSectionTesting(27, 28, true)),
+                        new TimelineItem(LocalDate.of(2017, 4, 5), new PddSectionTesting(27, 28, true))
 
                 )),
                 new PddSectionTimelineItem(PDD_SECTION_05, Arrays.asList(
@@ -374,7 +376,8 @@ public class DataGenerationServiceImpl implements DataGenerationService {
                         new TimelineItem(LocalDate.of(2017, 3, 13), new PddSectionTesting(12, 12, true)),
                         new TimelineItem(LocalDate.of(2017, 3, 15), new PddSectionTesting(12, 12, true)),
                         new TimelineItem(LocalDate.of(2017, 3, 16), new PddSectionTesting(12, 12, true)),
-                        new TimelineItem(LocalDate.of(2017, 3, 26), new PddSectionTesting(12, 12, true))
+                        new TimelineItem(LocalDate.of(2017, 3, 26), new PddSectionTesting(12, 12, true)),
+                        new TimelineItem(LocalDate.of(2017, 4, 5), new PddSectionTesting(11, 12, true))
 
                 )),
                 new PddSectionTimelineItem(PDD_SECTION_06, Arrays.asList(
