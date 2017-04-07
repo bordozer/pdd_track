@@ -1,15 +1,5 @@
 package com.pdd.track.converter;
 
-import java.time.DayOfWeek;
-import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.EnumSet;
-import java.util.List;
-import java.util.Map;
-import java.util.stream.Collectors;
-
 import com.pdd.track.dto.DrivingDto;
 import com.pdd.track.dto.DrivingDto.CarDto;
 import com.pdd.track.dto.DrivingDto.InstructorDto;
@@ -41,11 +31,20 @@ import com.pdd.track.model.events.PddSectionTesting;
 import com.pdd.track.model.events.TimelineEvent;
 import com.pdd.track.service.impl.DataGenerationServiceImpl;
 import com.pdd.track.utils.CommonUtils;
-
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+
+import java.time.DayOfWeek;
+import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.EnumSet;
+import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 public class TimelineConverter {
@@ -298,8 +297,9 @@ public class TimelineConverter {
     }
 
     private static void populateHintsOnDate(final List<TimelineItem> schoolTimelineItems,
-        final List<PddSectionTimelineItem> pddSectionTimelineItems,
-        final List<TimelineItemDto> visitor, final LocalDate onDate) {
+                                            final List<PddSectionTimelineItem> pddSectionTimelineItems,
+                                            final List<TimelineItemDto> visitor,
+                                            final LocalDate onDate) {
         visitor.stream()
             .forEach(item -> {
                 item.getTimelineDays().stream()
@@ -312,31 +312,25 @@ public class TimelineConverter {
                         List<TimeLineDayHintDto> dayHints = new ArrayList<>();
                         day.setDayHints(dayHints);
 
-                        TimelineItem pddSectionLectureEvent = getLastLectureEvent(sectionKey, schoolTimelineItems,
-                            TimeLineItemEventType.LECTURE);
+                        TimelineItem pddSectionLectureEvent = getLastLectureEvent(sectionKey, schoolTimelineItems, TimeLineItemEventType.LECTURE);
                         if (pddSectionLectureEvent == null) {
                             return; // no lecture
                         }
 
-                        TimelineItem lastLectureStudyEvent = getLastLectureEvent(sectionKey, schoolTimelineItems,
-                            TimeLineItemEventType.LECTURE_STUDY);
+                        TimelineItem lastLectureStudyEvent = getLastLectureEvent(sectionKey, schoolTimelineItems, TimeLineItemEventType.LECTURE_STUDY);
                         if (lastLectureStudyEvent == null) {
-                            if (CommonUtils.ageInDays(pddSectionLectureEvent.getDate(), onDate)
-                                > SECTION_TOO_LONG_WITHOUT_STUDY_DAYS) {
+                            if (CommonUtils.ageInDays(pddSectionLectureEvent.getDate(), onDate) > SECTION_TOO_LONG_WITHOUT_STUDY_DAYS) {
                                 // it was lecture but the study is missed too long
-                                dayHints.add(new TimeLineDayHintDto(TimeLineDayHintType.LECTURE_WITHOUT_STUDY,
-                                    CommonUtils.ageInDays(pddSectionLectureEvent.getDate(), onDate)));
+                                dayHints.add(new TimeLineDayHintDto(TimeLineDayHintType.LECTURE_WITHOUT_STUDY, CommonUtils.ageInDays(pddSectionLectureEvent.getDate(), onDate)));
                             }
                             return;
                         } else {
                             if (isSectionTooLongWithoutRestudy(sectionKey, schoolTimelineItems, onDate)) {
                                 // it was lecture, it was study but too lonf time ago
-                                dayHints.add(new TimeLineDayHintDto(TimeLineDayHintType.NEEDS_RESTUDY,
-                                    CommonUtils.ageInDays(lastLectureStudyEvent.getDate(), onDate)));
+                                dayHints.add(new TimeLineDayHintDto(TimeLineDayHintType.NEEDS_RESTUDY, CommonUtils.ageInDays(lastLectureStudyEvent.getDate(), onDate)));
                             }
                         }
-                        TimelineItem lastTesting = getLastPddSectionTestingEvent(sectionKey, pddSectionTimelineItems,
-                            TimeLineItemEventType.TESTING);
+                        TimelineItem lastTesting = getLastPddSectionTestingEvent(sectionKey, pddSectionTimelineItems, TimeLineItemEventType.TESTING);
                         if (lastTesting == null) {
                             if (CommonUtils.ageInDays(lastLectureStudyEvent.getDate(), onDate) > SECTION_TOO_LONG_WITHOUT_TESTING_AFTER_STUDY_DAYS) {
                                 // it was lecture, it was study but there is no testing yet

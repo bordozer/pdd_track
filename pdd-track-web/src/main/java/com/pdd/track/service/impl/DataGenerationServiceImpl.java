@@ -229,6 +229,7 @@ public class DataGenerationServiceImpl implements DataGenerationService {
                 new TimelineItem(LocalDate.of(2017, 3, 4), new LectureEvent(PDD_SECTION_05.getKey())),
                 new TimelineItem(LocalDate.of(2017, 2, 25), new LectureEvent(PDD_SECTION_06.getKey())),
                 new TimelineItem(LocalDate.of(2017, 3, 4), new LectureEvent(PDD_SECTION_07.getKey())),
+                new TimelineItem(LocalDate.of(2017, 3, 19), new LectureEvent(PDD_SECTION_08.getKey())),
                 new TimelineItem(LocalDate.of(2017, 3, 5), new LectureEvent(PDD_SECTION_09.getKey())),
                 new TimelineItem(LocalDate.of(2017, 3, 11), new LectureEvent(PDD_SECTION_10.getKey())),
                 new TimelineItem(LocalDate.of(2017, 3, 12), new LectureEvent(PDD_SECTION_11.getKey())),
