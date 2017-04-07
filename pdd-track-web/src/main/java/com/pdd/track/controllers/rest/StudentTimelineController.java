@@ -3,6 +3,9 @@ package com.pdd.track.controllers.rest;
 import com.pdd.track.dto.TimelineDto;
 import com.pdd.track.service.DataGenerationService;
 import com.pdd.track.service.TimelineService;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.Setter;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -31,5 +34,23 @@ public class StudentTimelineController {
     public boolean createLogRecord() {
         dataGenerationService.createData();
         return true;
+    }
+
+    @RequestMapping(method = RequestMethod.GET, value = "/rest-docs/")
+    public RestDocResponse getRestDocs() {
+        return RestDocResponse.builder()
+                .docName("rest-document-name")
+                .docOwner("rest-document-owner")
+                .docVersion("rest-document-version")
+                .build();
+    }
+
+    @Getter
+    @Setter
+    @Builder
+    public static class RestDocResponse {
+        private String docName;
+        private String docOwner;
+        private String docVersion;
     }
 }
