@@ -21,6 +21,10 @@ public class TimelineDto {
     public static class TimelineStatistics {
         private final List<SectionDataHolder> holders = new ArrayList<>();
 
+        private String schoolDriving;
+        private String additionalDriving;
+        private String totalDriving;
+
         public void add(final SectionDataHolder holder) {
             this.holders.add(holder);
         }

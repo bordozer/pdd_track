@@ -530,9 +530,9 @@ public class TimelineConverter {
                         boolean additionalDriving = event instanceof AdditionalDrivingEvent;
                         TimelineDayColumnEventsDto dayEvents = dayColumn.getColumnEvents();
                         if (additionalDriving) {
-                            dayEvents.setDriving(new DrivingDto(carDto, instructor, schoolDrivingEvent.getDuration()));
+                            dayEvents.setAdditionalDriving(new DrivingDto(carDto, instructor, schoolDrivingEvent.getDuration()));
                         } else {
-                            dayEvents.setAdditionalDriving(
+                            dayEvents.setDriving(
                                 new DrivingDto(carDto, instructor, schoolDrivingEvent.getDuration()));
                         }
                         break;
