@@ -56,23 +56,23 @@ define(function (require) {
         },
 
         _pddSectionSummaryStatusClass: function(status) {
-            if (status == 'COMPLETELY_READY') {
-                return {icon: 'fa fa-check-square', color: 'text-success pdd-section-ready', hint: 'The section is ready'}
-            }
-            if (status == 'READY_WITH_RISK') {
-                return {icon: 'fa fa-check-square-o', color: 'text-success', hint: 'The section is ready but under a risk - repeat testing, please'}
-            }
-            if (status == 'NEED_MORE_TESTING') {
-                return {icon: 'fa fa-thermometer-empty', color: 'text-danger', hint: 'The section needs more testing'}
-            }
-            if (status == 'TESTS_ARE_RED') {
-                return {icon: 'fa fa-bug', color: 'text-danger', hint: 'The section\' tests are red'}
-            }
-            if (status == 'TO_STUDY') {
-                return {icon: 'fa fa-eye-slash', color: 'text-danger', hint: 'The section is NOT studied'}
-            }
-            if (status == 'NO_LECTURE_YET') {
+            if (status === 'NO_LECTURE_YET') {
                 return {icon: 'fa fa-hourglass-o', color: 'text-muted', hint: 'No lecture yet'}
+            }
+            if (status === 'COMPLETELY_READY') {
+                return {icon: 'fa fa-check-square', color: 'pdd-section-ready', hint: 'The section is ready'}
+            }
+            if (status === 'READY_WITH_RISK') {
+                return {icon: 'fa fa-check-square-o', color: 'pdd-section-ready-with-risks', hint: 'The section is ready but under a risk - repeat testing, please'}
+            }
+            if (status === 'NEED_MORE_TESTING') {
+                return {icon: 'fa fa-thermometer-empty', color: 'pdd-section-warning', hint: 'The section needs more testing'}
+            }
+            if (status === 'TESTS_ARE_RED') {
+                return {icon: 'fa fa-bug', color: 'pdd-section-danger', hint: 'The section\' tests are red'}
+            }
+            if (status === 'TO_STUDY') {
+                return {icon: 'fa fa-eye-slash', color: 'pdd-section-to-study', hint: 'The section is NOT studied'}
             }
             return {icon: '', color: '', hint: ''}
         }

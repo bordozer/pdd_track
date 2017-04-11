@@ -120,7 +120,7 @@
                                 <div class="col-xs-1 col-fixed-60 text-center text-muted no-padding"><span class="<%=item.timelineItemSummary.study ? 'fa fa-check' : ''%>">&nbsp;</span></div>
 
                                 <div class="col-xs-1 col-fixed-60 text-center no-padding">
-                                    <small><strong class="<%=item.timelineItemSummary.testsCount >= minTestForSuccess ? 'text-success' : 'text-danger'%>">
+                                    <small><strong class="<%=item.timelineItemSummary.testsCount >= minTestForSuccess ? 'text-success' : 'pdd-section-warning'%>">
                                         <% if(item.timelineItemSummary.study) { %>
                                             <%=item.timelineItemSummary.testsCount%>
                                         <% } else { %>

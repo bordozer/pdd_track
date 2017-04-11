@@ -93,10 +93,29 @@
     color: darkgreen;
 }
 
-.pdd-section-ready {
+.bottom-lined {
+    border-bottom: 1px dotted silver;
+}
+
+.pdd-section-danger {
+    color: #aa0000;
     font-weight: bold;
 }
 
-.bottom-lined {
-    border-bottom: 1px dotted silver;
+.pdd-section-warning {
+    color: #d58512;
+    font-weight: bold;
+}
+
+.pdd-section-to-study {
+    color: #d58512;
+}
+
+.pdd-section-ready-with-risks {
+    color: #498b18;
+}
+
+.pdd-section-ready {
+    color: #31630b;
+    font-weight: bold;
 }
