@@ -338,10 +338,10 @@ public class TimelineConverter {
                             }
                             return;
                         }
-                        if (isSectionTooLongWithoutTestsRepeating(sectionKey, pddSectionTimelineItems, onDate)) {
+                        /*if (isSectionTooLongWithoutTestsRepeating(sectionKey, pddSectionTimelineItems, onDate)) {
                             // lecture, study, testing, but last restudy was too long time ago
                             dayHints.add(new TimeLineDayHintDto(TimeLineDayHintType.ADVICE_REFRESH_TESTS, CommonUtils.ageInDays(lastTesting.getDate(), onDate)));
-                        }
+                        }*/
                         PddSectionTesting pddSectionTestingEvent = (PddSectionTesting) lastTesting.getEvent();
                         boolean isRedTests = !lastTesting.getDate().equals(onDate) && !pddSectionTestingEvent.getTesting().isPassed();
                         if (isRedTests) {
@@ -349,13 +349,20 @@ public class TimelineConverter {
                             dayHints.add(new TimeLineDayHintDto(TimeLineDayHintType.LAST_TESTING_IS_RED, CommonUtils.ageInDays(lastTesting.getDate(), onDate)));
                         }
 
+                        if (isRedTests) {
+                            return;
+                        }
+
                         double testsAveragePercentage = item.getTimelineItemSummary().getTestsAveragePercentage();
                         int testsCount = item.getTimelineItemSummary().getTestsCount();
                         boolean notEnoughTesting = testsCount < MIN_TESTS_COUNT;
-                        if (!isRedTests && !lastTesting.getDate().equals(onDate) && (testsAveragePercentage < GOOD_TEST_PERCENTAGE || notEnoughTesting)) {
+                        if (!lastTesting.getDate().equals(onDate) && (testsAveragePercentage < GOOD_TEST_PERCENTAGE || notEnoughTesting)) {
                             // future testing is needed if average test percentage is red
                             TimeLineDayHintType status =  notEnoughTesting ? TimeLineDayHintType.NEEDS_MORE_TESTING : TimeLineDayHintType.AVERAGE_TESTS_PERCENTAGE_IS_RED;
                             dayHints.add(new TimeLineDayHintDto(status, CommonUtils.ageInDays(lastTesting.getDate(), onDate)));
+                        } else if (isSectionTooLongWithoutTestsRepeating(sectionKey, pddSectionTimelineItems, onDate)) {
+                            // lecture, study, testing, but last restudy was too long time ago
+                            dayHints.add(new TimeLineDayHintDto(TimeLineDayHintType.ADVICE_REFRESH_TESTS, CommonUtils.ageInDays(lastTesting.getDate(), onDate)));
                         }
                     });
             });
