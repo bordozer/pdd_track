@@ -18,6 +18,11 @@
     height: 100%;
     border: 1px silver solid;
 }
+.col-fixed-80 {
+    width: 80px;
+    height: 100%;
+    border: 1px silver solid;
+}
 
 .col-fixed-timeline-day {
     width: 120px;

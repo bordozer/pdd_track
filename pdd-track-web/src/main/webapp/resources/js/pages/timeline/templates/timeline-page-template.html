@@ -102,9 +102,9 @@
                         <div class="col-xs-1 col-fixed-60 text-center timeline-header">Study</div>
 
                         <div class="col-xs-1 col-fixed-60 text-center timeline-header">Tests</div>
-                        <div class="col-xs-1 col-fixed-60 text-center timeline-header">Avg %</div>
+                        <div class="col-xs-1 col-fixed-80 text-center timeline-header">Avg %</div>
+                        <div class="col-xs-1 col-fixed-80 text-center timeline-header">Last test</div>
 
-                        <div class="col-xs-1 col-fixed-60 text-center timeline-header">Last test</div>
                         <div class="col-xs-1 col-fixed-60 text-center timeline-header">Success</div>
                     </div>
                 </div>
@@ -130,19 +130,22 @@
                                         <% } %>
                                     </strong></small>
                                 </div>
-                                <div class="col-xs-1 col-fixed-60 text-center no-padding">
+                                <div class="col-xs-1 col-fixed-80 text-right no-padding">
                                     <small><strong class="<%=percentageClass(item.timelineItemSummary.testsAveragePercentage)%>">
                                         <% if(item.timelineItemSummary.testsCount > 0) { %>
-                                            <%=item.timelineItemSummary.testsAveragePercentageFormatted%>%
+                                            <%=item.timelineItemSummary.testsAveragePercentageFormatted%>% &nbsp;
                                         <% } else { %>
                                             &nbsp;
                                         <% } %>
                                     </strong></small>
                                 </div>
 
-                                <div class="col-xs-1 col-fixed-60 text-center text-muted">
+                                <div class="col-xs-1 col-fixed-80 text-right no-padding">
                                     <% if(item.timelineItemSummary.testsCount > 0) { %>
-                                        <span class="<%=item.timelineItemSummary.lastTestSuccessful ? 'text-success fa fa-check-circle-o' : 'text-danger fa fa-circle-o'%>"></span>
+                                        <small><strong class="<%=percentageClass(item.timelineItemSummary.lastTestPercentage)%>">
+                                                <%=item.timelineItemSummary.lastTestPercentageFormatted%>% &nbsp;
+                                            </strong>
+                                        </small>
                                     <% } else { %>
                                         &nbsp;
                                     <% } %>

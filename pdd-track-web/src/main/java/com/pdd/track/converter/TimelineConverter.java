@@ -390,6 +390,9 @@ public class TimelineConverter {
                     PddSectionTesting lastSectionTesting = (PddSectionTesting) lastPddSectionTesting.getEvent();
                     lastTestSuccessful = lastSectionTesting.getTesting().isPassed();
                     timelineItemSummary.setLastTestSuccessful(lastTestSuccessful);
+                    double lastTestPercentage = CommonUtils.getPercentage(lastSectionTesting.getTesting());
+                    timelineItemSummary.setLastTestPercentage(lastTestPercentage);
+                    timelineItemSummary.setLastTestPercentageFormatted(CommonUtils.formatDouble(lastTestPercentage));
                 }
 
                 ValuesAggregator valuesAggregator = calculateTimelinePddSectionSummary(sectionKey, pddSectionTimelineItems);

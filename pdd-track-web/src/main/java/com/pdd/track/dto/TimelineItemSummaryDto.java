@@ -9,7 +9,11 @@ public class TimelineItemSummaryDto {
     private String testsAveragePercentageFormatted;
     private boolean lecture;
     private boolean study;
+
     private boolean lastTestSuccessful;
+    private double lastTestPercentage;
+    private String lastTestPercentageFormatted;
+
     private TimelineItemSummaryStatus timelineItemSummaryStatus;
 
     public enum TimelineItemSummaryStatus {
