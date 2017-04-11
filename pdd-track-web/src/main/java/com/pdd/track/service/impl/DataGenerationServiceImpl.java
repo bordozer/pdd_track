@@ -378,7 +378,8 @@ public class DataGenerationServiceImpl implements DataGenerationService {
                         new TimelineItem(LocalDate.of(2017, 3, 8), new PddSectionTesting(76, 85, false)),
                         new TimelineItem(LocalDate.of(2017, 3, 10), new PddSectionTesting(81, 85, true)),
                         new TimelineItem(LocalDate.of(2017, 3, 15), new PddSectionTesting(81, 85, true)),
-                        new TimelineItem(LocalDate.of(2017, 3, 23), new PddSectionTesting(83, 85, true))
+                        new TimelineItem(LocalDate.of(2017, 3, 23), new PddSectionTesting(83, 85, true)),
+                        new TimelineItem(LocalDate.of(2017, 4, 11), new PddSectionTesting(84, 85, true))
                 )),
                 new PddSectionTimelineItem(PDD_SECTION_03, Arrays.asList(
                         new TimelineItem(LocalDate.of(2017, 3, 29), new PddSectionTesting(137, 150, true)),
