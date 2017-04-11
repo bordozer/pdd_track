@@ -374,15 +374,14 @@ public class TimelineConverter {
         visitor.stream()
             .forEach(item -> {
                 String sectionKey = item.getPddSection().getKey();
-                TimelineItem lastPddSectionLectureEvent = getLastLectureEvent(sectionKey, schoolTimelineItems,
-                    TimeLineItemEventType.LECTURE);
-                TimelineItem lastPddSectionLectureStudyEvent = getLastLectureEvent(sectionKey, schoolTimelineItems,
-                    TimeLineItemEventType.LECTURE_STUDY);
+                TimelineItem lastPddSectionLectureEvent = getLastLectureEvent(sectionKey, schoolTimelineItems, TimeLineItemEventType.LECTURE);
+                TimelineItem lastPddSectionLectureStudyEvent = getLastLectureEvent(sectionKey, schoolTimelineItems, TimeLineItemEventType.LECTURE_STUDY);
 
                 TimelineItemSummaryDto timelineItemSummary = new TimelineItemSummaryDto();
                 timelineItemSummary.setLecture(lastPddSectionLectureEvent != null);
                 timelineItemSummary.setStudy(lastPddSectionLectureStudyEvent != null);
 
+                TimelineItemSummaryStatus pddSummaryStatus = TimelineItemSummaryStatus.NONE;
 
                 boolean lastTestSuccessful = false;
                 TimelineItem lastPddSectionTesting = getLastPddSectionTestingEvent(sectionKey, pddSectionTimelineItems,
@@ -393,15 +392,13 @@ public class TimelineConverter {
                     timelineItemSummary.setLastTestSuccessful(lastTestSuccessful);
                 }
 
-                ValuesAggregator valuesAggregator = calculateTimelinePddSectionSummary(sectionKey,
-                    pddSectionTimelineItems);
+                ValuesAggregator valuesAggregator = calculateTimelinePddSectionSummary(sectionKey, pddSectionTimelineItems);
                 double averageTestingScore = valuesAggregator.getValue() / valuesAggregator.getCount();
                 timelineItemSummary.setTestsCount(valuesAggregator.getCount());
                 timelineItemSummary.setTestsAveragePercentage(averageTestingScore);
                 timelineItemSummary.setTestsAveragePercentageFormatted(CommonUtils.formatDouble(averageTestingScore));
                 boolean testPercentageIsGood = averageTestingScore > GOOD_TEST_PERCENTAGE;
 
-                TimelineItemSummaryStatus pddSummaryStatus = TimelineItemSummaryStatus.NONE;
                 if (lastPddSectionLectureEvent != null && valuesAggregator.getCount() < MIN_TESTS_COUNT) {
                     pddSummaryStatus = TimelineItemSummaryStatus.NEED_MORE_TESTING;
                 }
@@ -409,14 +406,13 @@ public class TimelineConverter {
                     pddSummaryStatus = TimelineItemSummaryStatus.TO_STUDY;
                 }
                 if (valuesAggregator.getCount() >= MIN_TESTS_COUNT && testPercentageIsGood && lastTestSuccessful) {
-                    if (isSectionTooLongWithoutTestsRepeating(sectionKey, pddSectionTimelineItems, onDate)
-                        || isSectionTooLongWithoutRestudy(sectionKey, schoolTimelineItems, onDate)) {
+                    if (isSectionTooLongWithoutTestsRepeating(sectionKey, pddSectionTimelineItems, onDate) || isSectionTooLongWithoutRestudy(sectionKey, schoolTimelineItems, onDate)) {
                         pddSummaryStatus = TimelineItemSummaryStatus.READY_WITH_RISK;
                     } else {
                         pddSummaryStatus = TimelineItemSummaryStatus.COMPLETELY_READY;
                     }
                 }
-                if (valuesAggregator.getCount() >= MIN_TESTS_COUNT && !testPercentageIsGood && lastTestSuccessful) {
+                if (valuesAggregator.getCount() >= MIN_TESTS_COUNT && !testPercentageIsGood) {
                     pddSummaryStatus = TimelineItemSummaryStatus.TESTS_ARE_RED;
                 }
                 if (lastPddSectionLectureEvent == null) {
