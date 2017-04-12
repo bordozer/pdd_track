@@ -1,16 +1,19 @@
 package com.pdd.track.converter;
 
 import com.google.common.collect.Lists;
+import com.pdd.track.converter.TimelineConverter.ValuesAggregator;
 import com.pdd.track.dto.TimelineDayColumnEventsDto;
 import com.pdd.track.dto.TimelineDto;
 import com.pdd.track.dto.TimelineDto.SectionDataHolder;
 import com.pdd.track.dto.TimelineDto.TimelineStatistics;
 import com.pdd.track.dto.TimelineItemDto;
+import com.pdd.track.dto.TimelineItemSummaryDto.TestPercentageHolder;
 import com.pdd.track.dto.TimelineItemSummaryDto.TimelineItemSummaryStatus;
 import com.pdd.track.utils.CommonUtils;
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -18,10 +21,17 @@ import java.util.stream.Collectors;
 public class TimelineStatisticsConverter {
 
 
+    public static void populateStatistics(final TimelineDto result) {
+        result.setTimelineStatistics(convertStatistics(result));
+        result.setAverageTestingPercentageAvg(new TestPercentageHolder(calculateAvgTestingAvgPercentage(result)));
+        result.setLastTestingPercentageAvg(new TestPercentageHolder(calculateLastTestingAvgPercentage(result)));
+        result.setTotalTestingCount(calculateTotalTestingCount(result));
+    }
+
     public static TimelineStatistics convertStatistics(final TimelineDto timeline) {
         TimelineStatistics statistics = new TimelineStatistics();
 
-        List<TimelineItemDto> totalSections = timeline.getItems().stream().collect(Collectors.toList());
+        List<TimelineItemDto> totalSections = new ArrayList<>(timeline.getItems());
         int totalSectionsCount = totalSections.size();
         int totalQuestionsCount = totalSections.stream().mapToInt(item -> item.getPddSection().getQuestionsCount()).sum();
         SectionDataHolder sectionDataHolder = new SectionDataHolder("Section total", totalSectionsCount, CommonUtils.formatDouble(100), totalQuestionsCount, CommonUtils.formatDouble(100));
@@ -77,5 +87,35 @@ public class TimelineStatisticsConverter {
         String sectionsPercentage = CommonUtils.formatDouble((double) sectionsCount / totalSectionsCount * 100);
         String questionsPercentage = CommonUtils.formatDouble((double) questionsCount / totalQuestionsCount * 100);
         return new SectionDataHolder(title, sectionsCount, sectionsPercentage, questionsCount, questionsPercentage);
+    }
+
+    private static double calculateAvgTestingAvgPercentage(final TimelineDto result) {
+        ValuesAggregator aggregator = new ValuesAggregator();
+        result.getItems()
+                .forEach(item -> {
+                    if (item.getTimelineItemSummary().getTestsCount() == 0) {
+                        return;
+                    }
+                    aggregator.add(item.getTimelineItemSummary().getAverageTestingPercentage().getPercentage());
+                });
+        return aggregator.getValue() / aggregator.getCount();
+    }
+
+    private static double calculateLastTestingAvgPercentage(final TimelineDto result) {
+        ValuesAggregator aggregator = new ValuesAggregator();
+        result.getItems()
+                .forEach(item -> {
+                    if (item.getTimelineItemSummary().getLastTestingPercentage() == null) {
+                        return;
+                    }
+                    aggregator.add(item.getTimelineItemSummary().getLastTestingPercentage().getPercentage());
+                });
+        return aggregator.getValue() / aggregator.getCount();
+    }
+
+    private static int calculateTotalTestingCount(final TimelineDto result) {
+        return result.getItems().stream()
+                .mapToInt(item -> item.getTimelineItemSummary().getTestsCount())
+                .sum();
     }
 }
