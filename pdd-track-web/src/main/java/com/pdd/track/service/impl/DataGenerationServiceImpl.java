@@ -213,6 +213,10 @@ public class DataGenerationServiceImpl implements DataGenerationService {
 
     private List<PddSectionTimelineItem> constructPddSectionTimelineItemsKharkov() {
         return Arrays.asList(
+                new PddSectionTimelineItem(PDD_SECTION_01, Arrays.asList(
+                        new TimelineItem(LocalDate.of(2017, 4, 12), new PddSectionTesting(54, 57, true))
+
+                )),
                 new PddSectionTimelineItem(PDD_SECTION_07, Arrays.asList(
                         new TimelineItem(LocalDate.of(2017, 3, 24), new PddSectionTesting(1, 1, true))
 
