@@ -389,7 +389,7 @@ public class TimelineConverter {
             return false;
         }
 
-        int extraDays = testsCount / MIN_TESTS_COUNT;
+        int extraDays = testsCount > MIN_TESTS_COUNT ? testsCount / MIN_TESTS_COUNT : 0;
         PddSectionTesting lastSectionTesting = (PddSectionTesting) lastPddSectionTesting.getEvent();
         if (CommonUtils.getPercentage(lastSectionTesting.getTesting()) >= EXCELLENT_TEST_PERCENTAGE) {
             return CommonUtils.ageInDays(lastPddSectionTesting.getDate(), onDate) >= EXCELLENT_SECTION_TOO_LONG_WITHOUT_TESTING_DAYS + extraDays;
