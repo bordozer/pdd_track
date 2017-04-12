@@ -160,7 +160,7 @@ public class DataGenerationServiceImpl implements DataGenerationService {
     }
 
     public static final LocalDate STUDY_START_DAY = LocalDate.of(2017, 2, 25);
-    public static final LocalDate STUDY_END_DAY = LocalDate.of(2017, 4, 23);
+    public static final LocalDate STUDY_END_DAY = LocalDate.of(2017, 5, 13);
 
     public static final Set<DayOfWeek> LECTURE_WEEK_DAYS = Sets.newHashSet(DayOfWeek.SATURDAY, DayOfWeek.SUNDAY);
 
@@ -453,7 +453,8 @@ public class DataGenerationServiceImpl implements DataGenerationService {
                         new TimelineItem(LocalDate.of(2017, 3, 14), new PddSectionTesting(62, 67, true)),
                         new TimelineItem(LocalDate.of(2017, 3, 16), new PddSectionTesting(65, 67, true)),
                         new TimelineItem(LocalDate.of(2017, 3, 26), new PddSectionTesting(65, 67, true)),
-                        new TimelineItem(LocalDate.of(2017, 4, 4), new PddSectionTesting(66, 67, true))
+                        new TimelineItem(LocalDate.of(2017, 4, 4), new PddSectionTesting(66, 67, true)),
+                        new TimelineItem(LocalDate.of(2017, 4, 12), new PddSectionTesting(63, 67, true))
 
                 )),
                 new PddSectionTimelineItem(PDD_SECTION_11, Arrays.asList(
