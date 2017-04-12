@@ -1,18 +1,18 @@
 package com.pdd.track.dto;
 
+import com.pdd.track.utils.CommonUtils;
 import lombok.Data;
+import lombok.Getter;
 
 @Data
 public class TimelineItemSummaryDto {
     private int testsCount;
-    private double testsAveragePercentage;
-    private String testsAveragePercentageFormatted;
     private boolean lecture;
     private boolean study;
 
     private boolean lastTestSuccessful;
-    private double lastTestPercentage;
-    private String lastTestPercentageFormatted;
+    private TestPercentageHolder averageTestingPercentage;
+    private TestPercentageHolder lastTestingPercentage;
 
     private TimelineItemSummaryStatus timelineItemSummaryStatus;
 
@@ -24,5 +24,16 @@ public class TimelineItemSummaryDto {
         TESTS_ARE_RED,
         TO_STUDY,
         NO_LECTURE_YET
+    }
+
+    @Getter
+    public static class TestPercentageHolder {
+        private final double percentage;
+        private final String percentageFormatted;
+
+        public TestPercentageHolder(final double lastTestPercentage) {
+            this.percentage = lastTestPercentage;
+            this.percentageFormatted = CommonUtils.formatDouble(lastTestPercentage);
+        }
     }
 }

@@ -14,6 +14,7 @@ import com.pdd.track.dto.TimelineDaySummaryDto;
 import com.pdd.track.dto.TimelineDto;
 import com.pdd.track.dto.TimelineItemDto;
 import com.pdd.track.dto.TimelineItemSummaryDto;
+import com.pdd.track.dto.TimelineItemSummaryDto.TestPercentageHolder;
 import com.pdd.track.dto.TimelineItemSummaryDto.TimelineItemSummaryStatus;
 import com.pdd.track.model.PddSection;
 import com.pdd.track.model.PddSection.PddSectionQuestions;
@@ -353,7 +354,7 @@ public class TimelineConverter {
                             return;
                         }
 
-                        double testsAveragePercentage = item.getTimelineItemSummary().getTestsAveragePercentage();
+                        double testsAveragePercentage = item.getTimelineItemSummary().getAverageTestingPercentage().getPercentage();
                         int testsCount = item.getTimelineItemSummary().getTestsCount();
                         boolean notEnoughTesting = testsCount < MIN_TESTS_COUNT;
                         if (!lastTesting.getDate().equals(onDate) && (testsAveragePercentage < GOOD_TEST_PERCENTAGE || notEnoughTesting)) {
@@ -391,15 +392,13 @@ public class TimelineConverter {
                     lastTestSuccessful = lastSectionTesting.getTesting().isPassed();
                     timelineItemSummary.setLastTestSuccessful(lastTestSuccessful);
                     double lastTestPercentage = CommonUtils.getPercentage(lastSectionTesting.getTesting());
-                    timelineItemSummary.setLastTestPercentage(lastTestPercentage);
-                    timelineItemSummary.setLastTestPercentageFormatted(CommonUtils.formatDouble(lastTestPercentage));
+                    timelineItemSummary.setLastTestingPercentage(new TestPercentageHolder(lastTestPercentage));
                 }
 
                 ValuesAggregator valuesAggregator = calculateTimelinePddSectionSummary(sectionKey, pddSectionTimelineItems);
                 double averageTestingScore = valuesAggregator.getValue() / valuesAggregator.getCount();
                 timelineItemSummary.setTestsCount(valuesAggregator.getCount());
-                timelineItemSummary.setTestsAveragePercentage(averageTestingScore);
-                timelineItemSummary.setTestsAveragePercentageFormatted(CommonUtils.formatDouble(averageTestingScore));
+                timelineItemSummary.setAverageTestingPercentage(new TestPercentageHolder(averageTestingScore));
                 boolean testPercentageIsGood = averageTestingScore > GOOD_TEST_PERCENTAGE;
 
                 if (lastPddSectionLectureEvent != null && valuesAggregator.getCount() < MIN_TESTS_COUNT) {

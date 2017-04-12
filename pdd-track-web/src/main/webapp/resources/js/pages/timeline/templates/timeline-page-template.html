@@ -131,9 +131,9 @@
                                     </strong></small>
                                 </div>
                                 <div class="col-xs-1 col-fixed-80 text-right no-padding">
-                                    <small><strong class="<%=percentageClass(item.timelineItemSummary.testsAveragePercentage)%>">
+                                    <small><strong class="<%=percentageClass(item.timelineItemSummary.averageTestingPercentage.percentage)%>">
                                         <% if(item.timelineItemSummary.testsCount > 0) { %>
-                                            <%=item.timelineItemSummary.testsAveragePercentageFormatted%>% &nbsp;
+                                            <%=item.timelineItemSummary.averageTestingPercentage.percentageFormatted%>% &nbsp;
                                         <% } else { %>
                                             &nbsp;
                                         <% } %>
@@ -142,8 +142,8 @@
 
                                 <div class="col-xs-1 col-fixed-80 text-right no-padding">
                                     <% if(item.timelineItemSummary.testsCount > 0) { %>
-                                        <small><strong class="<%=percentageClass(item.timelineItemSummary.lastTestPercentage)%>">
-                                                <%=item.timelineItemSummary.lastTestPercentageFormatted%>% &nbsp;
+                                        <small><strong class="<%=percentageClass(item.timelineItemSummary.lastTestingPercentage.percentage)%>">
+                                                <%=item.timelineItemSummary.lastTestingPercentage.percentageFormatted%>% &nbsp;
                                             </strong>
                                         </small>
                                     <% } else { %>
