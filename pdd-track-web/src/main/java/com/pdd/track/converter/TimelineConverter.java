@@ -317,7 +317,7 @@ public class TimelineConverter {
                             // future testing is needed if average test percentage is red
                             TimeLineDayHintType status =  notEnoughTesting ? TimeLineDayHintType.NEEDS_MORE_TESTING : TimeLineDayHintType.AVERAGE_TESTS_PERCENTAGE_IS_RED;
                             dayHints.add(new TimeLineDayHintDto(status, CommonUtils.ageInDays(lastTesting.getDate(), onDate)));
-                        } else if (isSectionTooLongWithoutTestsRepeating(sectionKey, pddSectionTimelineItems, onDate)) {
+                        } else if (isSectionTooLongWithoutTestsRepeating(sectionKey, pddSectionTimelineItems, item.getTimelineItemSummary().getTestsCount(), onDate)) {
                             // lecture, study, testing, but last restudy was too long time ago
                             dayHints.add(new TimeLineDayHintDto(TimeLineDayHintType.ADVICE_REFRESH_TESTS, CommonUtils.ageInDays(lastTesting.getDate(), onDate)));
                         }
@@ -364,7 +364,8 @@ public class TimelineConverter {
                     pddSummaryStatus = TimelineItemSummaryStatus.TO_STUDY;
                 }
                 if (valuesAggregator.getCount() >= MIN_TESTS_COUNT && testPercentageIsGood && lastTestSuccessful) {
-                    if (isSectionTooLongWithoutTestsRepeating(sectionKey, pddSectionTimelineItems, onDate) || isSectionTooLongWithoutRestudy(sectionKey, schoolTimelineItems, onDate)) {
+                    if (isSectionTooLongWithoutTestsRepeating(sectionKey, pddSectionTimelineItems, valuesAggregator.getCount(), onDate)
+                            || isSectionTooLongWithoutRestudy(sectionKey, schoolTimelineItems, onDate)) {
                         pddSummaryStatus = TimelineItemSummaryStatus.READY_WITH_RISK;
                     } else {
                         pddSummaryStatus = TimelineItemSummaryStatus.COMPLETELY_READY;
@@ -381,17 +382,20 @@ public class TimelineConverter {
             });
     }
 
-    private static boolean isSectionTooLongWithoutTestsRepeating(final String sessionKey, final List<PddSectionTimelineItem> pddSectionTimelineItems, final LocalDate onDate) {
+    private static boolean isSectionTooLongWithoutTestsRepeating(final String sessionKey, final List<PddSectionTimelineItem> pddSectionTimelineItems,
+                                                                 final int testsCount, final LocalDate onDate) {
         TimelineItem lastPddSectionTesting = getLastPddSectionTestingEvent(sessionKey, pddSectionTimelineItems, TimeLineItemEventType.TESTING);
         if (lastPddSectionTesting == null) {
             return false;
         }
+
+        int extraDays = testsCount / MIN_TESTS_COUNT;
         PddSectionTesting lastSectionTesting = (PddSectionTesting) lastPddSectionTesting.getEvent();
         if (CommonUtils.getPercentage(lastSectionTesting.getTesting()) >= EXCELLENT_TEST_PERCENTAGE) {
-            return CommonUtils.ageInDays(lastPddSectionTesting.getDate(), onDate) >= EXCELLENT_SECTION_TOO_LONG_WITHOUT_TESTING_DAYS;
+            return CommonUtils.ageInDays(lastPddSectionTesting.getDate(), onDate) >= EXCELLENT_SECTION_TOO_LONG_WITHOUT_TESTING_DAYS + extraDays;
         }
         if (CommonUtils.getPercentage(lastSectionTesting.getTesting()) >= COLL_TEST_PERCENTAGE) {
-            return CommonUtils.ageInDays(lastPddSectionTesting.getDate(), onDate) >= COOL_SECTION_TOO_LONG_WITHOUT_TESTING_DAYS;
+            return CommonUtils.ageInDays(lastPddSectionTesting.getDate(), onDate) >= COOL_SECTION_TOO_LONG_WITHOUT_TESTING_DAYS + extraDays;
         }
         return CommonUtils.ageInDays(lastPddSectionTesting.getDate(), onDate) >= SECTION_TOO_LONG_WITHOUT_RETESTING_DAYS;
     }
