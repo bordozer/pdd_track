@@ -97,7 +97,12 @@
     background-color: #dff0d8;
 }
 
-.timeline-day-testing-100 {
+.timeline-day-testing-excellent {
+    font-size: 14px;
+    color: navy;
+}
+
+.timeline-day-testing-cool {
     font-size: 14px;
     color: darkgreen;
 }

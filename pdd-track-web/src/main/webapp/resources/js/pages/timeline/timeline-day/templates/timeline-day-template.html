@@ -11,7 +11,7 @@
     <% var testing = dayEvents.testing%>
     <small>
         <strong class="<%=dayEvents.testing.passed ? 'text-success' : 'text-danger'%>" title="Testing: <%=testing.passedQuestions%>/<%=testing.totalQuestions%>">
-            <span class="<%=testing.percentage == 100 ? 'timeline-day-testing-100' : ''%>"><%=testing.percentageFormatted%>%</span>
+            <span class="<%=percentageClass(testing.percentage)%>"><%=testing.percentageFormatted%>%</span>
         </strong>
     </small>
 <% } %>

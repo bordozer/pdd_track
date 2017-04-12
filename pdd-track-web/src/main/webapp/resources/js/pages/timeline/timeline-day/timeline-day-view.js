@@ -18,6 +18,7 @@ define(function (require) {
             var jmodel = this.model.toJSON();
 
             var data = _.extend({}, jmodel.timelineDay, {
+                percentageClass: this._percentageClass,
                 getHintIcon: this._getHintIcon
             });
             this.$el.html(template(data));
@@ -36,6 +37,17 @@ define(function (require) {
             }
 
             return this;
+        },
+
+        _percentageClass: function(value) {
+            if (value === 100) {
+                return 'timeline-day-testing-excellent'
+            }
+
+            if (value >= 96) { // TODO: constant COOL_TEST_PERCENTAGE
+                return 'timeline-day-testing-cool'
+            }
+            return value > 90 ? 'text-success' : 'text-danger';
         },
 
         _getHintIcon: function(dayHint) {

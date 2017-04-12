@@ -59,7 +59,7 @@ public class TimelineConverter {
     private static final int MIN_TESTS_COUNT = 3;
     private static final EnumSet<DayOfWeek> WEEKENDS = EnumSet.of(DayOfWeek.SATURDAY, DayOfWeek.SUNDAY);
     private static final int GOOD_TEST_PERCENTAGE = 90;
-    private static final int COLL_TEST_PERCENTAGE = 96;
+    private static final int COOL_TEST_PERCENTAGE = 96;
     private static final int EXCELLENT_TEST_PERCENTAGE = 100;
     private static final List<TimeLineDayHintType> FUTURE_QUESTION_COUNT_FOR_EVENT_TYPES = Arrays.asList(
         TimeLineDayHintType.LAST_TESTING_IS_RED,
@@ -394,7 +394,7 @@ public class TimelineConverter {
         if (CommonUtils.getPercentage(lastSectionTesting.getTesting()) >= EXCELLENT_TEST_PERCENTAGE) {
             return CommonUtils.ageInDays(lastPddSectionTesting.getDate(), onDate) >= EXCELLENT_SECTION_TOO_LONG_WITHOUT_TESTING_DAYS + extraDays;
         }
-        if (CommonUtils.getPercentage(lastSectionTesting.getTesting()) >= COLL_TEST_PERCENTAGE) {
+        if (CommonUtils.getPercentage(lastSectionTesting.getTesting()) >= COOL_TEST_PERCENTAGE) {
             return CommonUtils.ageInDays(lastPddSectionTesting.getDate(), onDate) >= COOL_SECTION_TOO_LONG_WITHOUT_TESTING_DAYS + extraDays;
         }
         return CommonUtils.ageInDays(lastPddSectionTesting.getDate(), onDate) >= SECTION_TOO_LONG_WITHOUT_RETESTING_DAYS;

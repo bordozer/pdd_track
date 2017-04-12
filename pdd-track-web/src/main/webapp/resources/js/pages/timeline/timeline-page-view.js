@@ -53,9 +53,14 @@ define(function (require) {
             return this;
         },
 
+        // TODO: duplicated in timeline-day-view.js
         _percentageClass: function(value) {
-            if (value == 100) {
-                return 'timeline-day-testing-100'
+            if (value === 100) {
+                return 'timeline-day-testing-excellent'
+            }
+
+            if (value >= 96) { // TODO: constant COOL_TEST_PERCENTAGE
+                return 'timeline-day-testing-cool'
             }
             return value > 90 ? 'text-success' : 'text-danger';
         },
