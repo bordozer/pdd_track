@@ -44,6 +44,11 @@ define(function (require) {
                     timelineDayView(self.$('.js-timeline-day-' + item.pddSection.number + '-' + timelineDay.dayIndex), timelineDay);
                 });
             });
+            var today = this.$('.timeline-day-today')[0];
+            var todayX = $(today).position().left;
+            this.$('.row-fluid').animate({
+                scrollLeft: todayX - 126
+            }, 200);
 
             return this;
         },
