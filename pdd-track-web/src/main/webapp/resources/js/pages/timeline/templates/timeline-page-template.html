@@ -159,6 +159,37 @@
                         <% }) %>
                     </div>
                 </div>
+
+                <div class="row">
+                    <div class="col-xs-12">
+
+                        <div class="col-xs-1 col-fixed-60 bg-info">&nbsp;</div>
+                        <div class="col-xs-1 col-fixed-60 bg-info">&nbsp;</div>
+                        <div class="col-xs-1 col-fixed-60 bg-info">&nbsp;</div>
+                        <div class="col-xs-1 col-fixed-60 bg-info">
+                            <strong><%=totalTestingCount%></strong>
+                        </div>
+
+                        <div class="col-xs-1 col-fixed-80 text-right no-padding bg-info">
+                            <small>
+                                <strong class="<%=percentageClass(averageTestingPercentageAvg.percentage)%>">
+                                    <%=averageTestingPercentageAvg.percentageFormatted%>% &nbsp;
+                                </strong>
+                            </small>
+                        </div>
+
+                        <div class="col-xs-1 col-fixed-80 text-right no-padding bg-info">
+                            <small>
+                                <strong class="<%=percentageClass(lastTestingPercentageAvg.percentage)%>">
+                                    <%=lastTestingPercentageAvg.percentageFormatted%>% &nbsp;
+                                </strong>
+                            </small>
+                        </div>
+                        <div class="col-xs-1 col-fixed-60 bg-info">&nbsp;</div>
+
+                    </div>
+                </div>
+
             </div>
 
         </div>

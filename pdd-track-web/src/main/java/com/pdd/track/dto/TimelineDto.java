@@ -1,5 +1,6 @@
 package com.pdd.track.dto;
 
+import com.pdd.track.dto.TimelineItemSummaryDto.TestPercentageHolder;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 
@@ -16,6 +17,10 @@ public class TimelineDto {
     private LocalDate endDate;
 
     private TimelineStatistics timelineStatistics;
+
+    private TestPercentageHolder averageTestingPercentageAvg;
+    private TestPercentageHolder lastTestingPercentageAvg;
+    private int totalTestingCount;
 
     @Data
     public static class TimelineStatistics {

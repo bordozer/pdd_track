@@ -45,6 +45,7 @@ import java.util.Collections;
 import java.util.EnumSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
@@ -91,6 +92,9 @@ public class TimelineConverter {
         result.setItems(convertTimelineItems(pddSections, schoolTimeline.getTimelineItems(), pddSectionTimeline.getTimelineItems(), context));
         result.setSummaryColumns(calculateTimelineDaySummary(result, context));
         result.setTimelineStatistics(TimelineStatisticsConverter.convertStatistics(result));
+        result.setAverageTestingPercentageAvg(new TestPercentageHolder(calculateAvgTestingAvgPersentage(result)));
+        result.setLastTestingPercentageAvg(new TestPercentageHolder(calculateLastTestingAvgPersentage(result)));
+        result.setTotalTestingCount(calculateTotalTestingCount(result));
 
         return result;
     }
@@ -372,7 +376,7 @@ public class TimelineConverter {
     private static void populateTimelineSummary(final List<TimelineItem> schoolTimelineItems,
         final List<PddSectionTimelineItem> pddSectionTimelineItems,
         final List<TimelineItemDto> visitor, final LocalDate onDate) {
-        visitor.stream()
+        visitor
             .forEach(item -> {
                 String sectionKey = item.getPddSection().getKey();
                 TimelineItem lastPddSectionLectureEvent = getLastLectureEvent(sectionKey, schoolTimelineItems, TimeLineItemEventType.LECTURE);
@@ -559,6 +563,36 @@ public class TimelineConverter {
                         throw new IllegalStateException(String.format("Not implemented yet: %s", event));
                 }
             });
+    }
+
+    private static double calculateAvgTestingAvgPersentage(final TimelineDto result) {
+        ValuesAggregator aggregator = new ValuesAggregator();
+        result.getItems()
+                .forEach(item -> {
+                    if (item.getTimelineItemSummary().getTestsCount() == 0) {
+                        return;
+                    }
+                    aggregator.add(item.getTimelineItemSummary().getAverageTestingPercentage().getPercentage());
+                });
+        return aggregator.getValue() / aggregator.getCount();
+    }
+
+    private static double calculateLastTestingAvgPersentage(final TimelineDto result) {
+        ValuesAggregator aggregator = new ValuesAggregator();
+        result.getItems()
+                .forEach(item -> {
+                    if (item.getTimelineItemSummary().getLastTestingPercentage() == null) {
+                        return;
+                    }
+                    aggregator.add(item.getTimelineItemSummary().getLastTestingPercentage().getPercentage());
+                });
+        return aggregator.getValue() / aggregator.getCount();
+    }
+
+    private static int calculateTotalTestingCount(final TimelineDto result) {
+        return result.getItems().stream()
+                .mapToInt(item -> item.getTimelineItemSummary().getTestsCount())
+                .sum();
     }
 
     @Getter

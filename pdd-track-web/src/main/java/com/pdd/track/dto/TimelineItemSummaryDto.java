@@ -9,11 +9,9 @@ public class TimelineItemSummaryDto {
     private int testsCount;
     private boolean lecture;
     private boolean study;
-
-    private boolean lastTestSuccessful;
     private TestPercentageHolder averageTestingPercentage;
+    private boolean lastTestSuccessful;
     private TestPercentageHolder lastTestingPercentage;
-
     private TimelineItemSummaryStatus timelineItemSummaryStatus;
 
     public enum TimelineItemSummaryStatus {
