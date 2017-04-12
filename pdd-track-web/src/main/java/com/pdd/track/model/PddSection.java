@@ -15,7 +15,7 @@ public class PddSection {
     private String key;
     private String number;
     private String name;
-    private List<PddSectionRuleSet> ruleSet;
+    private List<RuleSetQuestions> questionsByRules;
 
     public PddSection(final String number, final String name) {
         this.key = CommonUtils.UUID();
@@ -24,9 +24,11 @@ public class PddSection {
     }
 
     @Data
-    public static class PddSectionRuleSet {
-        private String ruleSetKey;
-        private List<PddSectionQuestions> sectionQuestions;
+    @NoArgsConstructor
+    @AllArgsConstructor
+    public static class RuleSetQuestions {
+        private String ruleSetNumber;
+        private int questionsCount;
     }
 
     @Data

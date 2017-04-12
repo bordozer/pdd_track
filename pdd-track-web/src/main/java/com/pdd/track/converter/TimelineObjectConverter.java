@@ -8,10 +8,15 @@ import com.pdd.track.model.Car;
 import com.pdd.track.model.Instructor;
 import com.pdd.track.model.PddSection;
 import com.pdd.track.model.PddSection.PddSectionQuestions;
+import com.pdd.track.model.PddSection.RuleSetQuestions;
 import com.pdd.track.model.Testing;
 import com.pdd.track.utils.CommonUtils;
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
+
+import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 public class TimelineObjectConverter {
@@ -35,19 +40,18 @@ public class TimelineObjectConverter {
         dto.setKey(pddSection.getKey());
         dto.setNumber(pddSection.getNumber());
         dto.setName(pddSection.getName());
-        dto.setQuestionsCount(getQuestionsCount(pddSection, ruleSetKey));
+        dto.setQuestionsCount(getQuestionsBySectionNumberCount(pddSection, ruleSetKey).getQuestionsCount());
         return dto;
     }
 
-    public static int getQuestionsCount(final PddSection pddSection, final String ruleSetKey) {
-        PddSectionQuestions pddSectionQuestions = pddSection.getRuleSet().stream()
-                .filter(ruleSet -> ruleSet.getRuleSetKey().equals(ruleSetKey))
-                .findFirst()
-                .orElseThrow(IllegalArgumentException::new)
-                .getSectionQuestions().stream()
-                .filter(quest -> quest.getSectionNumber().equals(pddSection.getNumber()))
-                .findFirst()
-                .orElseThrow(IllegalArgumentException::new);
-        return pddSectionQuestions.getQuestionsCount();
+    public static Map<String, Integer> getQuestionsBySectionNumberCount(final List<PddSection> sections, final String ruleSetKey) {
+        List<PddSectionQuestions> collect = sections.stream()
+                .map(section -> new PddSectionQuestions(section.getNumber(), getQuestionsBySectionNumberCount(section, ruleSetKey).getQuestionsCount()))
+                .collect(Collectors.toList());
+        return collect.stream().collect(Collectors.toMap(PddSectionQuestions::getSectionNumber, PddSectionQuestions::getQuestionsCount));
+    }
+
+    private static RuleSetQuestions getQuestionsBySectionNumberCount(final PddSection section, final String ruleSetKey) {
+        return section.getQuestionsByRules().stream().filter(o -> o.getRuleSetNumber().equals(ruleSetKey)).findAny().orElse(new RuleSetQuestions(section.getNumber(), 0));
     }
 }

@@ -17,8 +17,6 @@ import com.pdd.track.dto.TimelineItemSummaryDto;
 import com.pdd.track.dto.TimelineItemSummaryDto.TestPercentageHolder;
 import com.pdd.track.dto.TimelineItemSummaryDto.TimelineItemSummaryStatus;
 import com.pdd.track.model.PddSection;
-import com.pdd.track.model.PddSection.PddSectionQuestions;
-import com.pdd.track.model.PddSection.PddSectionRuleSet;
 import com.pdd.track.model.PddSectionTimeline;
 import com.pdd.track.model.PddSectionTimelineItem;
 import com.pdd.track.model.SchoolTimeline;
@@ -45,7 +43,6 @@ import java.util.Collections;
 import java.util.EnumSet;
 import java.util.List;
 import java.util.Map;
-import java.util.Optional;
 import java.util.stream.Collectors;
 
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
@@ -85,7 +82,7 @@ public class TimelineConverter {
         ConversionContext context = ConversionContext.builder()
                 .ruleSetKey(pddSectionTimeline.getRuleSetKey())
                 .dayColumns(dayColumns)
-                .questionsByPddSections(getQuestionsCount(pddSectionTimeline.getTimelineItems(), pddSectionTimeline.getRuleSetKey()))
+                .questionsByPddSections(TimelineObjectConverter.getQuestionsBySectionNumberCount(pddSections, pddSectionTimeline.getRuleSetKey()))
                 .onDate(onDate)
                 .build();
 
@@ -106,26 +103,6 @@ public class TimelineConverter {
         private Map<String, Integer> questionsByPddSections;
         private List<TimelineDayColumn> dayColumns;
         private LocalDate onDate;
-    }
-
-    private static Map<String, Integer> getQuestionsCount(final List<PddSectionTimelineItem> pddSectionTimelineItems,
-        final String ruleSetKey) {
-        return pddSectionTimelineItems.stream()
-            .map(PddSectionTimelineItem::getPddSection)
-            .map(section -> {
-                PddSectionRuleSet pddSectionRuleSet = section.getRuleSet().stream()
-                    .filter(rule -> rule.getRuleSetKey().equals(ruleSetKey))
-                    .findFirst()
-                    .orElseThrow(IllegalStateException::new);
-                PddSectionQuestions pddSectionQuestions = pddSectionRuleSet.getSectionQuestions().stream()
-                    .filter(ruleSet -> ruleSet.getSectionNumber().equals(section.getNumber()))
-                    .findFirst()
-                    .orElseThrow(IllegalStateException::new);
-
-                return new PddSectionQuestions(pddSectionQuestions.getSectionNumber(),
-                    pddSectionQuestions.getQuestionsCount());
-            })
-            .collect(Collectors.toMap(PddSectionQuestions::getSectionNumber, PddSectionQuestions::getQuestionsCount));
     }
 
     private static List<TimelineItemDto> convertTimelineItems(final List<PddSection> pddSections,
