@@ -59,6 +59,10 @@
     float: none;
 }
 
+.timeline-day-header-container {
+    padding-bottom: 4px;
+}
+
 .timeline-day-header-today {
     background-color: #e0f2be;
 }
@@ -123,4 +127,12 @@
 .pdd-section-ready {
     color: #31630b;
     font-weight: bold;
+}
+
+.strong-border-right {
+    border-right: 3px solid gray;
+}
+
+.strong-border-left {
+    border-left: 3px solid gray;
 }
