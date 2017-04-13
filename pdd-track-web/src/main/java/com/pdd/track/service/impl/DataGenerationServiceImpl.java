@@ -210,23 +210,6 @@ public class DataGenerationServiceImpl implements DataGenerationService {
         return pddSectionTimeline;
     }
 
-    private List<PddSectionTimelineItem> constructPddSectionTimelineItemsKharkov() {
-        return Arrays.asList(
-                new PddSectionTimelineItem(PDD_SECTION_01, Arrays.asList(
-                        new TimelineItem(LocalDate.of(2017, 4, 12), new PddSectionTesting(54, 57, true))
-
-                )),
-                new PddSectionTimelineItem(PDD_SECTION_02, Arrays.asList(
-                        new TimelineItem(LocalDate.of(2017, 4, 13), new PddSectionTesting(24, 27, false))
-
-                )),
-                new PddSectionTimelineItem(PDD_SECTION_07, Arrays.asList(
-                        new TimelineItem(LocalDate.of(2017, 3, 24), new PddSectionTesting(1, 1, true))
-
-                ))
-        );
-    }
-
     private List<TimelineItem> constructStudyingTimelineItems() {
         return Arrays.asList(
                 new TimelineItem(LocalDate.of(2017, 3, 4), new LectureEvent(PDD_SECTION_01.getKey())),
@@ -397,7 +380,8 @@ public class DataGenerationServiceImpl implements DataGenerationService {
                 )),
                 new PddSectionTimelineItem(PDD_SECTION_03, Arrays.asList(
                         new TimelineItem(LocalDate.of(2017, 3, 29), new PddSectionTesting(137, 150, true)),
-                        new TimelineItem(LocalDate.of(2017, 4, 4), new PddSectionTesting(146, 150, true))
+                        new TimelineItem(LocalDate.of(2017, 4, 4), new PddSectionTesting(146, 150, true)),
+                        new TimelineItem(LocalDate.of(2017, 4, 13), new PddSectionTesting(145, 150, true))
                 )),
                 new PddSectionTimelineItem(PDD_SECTION_04, Arrays.asList(
                         new TimelineItem(LocalDate.of(2017, 3, 7), new PddSectionTesting(17, 20, false)),
@@ -650,6 +634,23 @@ public class DataGenerationServiceImpl implements DataGenerationService {
                         new TimelineItem(LocalDate.of(2017, 3, 30), new PddSectionTesting(48, 50, true)),
                         new TimelineItem(LocalDate.of(2017, 4, 3), new PddSectionTesting(44, 46, true)),
                         new TimelineItem(LocalDate.of(2017, 4, 11), new PddSectionTesting(43, 46, true))
+                ))
+        );
+    }
+
+    private List<PddSectionTimelineItem> constructPddSectionTimelineItemsKharkov() {
+        return Arrays.asList(
+                new PddSectionTimelineItem(PDD_SECTION_01, Arrays.asList(
+                        new TimelineItem(LocalDate.of(2017, 4, 12), new PddSectionTesting(54, 57, true))
+
+                )),
+                new PddSectionTimelineItem(PDD_SECTION_02, Arrays.asList(
+                        new TimelineItem(LocalDate.of(2017, 4, 13), new PddSectionTesting(24, 27, false))
+
+                )),
+                new PddSectionTimelineItem(PDD_SECTION_07, Arrays.asList(
+                        new TimelineItem(LocalDate.of(2017, 3, 24), new PddSectionTesting(1, 1, true))
+
                 ))
         );
     }
