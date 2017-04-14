@@ -333,11 +333,13 @@ public class DataGenerationServiceImpl implements DataGenerationService {
                 new TimelineItem(LocalDate.of(2017, 3, 28), new LectureStudyEvent(PDD_SECTION_30.getKey())),
                 new TimelineItem(LocalDate.of(2017, 4, 12), new LectureStudyEvent(PDD_SECTION_30.getKey())),
                 new TimelineItem(LocalDate.of(2017, 3, 20), new LectureStudyEvent(PDD_SECTION_31.getKey())),
+                new TimelineItem(LocalDate.of(2017, 4, 14), new LectureStudyEvent(PDD_SECTION_31.getKey())),
                 new TimelineItem(LocalDate.of(2017, 4, 12), new LectureStudyEvent(PDD_SECTION_32.getKey())),
                 new TimelineItem(LocalDate.of(2017, 3, 19), new LectureStudyEvent(PDD_SECTION_33.getKey())),
                 new TimelineItem(LocalDate.of(2017, 3, 29), new LectureStudyEvent(PDD_SECTION_33.getKey())),
                 new TimelineItem(LocalDate.of(2017, 3, 29), new LectureStudyEvent(PDD_SECTION_34.getKey())),
                 new TimelineItem(LocalDate.of(2017, 3, 30), new LectureStudyEvent(PDD_SECTION_34.getKey())),
+                new TimelineItem(LocalDate.of(2017, 4, 13), new LectureStudyEvent(PDD_SECTION_34.getKey())),
 
                 new TimelineItem(LocalDate.of(2017, 3, 17), new SchoolDrivingEvent(SCHOOL_INSTRUCTOR, SCHOOL_CAR, 50)),
                 new TimelineItem(LocalDate.of(2017, 3, 21), new SchoolDrivingEvent(SCHOOL_INSTRUCTOR, SCHOOL_CAR, 110)),
@@ -390,7 +392,8 @@ public class DataGenerationServiceImpl implements DataGenerationService {
                         new TimelineItem(LocalDate.of(2017, 3, 15), new PddSectionTesting(28, 28, true)),
                         new TimelineItem(LocalDate.of(2017, 3, 23), new PddSectionTesting(27, 28, true)),
                         new TimelineItem(LocalDate.of(2017, 3, 29), new PddSectionTesting(27, 28, true)),
-                        new TimelineItem(LocalDate.of(2017, 4, 5), new PddSectionTesting(27, 28, true))
+                        new TimelineItem(LocalDate.of(2017, 4, 5), new PddSectionTesting(27, 28, true)),
+                        new TimelineItem(LocalDate.of(2017, 4, 14), new PddSectionTesting(28, 28, true))
 
                 )),
                 new PddSectionTimelineItem(PDD_SECTION_05, Arrays.asList(
