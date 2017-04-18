@@ -371,7 +371,7 @@ public class TimelineConverter {
                         pddSummaryStatus = TimelineItemSummaryStatus.COMPLETELY_READY;
                     }
                 }
-                if (valuesAggregator.getCount() >= MIN_TESTS_COUNT && !testPercentageIsGood) {
+                if (valuesAggregator.getCount() >= MIN_TESTS_COUNT && (!testPercentageIsGood || !((PddSectionTesting) lastPddSectionTesting.getEvent()).getTesting().isPassed())) {
                     pddSummaryStatus = TimelineItemSummaryStatus.TESTS_ARE_RED;
                 }
                 if (lastPddSectionLectureEvent == null) {
