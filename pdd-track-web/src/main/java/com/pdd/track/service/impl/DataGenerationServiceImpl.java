@@ -256,32 +256,46 @@ public class DataGenerationServiceImpl implements DataGenerationService {
                 new TimelineItem(LocalDate.of(2017, 4, 3), new LectureStudyEvent(PDD_SECTION_02.getKey())),
                 new TimelineItem(LocalDate.of(2017, 3, 29), new LectureStudyEvent(PDD_SECTION_03.getKey())),
                 new TimelineItem(LocalDate.of(2017, 4, 11), new LectureStudyEvent(PDD_SECTION_03.getKey())),
+
                 new TimelineItem(LocalDate.of(2017, 3, 6), new LectureStudyEvent(PDD_SECTION_04.getKey())),
                 new TimelineItem(LocalDate.of(2017, 3, 23), new LectureStudyEvent(PDD_SECTION_04.getKey())),
                 new TimelineItem(LocalDate.of(2017, 4, 6), new LectureStudyEvent(PDD_SECTION_04.getKey())),
+                new TimelineItem(LocalDate.of(2017, 4, 18), new LectureStudyEvent(PDD_SECTION_04.getKey())),
+
                 new TimelineItem(LocalDate.of(2017, 3, 6), new LectureStudyEvent(PDD_SECTION_05.getKey())),
                 new TimelineItem(LocalDate.of(2017, 3, 23), new LectureStudyEvent(PDD_SECTION_05.getKey())),
                 new TimelineItem(LocalDate.of(2017, 4, 6), new LectureStudyEvent(PDD_SECTION_05.getKey())),
+                new TimelineItem(LocalDate.of(2017, 4, 18), new LectureStudyEvent(PDD_SECTION_05.getKey())),
+
                 new TimelineItem(LocalDate.of(2017, 3, 6), new LectureStudyEvent(PDD_SECTION_06.getKey())),
                 new TimelineItem(LocalDate.of(2017, 3, 23), new LectureStudyEvent(PDD_SECTION_06.getKey())),
                 new TimelineItem(LocalDate.of(2017, 4, 6), new LectureStudyEvent(PDD_SECTION_06.getKey())),
+                new TimelineItem(LocalDate.of(2017, 4, 18), new LectureStudyEvent(PDD_SECTION_06.getKey())),
+
                 new TimelineItem(LocalDate.of(2017, 3, 6), new LectureStudyEvent(PDD_SECTION_07.getKey())),
                 new TimelineItem(LocalDate.of(2017, 3, 23), new LectureStudyEvent(PDD_SECTION_07.getKey())),
                 new TimelineItem(LocalDate.of(2017, 4, 6), new LectureStudyEvent(PDD_SECTION_07.getKey())),
+                new TimelineItem(LocalDate.of(2017, 4, 18), new LectureStudyEvent(PDD_SECTION_07.getKey())),
+
                 new TimelineItem(LocalDate.of(2017, 4, 1), new LectureStudyEvent(PDD_SECTION_08.getKey())),
                 new TimelineItem(LocalDate.of(2017, 4, 12), new LectureStudyEvent(PDD_SECTION_08.getKey())),
+
                 new TimelineItem(LocalDate.of(2017, 3, 6), new LectureStudyEvent(PDD_SECTION_09.getKey())),
                 new TimelineItem(LocalDate.of(2017, 3, 23), new LectureStudyEvent(PDD_SECTION_09.getKey())),
                 new TimelineItem(LocalDate.of(2017, 4, 6), new LectureStudyEvent(PDD_SECTION_09.getKey())),
+
                 new TimelineItem(LocalDate.of(2017, 3, 13), new LectureStudyEvent(PDD_SECTION_10.getKey())),
                 new TimelineItem(LocalDate.of(2017, 3, 23), new LectureStudyEvent(PDD_SECTION_10.getKey())),
                 new TimelineItem(LocalDate.of(2017, 4, 6), new LectureStudyEvent(PDD_SECTION_10.getKey())),
+
                 new TimelineItem(LocalDate.of(2017, 3, 15), new LectureStudyEvent(PDD_SECTION_11.getKey())),
                 new TimelineItem(LocalDate.of(2017, 3, 27), new LectureStudyEvent(PDD_SECTION_11.getKey())),
                 new TimelineItem(LocalDate.of(2017, 4, 11), new LectureStudyEvent(PDD_SECTION_11.getKey())),
+
                 new TimelineItem(LocalDate.of(2017, 3, 8), new LectureStudyEvent(PDD_SECTION_12.getKey())),
                 new TimelineItem(LocalDate.of(2017, 3, 27), new LectureStudyEvent(PDD_SECTION_12.getKey())),
                 new TimelineItem(LocalDate.of(2017, 4, 12), new LectureStudyEvent(PDD_SECTION_12.getKey())),
+
                 new TimelineItem(LocalDate.of(2017, 3, 8), new LectureStudyEvent(PDD_SECTION_13.getKey())),
                 new TimelineItem(LocalDate.of(2017, 3, 27), new LectureStudyEvent(PDD_SECTION_13.getKey())),
                 new TimelineItem(LocalDate.of(2017, 4, 3), new LectureStudyEvent(PDD_SECTION_13.getKey())),
@@ -677,6 +691,10 @@ public class DataGenerationServiceImpl implements DataGenerationService {
                 )),
                 new PddSectionTimelineItem(PDD_SECTION_07, Arrays.asList(
                         new TimelineItem(LocalDate.of(2017, 3, 24), new PddSectionTesting(1, 1, true))
+
+                )),
+                new PddSectionTimelineItem(PDD_SECTION_06, Arrays.asList(
+                        new TimelineItem(LocalDate.of(2017, 4, 19), new PddSectionTesting(46, 50, true))
 
                 ))
         );
