@@ -359,11 +359,11 @@ public class DataGenerationServiceImpl implements DataGenerationService {
                 new TimelineItem(LocalDate.of(2017, 3, 30), new LectureStudyEvent(PDD_SECTION_34.getKey())),
                 new TimelineItem(LocalDate.of(2017, 4, 13), new LectureStudyEvent(PDD_SECTION_34.getKey())),
 
-                new TimelineItem(LocalDate.of(2017, 3, 17), new SchoolDrivingEvent(SCHOOL_INSTRUCTOR, SCHOOL_CAR, 50)),
-                new TimelineItem(LocalDate.of(2017, 3, 21), new SchoolDrivingEvent(SCHOOL_INSTRUCTOR, SCHOOL_CAR, 110)),
-                new TimelineItem(LocalDate.of(2017, 3, 30), new SchoolDrivingEvent(SCHOOL_INSTRUCTOR, SCHOOL_CAR, 110)),
-                new TimelineItem(LocalDate.of(2017, 4, 9), new SchoolDrivingEvent(SCHOOL_INSTRUCTOR, SCHOOL_CAR, 100)),
-                new TimelineItem(LocalDate.of(2017, 4, 11), new SchoolDrivingEvent(SCHOOL_INSTRUCTOR, SCHOOL_CAR, 100)),
+                new TimelineItem(LocalDate.of(2017, 3, 17), new SchoolDrivingEvent(SCHOOL_INSTRUCTOR, SCHOOL_CAR, 60)),
+                new TimelineItem(LocalDate.of(2017, 3, 21), new SchoolDrivingEvent(SCHOOL_INSTRUCTOR, SCHOOL_CAR, 120)),
+                new TimelineItem(LocalDate.of(2017, 3, 30), new SchoolDrivingEvent(SCHOOL_INSTRUCTOR, SCHOOL_CAR, 120)),
+                new TimelineItem(LocalDate.of(2017, 4, 9), new SchoolDrivingEvent(SCHOOL_INSTRUCTOR, SCHOOL_CAR, 120)),
+                new TimelineItem(LocalDate.of(2017, 4, 11), new SchoolDrivingEvent(SCHOOL_INSTRUCTOR, SCHOOL_CAR, 120)),
                 new TimelineItem(LocalDate.of(2017, 4, 15), new SchoolDrivingEvent(SCHOOL_INSTRUCTOR, SCHOOL_CAR, 60)),
 
                 new TimelineItem(LocalDate.of(2017, 3, 18), new AdditionalDrivingEvent(ADDITIONAL_INSTRUCTOR, ADDITIONAL_CAR, 90)),
@@ -380,7 +380,8 @@ public class DataGenerationServiceImpl implements DataGenerationService {
                 new TimelineItem(LocalDate.of(2017, 4, 8), new AdditionalDrivingEvent(ADDITIONAL_INSTRUCTOR, ADDITIONAL_CAR, 90)),
                 new TimelineItem(LocalDate.of(2017, 4, 12), new AdditionalDrivingEvent(ADDITIONAL_INSTRUCTOR, ADDITIONAL_CAR, 90)),
                 new TimelineItem(LocalDate.of(2017, 4, 14), new AdditionalDrivingEvent(ADDITIONAL_INSTRUCTOR, ADDITIONAL_CAR, 90)),
-                new TimelineItem(LocalDate.of(2017, 4, 15), new AdditionalDrivingEvent(ADDITIONAL_INSTRUCTOR, ADDITIONAL_CAR, 90))
+                new TimelineItem(LocalDate.of(2017, 4, 15), new AdditionalDrivingEvent(ADDITIONAL_INSTRUCTOR, ADDITIONAL_CAR, 90)),
+                new TimelineItem(LocalDate.of(2017, 4, 19), new AdditionalDrivingEvent(ADDITIONAL_INSTRUCTOR, ADDITIONAL_CAR, 90))
         );
     }
 
