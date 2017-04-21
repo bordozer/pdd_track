@@ -290,9 +290,9 @@ public class TimelineConverter {
                         }
                         TimelineItem lastTesting = getLastPddSectionTestingEvent(sectionKey, pddSectionTimelineItems, TimeLineItemEventType.TESTING);
                         if (lastTesting == null) {
-                            if (CommonUtils.ageInDays(lastLectureStudyEvent.getDate(), onDate) > context.getStudySettings().getSectionTooLongWithoutTestingAfterStudyDays()) {
+                            if (CommonUtils.ageInDays(pddSectionLectureEvent.getDate(), onDate) > context.getStudySettings().getSectionTooLongWithoutTestingAfterStudyDays()) {
                                 // it was lecture, it was study but there is no testing yet
-                                dayHints.add(new TimeLineDayHintDto(TimeLineDayHintType.STUDY_WITHOUT_TESTING, CommonUtils.ageInDays(lastLectureStudyEvent.getDate(), onDate)));
+                                dayHints.add(new TimeLineDayHintDto(TimeLineDayHintType.STUDY_WITHOUT_TESTING, CommonUtils.ageInDays(pddSectionLectureEvent.getDate(), onDate)));
                             }
                             return;
                         }
