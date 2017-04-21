@@ -78,6 +78,8 @@ public class DataGenerationServiceImpl implements DataGenerationService {
     private static final PddSection PDD_SECTION_33 = new PddSection("33", "Дорожные знаки");
     private static final PddSection PDD_SECTION_34 = new PddSection("34", "Дорожная разметка");
 
+    public static final String KIEV_2017_RULE_KEY_ID = "1";
+    public static final String KHARKOV_2017_RULE_KEY_ID = "2";
     private static final String KIEV_2017_RULE_SET_KEY = "KIEV_2017";
     private static final String KHARKOV_2017_RULE_SET_KEY = "KHARKOV_2017";
 
@@ -194,7 +196,7 @@ public class DataGenerationServiceImpl implements DataGenerationService {
 
     private PddSectionTimeline constructTimelineStudyKiev(final String timelineId) {
         PddSectionTimeline pddSectionTimeline = new PddSectionTimeline();
-        pddSectionTimeline.set_id("1");
+        pddSectionTimeline.set_id(KIEV_2017_RULE_KEY_ID);
         pddSectionTimeline.setSchoolTimelineId(timelineId);
         pddSectionTimeline.setTimelineItems(constructPddSectionTimelineItemsKiev());
         pddSectionTimeline.setRuleSetKey(KIEV_2017_RULE_SET_KEY);
@@ -203,7 +205,7 @@ public class DataGenerationServiceImpl implements DataGenerationService {
 
     private PddSectionTimeline constructTimelineStudyKharkov(final String timelineId) {
         PddSectionTimeline pddSectionTimeline = new PddSectionTimeline();
-        pddSectionTimeline.set_id("2");
+        pddSectionTimeline.set_id(KHARKOV_2017_RULE_KEY_ID);
         pddSectionTimeline.setSchoolTimelineId(timelineId);
         pddSectionTimeline.setTimelineItems(constructPddSectionTimelineItemsKharkov());
         pddSectionTimeline.setRuleSetKey(KHARKOV_2017_RULE_SET_KEY);

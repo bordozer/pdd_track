@@ -47,7 +47,7 @@ define(function (require) {
             if (value >= 96) { // TODO: constant COOL_TEST_PERCENTAGE
                 return 'timeline-day-testing-cool'
             }
-            return value > 90 ? 'text-success' : 'text-danger';
+            return value >= 90 ? 'text-success' : 'text-danger';
         },
 
         _getHintIcon: function(dayHint) {

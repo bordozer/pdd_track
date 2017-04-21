@@ -5,6 +5,7 @@ import com.pdd.track.dto.TimelineDto;
 import com.pdd.track.model.PddSection;
 import com.pdd.track.model.SchoolTimeline;
 import com.pdd.track.model.PddSectionTimeline;
+import com.pdd.track.model.StudySettings;
 import com.pdd.track.repository.PddSectionRepository;
 import com.pdd.track.repository.SchoolTimelineRepository;
 import com.pdd.track.repository.PddSectionTimelineRepository;
@@ -32,11 +33,27 @@ public class TimelineServiceImpl implements TimelineService {
         List<PddSection> pddSections = pddSectionRepository.findAll();
         SchoolTimeline schoolTimeline = schoolTimelineRepository.findOneByStudentKey(studentKey);
         PddSectionTimeline pddSectionTimeline = pddSectionTimelineRepository.findOneBy_id(rulesSetKey);
-        return TimelineConverter.toDto(pddSections, schoolTimeline, pddSectionTimeline, onDate);
+        StudySettings settings = loadStudySettings(studentKey, rulesSetKey);
+        return TimelineConverter.toDto(pddSections, schoolTimeline, pddSectionTimeline, settings, onDate);
     }
 
     @Override
     public SchoolTimeline create(final SchoolTimeline entity) {
         return schoolTimelineRepository.save(entity);
+    }
+
+    private StudySettings loadStudySettings(final String studentKey, final String rulesSetKey) {
+        if (rulesSetKey.equals(DataGenerationServiceImpl.KHARKOV_2017_RULE_KEY_ID)) {
+            return StudySettings.builder()
+                    .minTestCount(1)
+                    .sectionTooLongWithoutTestingAfterStudyDays(30)
+                    .sectionTooLongWithoutRetestingDays(30)
+                    .build();
+        }
+        return StudySettings.builder()
+                .minTestCount(3)
+                .sectionTooLongWithoutTestingAfterStudyDays(2)
+                .sectionTooLongWithoutRetestingDays(5)
+                .build();
     }
 }

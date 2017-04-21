@@ -20,6 +20,7 @@ import com.pdd.track.model.PddSection;
 import com.pdd.track.model.PddSectionTimeline;
 import com.pdd.track.model.PddSectionTimelineItem;
 import com.pdd.track.model.SchoolTimeline;
+import com.pdd.track.model.StudySettings;
 import com.pdd.track.model.TimeLineDayHintType;
 import com.pdd.track.model.TimeLineItemEventType;
 import com.pdd.track.model.TimelineItem;
@@ -48,15 +49,8 @@ import java.util.stream.Collectors;
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 public class TimelineConverter {
 
-    private static final int SECTION_TOO_LONG_WITHOUT_TESTING_AFTER_STUDY_DAYS = 2;
-    private static final int SECTION_TOO_LONG_WITHOUT_RETESTING_DAYS = 5;
-    private static final int COOL_SECTION_TOO_LONG_WITHOUT_TESTING_DAYS = 7;
-    private static final int EXCELLENT_SECTION_TOO_LONG_WITHOUT_TESTING_DAYS = 10;
-
-    private static final int SECTION_TOO_LONG_WITHOUT_RESTUDY_DAYS = 10;
-
     private static final int SECTION_TOO_LONG_WITHOUT_STUDY_DAYS = 5;
-    private static final int MIN_TESTS_COUNT = 3;
+    private static final int SECTION_TOO_LONG_WITHOUT_RESTUDY_DAYS = 10;
     private static final EnumSet<DayOfWeek> WEEKENDS = EnumSet.of(DayOfWeek.SATURDAY, DayOfWeek.SUNDAY);
     private static final int GOOD_TEST_PERCENTAGE = 90;
     private static final int COOL_TEST_PERCENTAGE = 96;
@@ -72,6 +66,7 @@ public class TimelineConverter {
     public static TimelineDto toDto(final List<PddSection> pddSections,
                                     final SchoolTimeline schoolTimeline,
                                     final PddSectionTimeline pddSectionTimeline,
+                                    final StudySettings studySettings,
                                     final LocalDate onDate) {
         TimelineDto result = new TimelineDto();
         result.setStartDate(DataGenerationServiceImpl.STUDY_START_DAY);
@@ -85,6 +80,7 @@ public class TimelineConverter {
                 .ruleSetKey(pddSectionTimeline.getRuleSetKey())
                 .dayColumns(dayColumns)
                 .questionsByPddSections(TimelineObjectConverter.getQuestionsBySectionNumberCount(pddSections, pddSectionTimeline.getRuleSetKey()))
+                .studySettings(studySettings)
                 .onDate(onDate)
                 .build();
 
@@ -113,9 +109,9 @@ public class TimelineConverter {
             })
             .collect(Collectors.toList());
         populateLectureEvents(schoolTimelineItems, result);
-        populateTimelineSummary(schoolTimelineItems, pddSectionTimelineItems, result, onDate);
-        populateHintsOnDate(schoolTimelineItems, pddSectionTimelineItems, result, onDate);
-        populateFutureHints(schoolTimelineItems, pddSectionTimelineItems, onDate, result);
+        populateTimelineSummary(schoolTimelineItems, pddSectionTimelineItems, result, context);
+        populateHintsOnDate(schoolTimelineItems, pddSectionTimelineItems, result, context.getOnDate(), context);
+        populateFutureHints(schoolTimelineItems, pddSectionTimelineItems, result, context);
         return result;
     }
 
@@ -149,11 +145,11 @@ public class TimelineConverter {
     }
 
     private static void populateFutureHints(final List<TimelineItem> schoolTimelineItems,
-        final List<PddSectionTimelineItem> pddSectionTimelineItems, final LocalDate onDate,
-        final List<TimelineItemDto> result) {
-        LocalDate aDate = onDate.plusDays(1);
+                                            final List<PddSectionTimelineItem> pddSectionTimelineItems,
+                                            final List<TimelineItemDto> result, final ConversionContext context) {
+        LocalDate aDate = context.getOnDate().plusDays(1);
         while (aDate.isBefore(DataGenerationServiceImpl.STUDY_END_DAY.plusDays(1))) {
-            populateHintsOnDate(schoolTimelineItems, pddSectionTimelineItems, result, aDate);
+            populateHintsOnDate(schoolTimelineItems, pddSectionTimelineItems, result, aDate, context);
             aDate = aDate.plusDays(1);
         }
     }
@@ -262,7 +258,8 @@ public class TimelineConverter {
     private static void populateHintsOnDate(final List<TimelineItem> schoolTimelineItems,
                                             final List<PddSectionTimelineItem> pddSectionTimelineItems,
                                             final List<TimelineItemDto> visitor,
-                                            final LocalDate onDate) {
+                                            final LocalDate onDate,
+                                            final ConversionContext context) {
         visitor.forEach(item -> {
                 item.getTimelineDays().forEach(day -> {
                         if (!day.getDayDate().equals(onDate)) {
@@ -293,7 +290,7 @@ public class TimelineConverter {
                         }
                         TimelineItem lastTesting = getLastPddSectionTestingEvent(sectionKey, pddSectionTimelineItems, TimeLineItemEventType.TESTING);
                         if (lastTesting == null) {
-                            if (CommonUtils.ageInDays(lastLectureStudyEvent.getDate(), onDate) > SECTION_TOO_LONG_WITHOUT_TESTING_AFTER_STUDY_DAYS) {
+                            if (CommonUtils.ageInDays(lastLectureStudyEvent.getDate(), onDate) > context.getStudySettings().getSectionTooLongWithoutTestingAfterStudyDays()) {
                                 // it was lecture, it was study but there is no testing yet
                                 dayHints.add(new TimeLineDayHintDto(TimeLineDayHintType.STUDY_WITHOUT_TESTING, CommonUtils.ageInDays(lastLectureStudyEvent.getDate(), onDate)));
                             }
@@ -312,12 +309,12 @@ public class TimelineConverter {
 
                         double testsAveragePercentage = item.getTimelineItemSummary().getAverageTestingPercentage().getPercentage();
                         int testsCount = item.getTimelineItemSummary().getTestsCount();
-                        boolean notEnoughTesting = testsCount < MIN_TESTS_COUNT;
+                        boolean notEnoughTesting = testsCount < context.getStudySettings().getMinTestCount();
                         if (!lastTesting.getDate().equals(onDate) && (testsAveragePercentage < GOOD_TEST_PERCENTAGE || notEnoughTesting)) {
                             // future testing is needed if average test percentage is red
                             TimeLineDayHintType status =  notEnoughTesting ? TimeLineDayHintType.NEEDS_MORE_TESTING : TimeLineDayHintType.AVERAGE_TESTS_PERCENTAGE_IS_RED;
                             dayHints.add(new TimeLineDayHintDto(status, CommonUtils.ageInDays(lastTesting.getDate(), onDate)));
-                        } else if (isSectionTooLongWithoutTestsRepeating(sectionKey, pddSectionTimelineItems, item.getTimelineItemSummary().getTestsCount(), onDate)) {
+                        } else if (isSectionTooLongWithoutTestsRepeating(sectionKey, pddSectionTimelineItems, item.getTimelineItemSummary().getTestsCount(), context)) {
                             // lecture, study, testing, but last restudy was too long time ago
                             dayHints.add(new TimeLineDayHintDto(TimeLineDayHintType.ADVICE_REFRESH_TESTS, CommonUtils.ageInDays(lastTesting.getDate(), onDate)));
                         }
@@ -326,8 +323,9 @@ public class TimelineConverter {
     }
 
     private static void populateTimelineSummary(final List<TimelineItem> schoolTimelineItems,
-        final List<PddSectionTimelineItem> pddSectionTimelineItems,
-        final List<TimelineItemDto> visitor, final LocalDate onDate) {
+                                                final List<PddSectionTimelineItem> pddSectionTimelineItems,
+                                                final List<TimelineItemDto> visitor, final ConversionContext context) {
+        final LocalDate onDate = context.getOnDate();
         visitor
             .forEach(item -> {
                 String sectionKey = item.getPddSection().getKey();
@@ -357,21 +355,22 @@ public class TimelineConverter {
                 timelineItemSummary.setAverageTestingPercentage(new TestPercentageHolder(averageTestingScore));
                 boolean testPercentageIsGood = averageTestingScore > GOOD_TEST_PERCENTAGE;
 
-                if (lastPddSectionLectureEvent != null && valuesAggregator.getCount() < MIN_TESTS_COUNT) {
+                int minTestsCount = context.getStudySettings().getMinTestCount();
+                if (lastPddSectionLectureEvent != null && valuesAggregator.getCount() < minTestsCount) {
                     pddSummaryStatus = TimelineItemSummaryStatus.NEED_MORE_TESTING;
                 }
                 if (lastPddSectionLectureEvent != null && lastPddSectionLectureStudyEvent == null) {
                     pddSummaryStatus = TimelineItemSummaryStatus.TO_STUDY;
                 }
-                if (valuesAggregator.getCount() >= MIN_TESTS_COUNT && testPercentageIsGood && lastTestSuccessful) {
-                    if (isSectionTooLongWithoutTestsRepeating(sectionKey, pddSectionTimelineItems, valuesAggregator.getCount(), onDate)
+                if (valuesAggregator.getCount() >= minTestsCount && testPercentageIsGood && lastTestSuccessful) {
+                    if (isSectionTooLongWithoutTestsRepeating(sectionKey, pddSectionTimelineItems, valuesAggregator.getCount(), context)
                             || isSectionTooLongWithoutRestudy(sectionKey, schoolTimelineItems, onDate)) {
                         pddSummaryStatus = TimelineItemSummaryStatus.READY_WITH_RISK;
                     } else {
                         pddSummaryStatus = TimelineItemSummaryStatus.COMPLETELY_READY;
                     }
                 }
-                if (valuesAggregator.getCount() >= MIN_TESTS_COUNT && (!testPercentageIsGood || !((PddSectionTesting) lastPddSectionTesting.getEvent()).getTesting().isPassed())) {
+                if (valuesAggregator.getCount() >= minTestsCount && (!testPercentageIsGood || !((PddSectionTesting) lastPddSectionTesting.getEvent()).getTesting().isPassed())) {
                     pddSummaryStatus = TimelineItemSummaryStatus.TESTS_ARE_RED;
                 }
                 if (lastPddSectionLectureEvent == null) {
@@ -383,21 +382,23 @@ public class TimelineConverter {
     }
 
     private static boolean isSectionTooLongWithoutTestsRepeating(final String sessionKey, final List<PddSectionTimelineItem> pddSectionTimelineItems,
-                                                                 final int testsCount, final LocalDate onDate) {
+                                                                 final int testsCount, final ConversionContext context) {
+        final LocalDate onDate = context.getOnDate();
+        int minTestsCount = context.getStudySettings().getMinTestCount();
         TimelineItem lastPddSectionTesting = getLastPddSectionTestingEvent(sessionKey, pddSectionTimelineItems, TimeLineItemEventType.TESTING);
         if (lastPddSectionTesting == null) {
             return false;
         }
 
-        int extraDays = testsCount > MIN_TESTS_COUNT ? testsCount / MIN_TESTS_COUNT : 0;
+        int extraDays = testsCount > minTestsCount ? testsCount / minTestsCount : 0;
         PddSectionTesting lastSectionTesting = (PddSectionTesting) lastPddSectionTesting.getEvent();
         if (CommonUtils.getPercentage(lastSectionTesting.getTesting()) >= EXCELLENT_TEST_PERCENTAGE) {
-            return CommonUtils.ageInDays(lastPddSectionTesting.getDate(), onDate) >= EXCELLENT_SECTION_TOO_LONG_WITHOUT_TESTING_DAYS + extraDays;
+            return CommonUtils.ageInDays(lastPddSectionTesting.getDate(), onDate) >= context.getStudySettings().getSectionTooLongWithoutRetestingDays() + extraDays;
         }
         if (CommonUtils.getPercentage(lastSectionTesting.getTesting()) >= COOL_TEST_PERCENTAGE) {
-            return CommonUtils.ageInDays(lastPddSectionTesting.getDate(), onDate) >= COOL_SECTION_TOO_LONG_WITHOUT_TESTING_DAYS + extraDays;
+            return CommonUtils.ageInDays(lastPddSectionTesting.getDate(), onDate) >= context.getStudySettings().getSectionTooLongWithoutRetestingDays() + extraDays;
         }
-        return CommonUtils.ageInDays(lastPddSectionTesting.getDate(), onDate) >= SECTION_TOO_LONG_WITHOUT_RETESTING_DAYS;
+        return CommonUtils.ageInDays(lastPddSectionTesting.getDate(), onDate) >= context.getStudySettings().getSectionTooLongWithoutRetestingDays();
     }
 
     private static boolean isSectionTooLongWithoutRestudy(final String sectionKey,
@@ -521,6 +522,7 @@ public class TimelineConverter {
         private String ruleSetKey;
         private Map<String, Integer> questionsByPddSections;
         private List<TimelineDayColumn> dayColumns;
+        private StudySettings studySettings;
         private LocalDate onDate;
     }
 
