@@ -393,7 +393,8 @@ public class DataGenerationServiceImpl implements DataGenerationService {
                         new TimelineItem(LocalDate.of(2017, 3, 14), new PddSectionTesting(107, 116, true)),
                         new TimelineItem(LocalDate.of(2017, 3, 15), new PddSectionTesting(75, 80, true)),
                         new TimelineItem(LocalDate.of(2017, 3, 23), new PddSectionTesting(111, 116, true)),
-                        new TimelineItem(LocalDate.of(2017, 3, 28), new PddSectionTesting(113, 116, true))
+                        new TimelineItem(LocalDate.of(2017, 3, 28), new PddSectionTesting(113, 116, true)),
+                        new TimelineItem(LocalDate.of(2017, 4, 21), new PddSectionTesting(105, 108, true))
                 )),
                 new PddSectionTimelineItem(PDD_SECTION_02, Arrays.asList(
                         new TimelineItem(LocalDate.of(2017, 3, 8), new PddSectionTesting(76, 85, false)),
@@ -669,7 +670,8 @@ public class DataGenerationServiceImpl implements DataGenerationService {
                         new TimelineItem(LocalDate.of(2017, 4, 13), new PddSectionTesting(6, 6, true)),
                         new TimelineItem(LocalDate.of(2017, 4, 18), new PddSectionTesting(7, 10, false)), // vodiy.ua
                         new TimelineItem(LocalDate.of(2017, 4, 19), new PddSectionTesting(8, 10, false)),  // vodiy.ua
-                        new TimelineItem(LocalDate.of(2017, 4, 20), new PddSectionTesting(10, 10, true))  // vodiy.ua
+                        new TimelineItem(LocalDate.of(2017, 4, 20), new PddSectionTesting(10, 10, true)),  // vodiy.ua
+                        new TimelineItem(LocalDate.of(2017, 4, 21), new PddSectionTesting(10, 10, true))  // vodiy.ua
                 )),
                 new PddSectionTimelineItem(PDD_SECTION_33, Arrays.asList(
                         new TimelineItem(LocalDate.of(2017, 3, 20), new PddSectionTesting(314, 368, false)),
@@ -714,6 +716,10 @@ public class DataGenerationServiceImpl implements DataGenerationService {
                 )),
                 new PddSectionTimelineItem(PDD_SECTION_10, Arrays.asList(
                         new TimelineItem(LocalDate.of(2017, 4, 20), new PddSectionTesting(53, 57, true))  // vodiy.ua
+
+                )),
+                new PddSectionTimelineItem(PDD_SECTION_11, Arrays.asList(
+                        new TimelineItem(LocalDate.of(2017, 4, 21), new PddSectionTesting(36, 40, true))  // vodiy.ua
 
                 ))
         );
