@@ -284,7 +284,7 @@ public class TimelineConverter {
                             return;
                         } else {
                             if (isSectionTooLongWithoutRestudy(sectionKey, schoolTimelineItems, onDate)) {
-                                // it was lecture, it was study but too lonf time ago
+                                // it was lecture, it was study but too long time ago
                                 dayHints.add(new TimeLineDayHintDto(TimeLineDayHintType.NEEDS_RESTUDY, CommonUtils.ageInDays(lastLectureStudyEvent.getDate(), onDate)));
                             }
                         }
@@ -314,7 +314,7 @@ public class TimelineConverter {
                             // future testing is needed if average test percentage is red
                             TimeLineDayHintType status =  notEnoughTesting ? TimeLineDayHintType.NEEDS_MORE_TESTING : TimeLineDayHintType.AVERAGE_TESTS_PERCENTAGE_IS_RED;
                             dayHints.add(new TimeLineDayHintDto(status, CommonUtils.ageInDays(lastTesting.getDate(), onDate)));
-                        } else if (isSectionTooLongWithoutTestsRepeating(sectionKey, pddSectionTimelineItems, item.getTimelineItemSummary().getTestsCount(), context)) {
+                        } else if (isSectionTooLongWithoutTestsRepeating(sectionKey, pddSectionTimelineItems, item.getTimelineItemSummary().getTestsCount(), onDate, context)) {
                             // lecture, study, testing, but last restudy was too long time ago
                             dayHints.add(new TimeLineDayHintDto(TimeLineDayHintType.ADVICE_REFRESH_TESTS, CommonUtils.ageInDays(lastTesting.getDate(), onDate)));
                         }
@@ -363,7 +363,7 @@ public class TimelineConverter {
                     pddSummaryStatus = TimelineItemSummaryStatus.TO_STUDY;
                 }
                 if (valuesAggregator.getCount() >= minTestsCount && testPercentageIsGood && lastTestSuccessful) {
-                    if (isSectionTooLongWithoutTestsRepeating(sectionKey, pddSectionTimelineItems, valuesAggregator.getCount(), context)
+                    if (isSectionTooLongWithoutTestsRepeating(sectionKey, pddSectionTimelineItems, valuesAggregator.getCount(), onDate, context)
                             || isSectionTooLongWithoutRestudy(sectionKey, schoolTimelineItems, onDate)) {
                         pddSummaryStatus = TimelineItemSummaryStatus.READY_WITH_RISK;
                     } else {
@@ -382,8 +382,7 @@ public class TimelineConverter {
     }
 
     private static boolean isSectionTooLongWithoutTestsRepeating(final String sessionKey, final List<PddSectionTimelineItem> pddSectionTimelineItems,
-                                                                 final int testsCount, final ConversionContext context) {
-        final LocalDate onDate = context.getOnDate();
+                                                                 final int testsCount, final LocalDate onDate, final ConversionContext context) {
         int minTestsCount = context.getStudySettings().getMinTestCount();
         TimelineItem lastPddSectionTesting = getLastPddSectionTestingEvent(sessionKey, pddSectionTimelineItems, TimeLineItemEventType.TESTING);
         if (lastPddSectionTesting == null) {
@@ -393,10 +392,10 @@ public class TimelineConverter {
         int extraDays = testsCount > minTestsCount ? testsCount / minTestsCount : 0;
         PddSectionTesting lastSectionTesting = (PddSectionTesting) lastPddSectionTesting.getEvent();
         if (CommonUtils.getPercentage(lastSectionTesting.getTesting()) >= EXCELLENT_TEST_PERCENTAGE) {
-            return CommonUtils.ageInDays(lastPddSectionTesting.getDate(), onDate) >= context.getStudySettings().getSectionTooLongWithoutRetestingDays() + extraDays;
+            return CommonUtils.ageInDays(lastPddSectionTesting.getDate(), onDate) >= context.getStudySettings().getSectionTooLongWithoutRetestingDays() + 5 + extraDays;
         }
         if (CommonUtils.getPercentage(lastSectionTesting.getTesting()) >= COOL_TEST_PERCENTAGE) {
-            return CommonUtils.ageInDays(lastPddSectionTesting.getDate(), onDate) >= context.getStudySettings().getSectionTooLongWithoutRetestingDays() + extraDays;
+            return CommonUtils.ageInDays(lastPddSectionTesting.getDate(), onDate) >= context.getStudySettings().getSectionTooLongWithoutRetestingDays() + 2 + extraDays;
         }
         return CommonUtils.ageInDays(lastPddSectionTesting.getDate(), onDate) >= context.getStudySettings().getSectionTooLongWithoutRetestingDays();
     }
